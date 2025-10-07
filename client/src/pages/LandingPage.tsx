@@ -1,6 +1,7 @@
 import GradientBG from "@/components/GradientBG";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
+import HowItWorks from "@/components/HowItWorks";
 import SocialProof from "@/components/SocialProof";
 import ValueProps from "@/components/ValueProps";
 import FeatureGrid from "@/components/FeatureGrid";
@@ -16,6 +17,7 @@ export default function LandingPage() {
       <GradientBG />
       <Nav />
       <Hero />
+      <HowItWorks />
       <SocialProof />
       <ValueProps />
       <FeatureGrid />

@@ -11,23 +11,28 @@ const fadeUp = {
 
 export default function Hero() {
   return (
-    <section className="relative mx-auto max-w-7xl px-4 pt-14 pb-10 grid md:grid-cols-2 gap-8 items-center">
+    <section className="relative mx-auto max-w-7xl px-4 pt-14 pb-10 grid md:grid-cols-2 gap-8 items-center overflow-hidden">
+      <div className="absolute inset-0 -z-10 opacity-25">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
+      </div>
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="space-y-6">
         <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 ring-1 ring-emerald-500/30 px-3 py-1 text-emerald-200 text-xs animate-[pulse-glow_3s_ease-in-out_infinite]" data-testid="badge-proof">
           <ShieldCheck className="h-3.5 w-3.5"/> AI-guided, exam-proven learning
         </div>
-        <h1 className="text-3xl md:text-5xl font-semibold leading-tight" data-testid="text-headline">
-          Find your direction in minutes. <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">Stay ahead</span> all year.
+        <h1 className="text-3xl md:text-5xl font-extrabold leading-tight" data-testid="text-headline">
+          Find your Agri career fit in 5 minutes. <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">Stay confident</span> all year.
         </h1>
         <p className="text-slate-300 text-base md:text-lg max-w-xl" data-testid="text-subheadline">
-          Built for Agri students who want clarity, speed, and results — not confusion. Your AI mentor is ready.
+          With AI-backed quizzes, personalized pathways, and outcome-first guidance — your path becomes clear, not crowded.
         </p>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-quiz-primary">
             Get My Career Plan → <PlayCircle className="ml-2 h-5 w-5" />
           </Button>
           <Button size="lg" variant="secondary" data-testid="button-games">
-            Explore Interactive Games
+            Preview Games
           </Button>
         </div>
         <ul className="text-sm text-slate-400 grid grid-cols-1 sm:grid-cols-3 gap-2 max-w-xl mt-2">

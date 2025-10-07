@@ -11,22 +11,22 @@ const items = [
   {
     icon: GraduationCap,
     title: "Career Guidance Quiz",
-    desc: "Discover your true fit across Agri and allied domains with our data-driven quiz. Based on your responses, you'll get a personalized plan—or, if another field suits you better, we'll recommend the right course elsewhere.",
+    desc: "A 100% unbiased, data-backed fit analysis for ABM, Banking, and JRF Horticulture. If your strengths align better with another path, The Agri Vision will suggest trusted alternatives instead of forcing a mismatch.",
   },
   {
     icon: BookOpen,
     title: "Notes, PYQs & Mocks",
-    desc: "High-yield content organized by topic and difficulty with spaced repetition.",
+    desc: "High-yield content by topic and difficulty, with spaced repetition.",
   },
   {
     icon: Gamepad2,
     title: "Interactive Games",
-    desc: "Study that doesn't feel like study—quiz duels, runners, and match-3 for recall.",
+    desc: "Study without fatigue — quiz duels, runners, and match-3 recall to make practice stick.",
   },
   {
     icon: LineChart,
     title: "Recorded Classes",
-    desc: "Master every topic on your schedule. Full-length, reusable sessions that cover concepts, PYQs, and tricks—anytime, anywhere.",
+    desc: "Learn anytime from top educators. Structured lessons with topic-wise clarity and exam-ready focus.",
   },
 ];
 

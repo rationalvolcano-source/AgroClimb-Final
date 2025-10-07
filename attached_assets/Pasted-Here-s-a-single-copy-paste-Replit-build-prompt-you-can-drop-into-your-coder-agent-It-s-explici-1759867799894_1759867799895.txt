@@ -1,0 +1,254 @@
+Here’s a single, copy-paste **Replit build prompt** you can drop into your coder agent. It’s explicit about *what to change*, *exact copy to use*, *animations*, *components to add*, and *acceptance criteria* so you get predictable results.
+
+---
+
+# 🔧 Replit Prompt — Elevate “The Agri Vision” Website
+
+## 0) Context
+
+We are upgrading **The Agri Vision (TAV)** — an AI-guided career platform for Agri students — to improve persuasion, clarity, and conversion. Tech stack is **React** (Vite/CRA) with CSS/Tailwind; feel free to add **Framer Motion** for micro-animations. Preserve dark theme.
+
+## 1) Global Design Tokens (update theme or CSS variables)
+
+Use/ensure these tokens exist and are applied consistently:
+
+* `--brand: #22e4b5;`
+* `--bg: #0b1020;`
+* `--card: #0f1530;`
+* `--text: #e7f6f2;` (body)
+* `--muted: #9fb0be;` (subtext)
+* Border: `1px solid rgba(255,255,255,0.06)`
+* Card radius: `20px` (desktop), `16px` (mobile)
+* Headings weight: 800; body: 400–500
+* Minimum body text size: 16px desktop, 15px mobile
+
+**Acceptance:** All feature cards and hero use these tokens; subtext has sufficient contrast (WCAG AA+).
+
+---
+
+## 2) Header (Sticky + micro-copy)
+
+* Make header **sticky** on scroll with a slight blur/alpha background.
+* Add micro-copy under the main CTA on desktop hover: “Takes 5 minutes”.
+* Keep CTA text: **Get My Career Plan →**.
+
+**Acceptance:** Header height compresses by ~8px on scroll; sticky works on mobile without jank.
+
+---
+
+## 3) Hero Section (copy + subtle motion)
+
+Replace hero copy with:
+
+**Headline:**
+
+> **Find your Agri career fit in 5 minutes. Stay confident all year.**
+
+**Subtext:**
+
+> With AI-backed quizzes, personalized pathways, and outcome-first guidance — your path becomes clear, not crowded.
+
+**Primary CTA:** `Get My Career Plan →`
+**Secondary CTA:** `Preview Games`
+
+**Visual:** Add a **soft animated gradient/constellation** background (very subtle; 10–15s loop, opacity ≤ 0.25). Use CSS or Framer Motion.
+
+**Acceptance:** No layout shift; animation GPU-friendly (no >3% CPU at idle).
+
+---
+
+## 4) “How It Works” (new section under hero)
+
+Add a 3-step strip with icons:
+
+1. **Take Quiz** — 5 minutes, no fluff.
+2. **See Your Fit** — ABM, Banking, or JRF Horticulture.
+3. **Get Plan or Redirect** — If another path fits better, we recommend the right course elsewhere.
+
+**Acceptance:** Section responsive; each step is a card with icon, title, 1-line subtext.
+
+---
+
+## 5) Features Grid — copy rewrites
+
+### 5.1 Career Guidance Quiz (unbiased & data-backed)
+
+Use this exact text:
+
+**Title:** Career Guidance Quiz
+**Body:**
+
+> A 100% unbiased, data-backed fit analysis for ABM, Banking, and JRF Horticulture. If your strengths align better with another path, The Agri Vision will suggest trusted alternatives instead of forcing a mismatch.
+
+*(Short mobile variant if needed: “Unbiased, data-backed fit. If another path suits you more, we’ll recommend it — even outside TAV.”)*
+
+### 5.2 Notes, PYQs & Mocks (keep if already good)
+
+Optionally tighten to:
+
+> High-yield content by topic and difficulty, with spaced repetition.
+
+### 5.3 Interactive Games
+
+> Study without fatigue — quiz duels, runners, and match-3 recall to make practice stick.
+
+### 5.4 Adaptive Engine
+
+> Your AI coach suggests what to learn next — never too easy, never too hard.
+
+### 5.5 Recorded Classes (sales-oriented)
+
+Pick **Option 3** below (for Plans upsell), else Option 1 for homepage:
+
+* **Recommended (Plans/Upsell):**
+
+  > **Recorded Classes**
+  > Missed a live class? No problem. Replay, revise, and retain with HD recorded sessions designed to build mastery at your own rhythm.
+
+* **Homepage variant:**
+
+  > **Recorded Classes**
+  > Learn anytime from top educators. Structured lessons with topic-wise clarity and exam-ready focus.
+
+**Acceptance:** Cards show new copy, no overflow; icons remain consistent.
+
+---
+
+## 6) Stats Row Animations
+
+For “25k+”, “38”, “2/week”, “120+”, implement **count-up on viewport enter** (Intersection Observer). Duration 1.0–1.2s with easeOut.
+
+**Acceptance:** Counter animates once per page load; prefers-reduced-motion disables animation.
+
+---
+
+## 7) Section Reveal Animations
+
+Use Framer Motion or CSS:
+
+* Each card/section **fade-in + slide-up (8–12px)** when 15% visible.
+* Stagger children by 60–90ms.
+
+**Acceptance:** Smooth on mobile; no layout shift.
+
+---
+
+## 8) Footer (trust & compliance)
+
+Add a richer footer with:
+
+* “Trusted by students from 120+ colleges” (placeholder; add logos grid when available).
+* Links: About, Privacy, Terms, Contact.
+* Small note: “© The Agri Vision — AI-guided career clarity for Agri students.”
+
+**Acceptance:** Footer readable at 14–15px minimum.
+
+---
+
+## 9) SWM & Wellness Integration (routes)
+
+We already have **/swm** (Study With Me) and **/wellness** pages. Ensure:
+
+* They’re registered in Router (`/swm`, `/wellness`) and visible in the top nav as **SWM** and **Wellness Centre**.
+* SWM page shows timer, audio, affirmations, stats; Wellness page shows Morning/Night Yoga placeholders, 4-7-8 breathing tool, Sharpness tips, and daily check-in.
+
+**Acceptance:** Deep links work; no full reloads; localStorage persists sessions/check-ins.
+
+---
+
+## 10) Accessibility & UX polish
+
+* Respect `prefers-reduced-motion` → disable non-essential animations.
+* All buttons have discernible text and 44px min tap targets.
+* Color contrast ≥ 4.5:1 for body, 3:1 for large headings.
+* Add `aria-live="polite"` to the stat counters during animation.
+
+**Acceptance:** Lighthouse accessibility score ≥ 95 on desktop.
+
+---
+
+## 11) Performance
+
+* Lazy-load non-critical images/Lottie.
+* Preload primary font.
+* Bundle stays small; ensure tree-shaking on Framer Motion imports.
+
+**Acceptance:** Lighthouse Performance ≥ 90 on a cold run.
+
+---
+
+## 12) Analytics hooks (optional if already present)
+
+* Fire `quiz_cta_click` when “Get My Career Plan” clicked.
+* Fire `feature_view` per section on viewport enter.
+
+**Acceptance:** Console log placeholders if analytics lib not configured.
+
+---
+
+## 13) Exact Copy Blocks (for quick paste)
+
+**Hero**
+
+```
+Find your Agri career fit in 5 minutes. Stay confident all year.
+With AI-backed quizzes, personalized pathways, and outcome-first guidance — your path becomes clear, not crowded.
+```
+
+**Career Guidance Quiz (card)**
+
+```
+A 100% unbiased, data-backed fit analysis for ABM, Banking, and JRF Horticulture. If your strengths align better with another path, The Agri Vision will suggest trusted alternatives instead of forcing a mismatch.
+```
+
+**Interactive Games**
+
+```
+Study without fatigue — quiz duels, runners, and match-3 recall to make practice stick.
+```
+
+**Adaptive Engine**
+
+```
+Your AI coach suggests what to learn next — never too easy, never too hard.
+```
+
+**Recorded Classes (homepage)**
+
+```
+Learn anytime from top educators. Structured lessons with topic-wise clarity and exam-ready focus.
+```
+
+**Recorded Classes (plans upsell)**
+
+```
+Missed a live class? No problem. Replay, revise, and retain with HD recorded sessions designed to build mastery at your own rhythm.
+```
+
+**How It Works step texts**
+
+```
+Take Quiz — 5 minutes, no fluff.
+See Your Fit — ABM, Banking, or JRF Horticulture.
+Get Plan or Redirect — If another path fits better, we recommend the right course elsewhere.
+```
+
+---
+
+## 14) QA Checklist (tick before handing off)
+
+* [ ] All updated copy visible and wraps cleanly on mobile.
+* [ ] Sticky header works; no overlap with hero on iOS Safari.
+* [ ] Counters animate once; stop when off-screen; respect reduced-motion.
+* [ ] “Get My Career Plan →” CTA always visible in first fold on common breakpoints.
+* [ ] /swm and /wellness routes reachable; localStorage persists.
+* [ ] Lighthouse: Perf ≥ 90, Access ≥ 95, Best Practices ≥ 95.
+* [ ] No console errors or hydration mismatches.
+
+---
+
+**Deliverables:** Updated React components (Hero, HowItWorks, FeaturesGrid, Footer, Header), small animation utility (Intersection Observer hook), and any CSS vars. Keep code clean, typed if TS is enabled, and commit in logical chunks with messages like `feat(hero): copy + subtle bg motion`.
+
+---
+
+If anything is unclear, implement best-judgment defaults that meet the acceptance criteria above.

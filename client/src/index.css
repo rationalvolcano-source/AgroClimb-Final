@@ -132,63 +132,63 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 222 47% 5%;
+  --background: 226 49% 8%;
 
-  --foreground: 210 20% 92%;
+  --foreground: 164 48% 93%;
 
-  --border: 217 35% 12%;
+  --border: 0 0% 100% / 0.06;
 
-  --card: 220 40% 7%;
+  --card: 229 52% 12%;
 
-  --card-foreground: 210 18% 90%;
+  --card-foreground: 164 48% 93%;
 
-  --card-border: 218 38% 10%;
+  --card-border: 0 0% 100% / 0.06;
 
-  --sidebar: 218 42% 9%;
+  --sidebar: 229 52% 12%;
 
-  --sidebar-foreground: 210 16% 88%;
+  --sidebar-foreground: 164 48% 93%;
 
-  --sidebar-border: 217 40% 12%;
+  --sidebar-border: 0 0% 100% / 0.06;
 
-  --sidebar-primary: 160 84% 35%;
+  --sidebar-primary: 165 78% 51%;
 
-  --sidebar-primary-foreground: 160 10% 98%;
+  --sidebar-primary-foreground: 164 48% 93%;
 
-  --sidebar-accent: 160 8% 14%;
+  --sidebar-accent: 165 20% 20%;
 
-  --sidebar-accent-foreground: 160 30% 85%;
+  --sidebar-accent-foreground: 164 48% 93%;
 
-  --sidebar-ring: 160 84% 45%;
+  --sidebar-ring: 165 78% 51%;
 
-  --popover: 218 38% 11%;
+  --popover: 229 52% 12%;
 
-  --popover-foreground: 210 16% 86%;
+  --popover-foreground: 164 48% 93%;
 
-  --popover-border: 217 36% 14%;
+  --popover-border: 0 0% 100% / 0.06;
 
-  --primary: 160 84% 35%;
+  --primary: 165 78% 51%;
 
-  --primary-foreground: 160 10% 98%;
+  --primary-foreground: 164 48% 93%;
 
-  --secondary: 217 6% 16%;
+  --secondary: 229 30% 16%;
 
-  --secondary-foreground: 215 15% 85%;
+  --secondary-foreground: 164 48% 93%;
 
-  --muted: 217 8% 18%;
+  --muted: 229 30% 18%;
 
-  --muted-foreground: 215 12% 70%;
+  --muted-foreground: 207 19% 68%;
 
-  --accent: 180 12% 20%;
+  --accent: 165 20% 20%;
 
-  --accent-foreground: 180 20% 82%;
+  --accent-foreground: 164 48% 93%;
 
   --destructive: 0 72% 32%;
 
-  --destructive-foreground: 0 10% 98%;
+  --destructive-foreground: 164 48% 93%;
 
-  --input: 217 35% 30%;
-  --ring: 160 84% 45%;
-  --chart-1: 160 84% 65%;
+  --input: 229 40% 20%;
+  --ring: 165 78% 51%;
+  --chart-1: 165 78% 55%;
   --chart-2: 180 65% 60%;
   --chart-3: 200 70% 62%;
   --chart-4: 215 75% 65%;
@@ -257,6 +257,34 @@
  * need to be distinguished from eachother visually.
  */
 @layer utilities {
+
+  /* Hero background blob animations */
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 15s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
 
   /* Hide ugly search cancel button in Chrome until we can style it properly */
   input[type="search"]::-webkit-search-cancel-button {
