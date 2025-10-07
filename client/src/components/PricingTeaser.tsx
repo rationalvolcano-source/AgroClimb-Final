@@ -12,16 +12,16 @@ const tiers = [
   {
     name: "Pro",
     price: "₹2,000",
-    bullets: ["Interactive games", "Alumni Connect (2×/week)", "Adaptive study plan"],
+    bullets: ["Interactive games", "Recorded classes", "Alumni Connect (2×/week)", "Adaptive study plan"],
     cta: "Go Pro",
-    highlight: true,
+    highlight: false,
   },
   {
     name: "Ultra",
     price: "₹5,000",
     bullets: ["Your AI-powered finishing school — polish every week, grow every month."],
     cta: "Get Ultra",
-    highlight: false,
+    highlight: true,
   },
 ];
 
