@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Home } from "lucide-react";
+import { Home, Sunrise, Moon, Wind, Lightbulb, Heart, Video, type LucideIcon } from "lucide-react";
 
 // Utility functions
 const todayKey = () => new Date().toISOString().slice(0, 10);
@@ -192,7 +192,7 @@ function useStyles() {
 }
 
 // Video Tile Component
-function VideoTile({ title, storageKey, defaultTip }: { title: string; storageKey: string; defaultTip: string }) {
+function VideoTile({ title, storageKey, defaultTip, icon: Icon }: { title: string; storageKey: string; defaultTip: string; icon: LucideIcon }) {
   const [url, setUrl] = useLocalVar(storageKey, "");
   const [editing, setEditing] = useState(false);
   const [tempUrl, setTempUrl] = useState("");
@@ -234,7 +234,10 @@ function VideoTile({ title, storageKey, defaultTip }: { title: string; storageKe
   return (
     <div className="wellness-card" data-testid={`video-tile-${storageKey}`}>
       <div className="wellness-tile-head">
-        <div className="wellness-tile-title">{title}</div>
+        <div className="flex items-center gap-2">
+          <Icon className="h-5 w-5 text-indigo-500" />
+          <div className="wellness-tile-title">{title}</div>
+        </div>
         {!editing && (
           <Button variant="ghost" size="sm" onClick={handleEdit} data-testid={`button-edit-${storageKey}`}>
             {url ? "Change" : "Add"}
@@ -331,7 +334,10 @@ function BreathingTool() {
 
   return (
     <div className="wellness-card" data-testid="breathing-tool">
-      <div className="wellness-tile-title">Anxiety Alleviation</div>
+      <div className="flex items-center gap-2 mb-2">
+        <Wind className="h-5 w-5 text-indigo-500" />
+        <div className="wellness-tile-title">Anxiety Alleviation</div>
+      </div>
       <div className="wellness-tip">4-7-8 breathing technique — scientifically proven to calm your nervous system</div>
       
       <div className="wellness-breathing-circle">
@@ -378,7 +384,10 @@ function BreathingTool() {
 function SharpnessTips() {
   return (
     <div className="wellness-card" data-testid="sharpness-tips">
-      <div className="wellness-tile-title">Tricks to Stay Mentally Sharp</div>
+      <div className="flex items-center gap-2 mb-2">
+        <Lightbulb className="h-5 w-5 text-indigo-500" />
+        <div className="wellness-tile-title">Tricks to Stay Mentally Sharp</div>
+      </div>
       <div className="wellness-tip">Science-backed micro-habits for sustained focus</div>
       <ul className="wellness-list">
         <li data-testid="tip-0">
@@ -432,7 +441,10 @@ function CheckIn() {
     <div className="wellness-card" data-testid="check-in">
       <div className="wellness-tile-head">
         <div>
-          <div className="wellness-tile-title">Daily Wellness Check‑in</div>
+          <div className="flex items-center gap-2 mb-1">
+            <Heart className="h-5 w-5 text-indigo-500" />
+            <div className="wellness-tile-title">Daily Wellness Check‑in</div>
+          </div>
           <div className="wellness-tip">Mark your practice once a day. Builds consistency and motivation.</div>
         </div>
         <label className="wellness-check">
@@ -494,11 +506,13 @@ export default function WellnessCentre() {
             title="Daily Morning Yoga"
             storageKey="morning_yoga"
             defaultTip="Morning flow — video coming soon"
+            icon={Sunrise}
           />
           <VideoTile
             title="Daily Night Yoga (Wind Down)"
             storageKey="night_yoga"
             defaultTip="Night routine — video coming soon"
+            icon={Moon}
           />
         </div>
 
