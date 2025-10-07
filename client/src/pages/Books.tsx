@@ -10,6 +10,7 @@ import mathsImg from "@assets/image_1759877325302.png";
 import reasoningImg from "@assets/image_1759877494047.png";
 import financeImg from "@assets/image_1759877764773.png";
 import agriAffairsImg from "@assets/image_1759877951515.png";
+import englishImg from "@assets/ChatGPT Image Oct 8, 2025, 04_35_24 AM_1759878517370.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -59,6 +60,13 @@ const books = [
     image: agriAffairsImg,
     price: "₹600",
   },
+  {
+    id: "english",
+    title: "English Mastery",
+    subtitle: "Enhance Your Understanding",
+    image: englishImg,
+    price: "₹600",
+  },
 ];
 
 export default function Books() {
@@ -92,7 +100,7 @@ export default function Books() {
               transition={{ delay: i * 0.1 }}
             >
               <Card className="bg-slate-900/60 border-slate-800 hover:border-primary/30 transition-all rounded-2xl overflow-hidden h-full flex flex-col">
-                <div className="relative aspect-[3/4] overflow-hidden">
+                <div className="relative aspect-[2/3] overflow-hidden">
                   <img
                     src={book.image}
                     alt={book.title}
@@ -136,11 +144,11 @@ export default function Books() {
               Complete Study Bundle
             </h2>
             <p className="text-slate-400 mb-6" data-testid="text-bundle-desc">
-              Get all 6 books and unlock the complete learning experience at a special price
+              Get all 7 books and unlock the complete learning experience at a special price
             </p>
             <div className="flex items-center justify-center gap-4 mb-6">
-              <span className="text-slate-500 line-through text-xl" data-testid="text-bundle-original">₹3,600</span>
-              <span className="text-4xl font-bold text-primary" data-testid="text-bundle-price">₹2,400</span>
+              <span className="text-slate-500 line-through text-xl" data-testid="text-bundle-original">₹4,200</span>
+              <span className="text-4xl font-bold text-primary" data-testid="text-bundle-price">₹2,800</span>
               <span className="text-sm bg-emerald-500/10 text-emerald-300 px-3 py-1 rounded-full ring-1 ring-emerald-500/30" data-testid="badge-bundle-save">
                 Save 33%
               </span>
