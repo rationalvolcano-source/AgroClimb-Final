@@ -21,18 +21,8 @@ const loadSessions = () => {
 };
 const saveSessions = (arr: any[]) => localStorage.setItem("agrivision_swm_sessions", JSON.stringify(arr));
 
-// ---------- Affirmations ----------
-const AFFIRMATIONS = [
-  "Deep breath in. You're safe and focused.",
-  "Clarity grows with every minute.",
-  "Small steps. Strong momentum.",
-  "Your future self thanks you.",
-  "Attention is your advantage.",
-  "One page at a time. Steady.",
-  "You remember what matters.",
-  "Progress over perfection.",
-  "Stay curious. Stay kind to yourself.",
-];
+// ---------- Goal Tracking ----------
+// Goals are stored with each session
 
 // ---------- Audio Engine (Binaural Beats) ----------
 function useBinaural({ carrier = 220, beat = 6, volume = 0.15 }) {
@@ -176,8 +166,9 @@ export default function StudyWithMe() {
   const [sessions, setSessions] = useState(() => loadSessions());
   const stats = useMemo(() => computeStats(sessions), [sessions]);
 
-  const [affirmIndex, setAffirmIndex] = useState(0);
-  const [showAffirm, setShowAffirm] = useState(false);
+  const [targetGoal, setTargetGoal] = useState("");
+  const [actualAchievement, setActualAchievement] = useState("");
+  const [showAchievementInput, setShowAchievementInput] = useState(false);
 
   useEffect(() => { setSecondsLeft(minutes * 60); }, [minutes]);
 
@@ -192,30 +183,40 @@ export default function StudyWithMe() {
     return () => clearInterval(id);
   }, [running]);
 
-  useEffect(() => {
-    if (!running) return;
-    const id = setInterval(() => {
-      setAffirmIndex((i) => (i + 1) % AFFIRMATIONS.length);
-      setShowAffirm(false);
-      setTimeout(() => setShowAffirm(true), 50);
-    }, 10000);
-    setShowAffirm(true);
-    return () => clearInterval(id);
-  }, [running]);
-
   function handleStart() {
     setRunning(true);
     if (!audio.isOn) audio.start();
+    setShowAchievementInput(false);
   }
   function handlePause() { setRunning(false); }
-  function handleReset() { setRunning(false); setSecondsLeft(minutes * 60); }
+  function handleReset() { 
+    setRunning(false); 
+    setSecondsLeft(minutes * 60);
+    setShowAchievementInput(false);
+    setActualAchievement("");
+  }
 
   function handleFinish() {
     setRunning(false);
+    setShowAchievementInput(true);
+  }
+
+  function saveSession() {
     const dur = minutes * 60 - secondsLeft;
-    const entry = { date: todayKey(), duration: dur, carrier, beat };
+    const entry = { 
+      date: todayKey(), 
+      duration: dur, 
+      carrier, 
+      beat,
+      targetGoal: targetGoal || "No goal set",
+      actualAchievement: actualAchievement || "Not recorded"
+    };
     const next = [...sessions, entry];
-    setSessions(next); saveSessions(next);
+    setSessions(next); 
+    saveSessions(next);
+    setShowAchievementInput(false);
+    setTargetGoal("");
+    setActualAchievement("");
   }
 
   function exportJSON() {
@@ -352,37 +353,49 @@ export default function StudyWithMe() {
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/60 border-slate-800" data-testid="card-affirmations">
+          <Card className="bg-slate-900/60 border-slate-800" data-testid="card-goals">
             <CardHeader>
-              <Label className="text-slate-400">Positive Affirmations</Label>
+              <Label className="text-slate-400">Goal Tracking</Label>
             </CardHeader>
-            <CardContent>
-              <div className="relative h-40 overflow-hidden mb-4">
-                <div
-                  className={`absolute left-0 right-0 bottom-0 text-center font-bold text-emerald-300 transition-all duration-300 ${
-                    showAffirm ? "animate-[rise_8s_ease-out_forwards]" : "opacity-0"
-                  }`}
-                  key={affirmIndex}
-                  data-testid="text-affirmation"
-                >
-                  {AFFIRMATIONS[affirmIndex]}
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-xs text-slate-400">Target Goal</Label>
+                <Input
+                  placeholder="e.g., Complete Chapter 5, Solve 10 problems"
+                  value={targetGoal}
+                  onChange={(e) => setTargetGoal(e.target.value)}
+                  className="bg-slate-800 border-slate-700"
+                  data-testid="input-target-goal"
+                />
+                <p className="text-xs text-slate-500">What do you plan to accomplish this session?</p>
+              </div>
+
+              {showAchievementInput && (
+                <div className="space-y-2 pt-4 border-t border-slate-700">
+                  <Label className="text-xs text-emerald-400">Session Complete! Record Your Achievement</Label>
+                  <Input
+                    placeholder="What did you actually accomplish?"
+                    value={actualAchievement}
+                    onChange={(e) => setActualAchievement(e.target.value)}
+                    className="bg-slate-800 border-slate-700"
+                    data-testid="input-actual-achievement"
+                  />
+                  <Button 
+                    onClick={saveSession} 
+                    className="w-full bg-emerald-500 hover:bg-emerald-400"
+                    data-testid="button-save-session"
+                  >
+                    Save Session
+                  </Button>
                 </div>
-              </div>
-              <div className="flex justify-between items-center gap-2 flex-wrap">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    setAffirmIndex((i) => (i + 1) % AFFIRMATIONS.length);
-                    setShowAffirm(false);
-                    setTimeout(() => setShowAffirm(true), 30);
-                  }}
-                  data-testid="button-next-affirmation"
-                >
-                  Next line
-                </Button>
-                <p className="text-xs text-slate-500">Lines gently rise and fade while you study.</p>
-              </div>
+              )}
+
+              {!showAchievementInput && targetGoal && (
+                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
+                  <div className="text-xs text-slate-400 mb-1">Current Goal</div>
+                  <div className="text-sm text-slate-200" data-testid="text-current-goal">{targetGoal}</div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -419,32 +432,27 @@ export default function StudyWithMe() {
             <p className="text-xs text-slate-500 mt-1">Stored locally on this device only.</p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-4 gap-4 text-sm">
+            <div className="grid grid-cols-6 gap-4 text-sm">
               <div className="text-slate-400 text-xs">Date</div>
               <div className="text-slate-400 text-xs">Duration</div>
               <div className="text-slate-400 text-xs">Mode</div>
               <div className="text-slate-400 text-xs">Carrier</div>
+              <div className="text-slate-400 text-xs">Target Goal</div>
+              <div className="text-slate-400 text-xs">Achievement</div>
               {sessions.slice(-10).reverse().map((s: any, i: number) => (
-                <>
-                  <div key={`${i}-date`} data-testid={`history-date-${i}`}>{s.date}</div>
-                  <div key={`${i}-dur`} data-testid={`history-duration-${i}`}>{Math.round(s.duration / 60)} min</div>
-                  <div key={`${i}-beat`} data-testid={`history-beat-${i}`}>{s.beat} Hz</div>
-                  <div key={`${i}-carrier`} data-testid={`history-carrier-${i}`}>{s.carrier} Hz</div>
-                </>
+                <div key={`session-${i}`} className="contents">
+                  <div data-testid={`history-date-${i}`}>{s.date}</div>
+                  <div data-testid={`history-duration-${i}`}>{Math.round(s.duration / 60)} min</div>
+                  <div data-testid={`history-beat-${i}`}>{s.beat} Hz</div>
+                  <div data-testid={`history-carrier-${i}`}>{s.carrier} Hz</div>
+                  <div data-testid={`history-goal-${i}`} className="text-slate-400">{s.targetGoal || "—"}</div>
+                  <div data-testid={`history-achievement-${i}`} className="text-emerald-400">{s.actualAchievement || "—"}</div>
+                </div>
               ))}
             </div>
           </CardContent>
         </Card>
       </div>
-
-      <style>{`
-        @keyframes rise {
-          0% { transform: translateY(30px); opacity: 0; }
-          10% { opacity: 0.7; }
-          60% { opacity: 1; }
-          100% { transform: translateY(-160px); opacity: 0; }
-        }
-      `}</style>
     </div>
   );
 }
