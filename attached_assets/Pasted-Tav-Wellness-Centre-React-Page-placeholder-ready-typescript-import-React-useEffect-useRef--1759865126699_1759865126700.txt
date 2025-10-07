@@ -1,0 +1,110 @@
+Tav Wellness Centre — React Page (placeholder-ready)
+· typescript
+import React, { useEffect, useRef, useState } from "react";
+        </div>
+      </div>
+      <ul className="list">
+        <li><b>Hydrate first thing:</b> 300–500 ml water after waking supports attention.</li>
+        <li><b>Light exposure:</b> 2–5 minutes of morning sunlight anchors your body clock.</li>
+        <li><b>90/20 rule:</b> Study 90 minutes, move for 2–5 minutes, then continue.</li>
+        <li><b>Eyes & neck reset:</b> 20–20–20: every 20 minutes, look 20 feet away for 20 seconds.</li>
+        <li><b>Micro journaling:</b> Write one line: “Today I’ll complete ___.”</li>
+        <li><b>Protein + fiber breakfast:</b> stabilizes energy for morning sessions.</li>
+      </ul>
+    </section>
+  );
+}
+
+
+function CheckIn(){
+  const [log,setLog]=useLocalVar('checkins', []);
+  const today = todayKey();
+  const practiced = log.includes(today);
+  function toggle(){
+    if(practiced){ setLog(log.filter(d=>d!==today)); }
+    else { setLog([...log, today]); }
+  }
+  // streak
+  let streak=0; const now=new Date();
+  while(true){
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - streak);
+    const key = d.toISOString().slice(0,10);
+    if(log.includes(key)) streak++; else break;
+  }
+  return (
+    <section className="card">
+      <div className="tileHead">
+        <div>
+          <div style={{fontWeight:800,fontSize:20}}>Daily Wellness Check‑in</div>
+          <div className="tip">Mark your practice once a day. Builds consistency and motivation.</div>
+        </div>
+        <label className="check"><input type="checkbox" checked={practiced} onChange={toggle} /> I practiced today</label>
+      </div>
+      <div className="kpi">
+        <div className="box"><div className="h">Current Streak</div><div className="v">{streak} day{streak===1?"":"s"}</div></div>
+        <div className="box"><div className="h">Total Check‑ins</div><div className="v">{log.length}</div></div>
+      </div>
+      <div className="tip">Data is stored locally on this device. You can safely refresh or come back later.</div>
+    </section>
+  );
+}
+
+
+export default function WellnessCentre(){
+  useStyles();
+  return (
+    <div className="container">
+      <header className="card">
+        <div className="title">Wellness Centre — Placeholders Ready</div>
+        <div className="subtitle">A calm corner inside TAV: quick tools and slots for guided videos. Add links now; upload full classes later.</div>
+      </header>
+
+
+      <div className="grid grid-2" style={{marginTop:16}}>
+        <VideoTile title="Daily Morning Yoga" storageKey="morning_yoga" defaultTip="Morning flow — video coming soon" />
+        <VideoTile title="Daily Night Yoga (Wind Down)" storageKey="night_yoga" defaultTip="Night routine — video coming soon" />
+      </div>
+
+
+      <div className="grid grid-2" style={{marginTop:16}}>
+        <BreathingTool />
+        <SharpnessTips />
+      </div>
+
+
+      <div style={{marginTop:16}}>
+        <CheckIn />
+      </div>
+    </div>
+  );
+}
+
+
+
+Perfect—wellness is the right companion to SWM. I’ve added a production-ready Wellness Centre React page to the canvas with exactly what you asked:
+
+What’s included
+
+Four tiles:
+
+Daily Morning Yoga — paste a YouTube/Vimeo/MP4 URL now; saved to localStorage (placeholder if empty).
+
+Anxiety Alleviation — built-in 4-7-8 breathing tool with animated progress circle and Start/Stop.
+
+Tricks to Stay Mentally Sharp — concise, science-backed tips list.
+
+Daily Night Yoga — same paste-URL placeholder flow.
+
+Daily wellness check-in (checkbox) that tracks streak and total check-ins locally.
+
+Minimal, brand-matching styles injected automatically; works without Tailwind.
+
+All data (video links + check-ins) is stored locally on the device.
+
+How to use in Replit
+
+Create a new page/route (e.g., /wellness) and paste the canvas code file; export default WellnessCentre.
+
+Add a nav link: Wellness Centre → /wellness.
+
+To attach videos, paste a link into each tile and click Save (it converts YouTube URLs to embeddable automatically).
