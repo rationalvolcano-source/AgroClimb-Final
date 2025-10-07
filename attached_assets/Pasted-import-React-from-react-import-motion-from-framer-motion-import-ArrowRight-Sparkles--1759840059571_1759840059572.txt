@@ -1,0 +1,389 @@
+import React from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Sparkles, ShieldCheck, PlayCircle, GraduationCap, BookOpen, Gamepad2, LineChart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+/**
+ * TAV Career Compass – Front Page Mockup
+ * -------------------------------------------------------------
+ * - Single-file React component for a persuasive, visually rich landing page
+ * - TailwindCSS + shadcn/ui + Framer Motion
+ * - "Front page only" – wires to later modules via CTA anchors
+ * - Drop into Replit/Next.js: paste into a client component, ensure Tailwind is enabled
+ *
+ * Brand cues: clean • tested • traceable • AI-guided
+ * Target: Agri students (ABM, Banking, JRF Horti) seeking career clarity & upskilling
+ */
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+export default function LandingPage() {
+  return (
+    <div className="min-h-screen w-full bg-slate-950 text-slate-50">
+      <GradientBG />
+      <Nav />
+      <Hero />
+      <SocialProof />
+      <ValueProps />
+      <FeatureGrid />
+      <PricingTeaser />
+      <Testimonials />
+      <FAQ />
+      <CTA />
+      <Footer />
+    </div>
+  );
+}
+
+function Nav() {
+  return (
+    <div className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-slate-950/70 border-b border-slate-800">
+      <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Sparkles className="h-5 w-5 text-emerald-400" />
+          <span className="font-semibold tracking-tight">TAV Career Compass</span>
+        </div>
+        <div className="hidden md:flex items-center gap-6 text-sm opacity-90">
+          <a href="#features" className="hover:opacity-100 opacity-80">Features</a>
+          <a href="#pricing" className="hover:opacity-100 opacity-80">Plans</a>
+          <a href="#faq" className="hover:opacity-100 opacity-80">FAQ</a>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" className="hidden md:inline-flex">Sign in</Button>
+          <Button className="bg-emerald-500 hover:bg-emerald-400">
+            Take Free Career Quiz <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="relative mx-auto max-w-7xl px-4 pt-14 pb-10 grid md:grid-cols-2 gap-8 items-center">
+      <motion.div variants={fadeUp} initial="hidden" animate="show" className="space-y-6">
+        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 ring-1 ring-emerald-500/30 px-3 py-1 text-emerald-200 text-xs">
+          <ShieldCheck className="h-3.5 w-3.5"/> AI-guided, exam-proven learning
+        </div>
+        <h1 className="text-3xl md:text-5xl font-semibold leading-tight">
+          Clarity today. <span className="text-emerald-400">Career wins</span> all year.
+        </h1>
+        <p className="text-slate-300/90 text-base md:text-lg max-w-xl">
+          A coaching platform for Agri students offering career guidance, interactive games,
+          mock tests & AI-powered study plans. Start with the free Career Quiz and unlock your best-fit pathway.
+        </p>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400">
+            Take Free Career Quiz <PlayCircle className="ml-2 h-5 w-5" />
+          </Button>
+          <Button size="lg" variant="secondary" className="bg-slate-200 text-slate-900 hover:bg-white">
+            Explore Interactive Games
+          </Button>
+        </div>
+        <ul className="text-sm text-slate-400 grid grid-cols-1 sm:grid-cols-3 gap-2 max-w-xl mt-2">
+          <li>Up-skilling for Plan B (Excel, PPT, AI)</li>
+          <li>Alumni Connect – live workshops</li>
+          <li>Flashcards • PYQs • Notes</li>
+        </ul>
+      </motion.div>
+      <motion.div variants={fadeUp} initial="hidden" animate="show" className="relative">
+        <div className="rounded-3xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 p-3 border border-slate-700 shadow-2xl">
+          <MockHeroCard />
+        </div>
+        <GlowDot className="top-10 -right-6" />
+        <GlowDot className="bottom-10 -left-6" color="from-emerald-400 to-cyan-400" />
+      </motion.div>
+    </section>
+  );
+}
+
+function SocialProof() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-6">
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        {[
+          { label: "Quiz Completions", value: "25k+" },
+          { label: "Study Minutes/Day", value: "38" },
+          { label: "Alumni Sessions", value: "2 / week" },
+          { label: "Courses & Notes", value: "120+" },
+        ].map((s, i) => (
+          <div key={i} className="space-y-1">
+            <div className="text-xl md:text-2xl font-semibold">{s.value}</div>
+            <div className="text-xs text-slate-400">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ValueProps() {
+  const items = [
+    {
+      icon: <GraduationCap className="h-5 w-5"/>,
+      title: "Career Guidance Quiz",
+      desc: "Instant fit score across ABM, Banking & JRF Horticulture with a personalized plan.",
+    },
+    {
+      icon: <BookOpen className="h-5 w-5"/>,
+      title: "Notes, PYQs & Mocks",
+      desc: "High-yield content organized by topic and difficulty with spaced repetition.",
+    },
+    {
+      icon: <Gamepad2 className="h-5 w-5"/>,
+      title: "Interactive Games",
+      desc: "Study that doesn’t feel like study—quiz duels, runners, and match-3 for recall.",
+    },
+    {
+      icon: <LineChart className="h-5 w-5"/>,
+      title: "Adaptive Engine",
+      desc: "Next-best-item suggestions to keep you in the sweet spot of challenge.",
+    },
+  ];
+  return (
+    <section id="features" className="mx-auto max-w-7xl px-4 py-12">
+      <div className="grid md:grid-cols-4 gap-4">
+        {items.map((it, i) => (
+          <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
+            <Card className="bg-slate-900/60 border-slate-800 hover:border-slate-700 transition-all rounded-2xl">
+              <CardHeader>
+                <div className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-300">
+                  {it.icon}
+                </div>
+                <CardTitle className="text-base mt-3">{it.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-slate-400">{it.desc}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FeatureGrid() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 pb-6">
+      <div className="grid md:grid-cols-2 gap-6">
+        <Card className="bg-slate-900/60 border-slate-800 rounded-3xl">
+          <CardHeader>
+            <CardTitle>Learn by doing</CardTitle>
+          </CardHeader>
+          <CardContent className="text-slate-300 text-sm">
+            Build momentum with micro-assignments, flashcard duels, and live alumni sessions.
+            Your plan adapts every week based on effort and accuracy.
+          </CardContent>
+        </Card>
+        <Card className="bg-slate-900/60 border-slate-800 rounded-3xl">
+          <CardHeader>
+            <CardTitle>Mindspace: Focus that sticks</CardTitle>
+          </CardHeader>
+          <CardContent className="text-slate-300 text-sm">
+            Session timers, distraction shields and short audio prompts to beat procrastination and sustain flow.
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
+function PricingTeaser() {
+  const tiers = [
+    {
+      name: "Books",
+      price: "₹600",
+      bullets: ["Complete PDFs & PYQs", "Topic-wise tests", "Starter roadmap"],
+      cta: "Buy Books",
+    },
+    {
+      name: "Pro",
+      price: "₹2,000",
+      bullets: ["Interactive games", "Alumni Connect (2×/week)", "Adaptive study plan"],
+      cta: "Go Pro",
+      highlight: true,
+    },
+    {
+      name: "Ultra",
+      price: "₹5,000",
+      bullets: ["Weekly upskilling classes", "AI study assistant", "Priority support"],
+      cta: "Get Ultra",
+    },
+  ];
+  return (
+    <section id="pricing" className="mx-auto max-w-7xl px-4 py-12">
+      <div className="grid md:grid-cols-3 gap-6">
+        {tiers.map((t, i) => (
+          <Card key={i} className={`rounded-3xl border ${t.highlight ? "border-emerald-500/60 shadow-emerald-500/20 shadow-xl" : "border-slate-800"} bg-slate-900/60`}>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>{t.name}</span>
+                {t.highlight && (
+                  <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/30">Popular</span>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-semibold mb-3">{t.price}</div>
+              <ul className="text-sm text-slate-300 space-y-2 mb-4">
+                {t.bullets.map((b, j) => (
+                  <li key={j} className="flex items-start gap-2"><span className="text-emerald-400">•</span><span>{b}</span></li>
+                ))}
+              </ul>
+              <Button className="w-full bg-emerald-500 hover:bg-emerald-400">{t.cta}</Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <p className="text-xs text-slate-500 mt-3 text-center">3 free game plays per Gmail before upgrade lock.</p>
+    </section>
+  );
+}
+
+function Testimonials() {
+  const list = [
+    {
+      quote: "The quiz nailed my fit and the alumni calls kept me consistent.",
+      name: "Ananya, ABM",
+    },
+    {
+      quote: "Flashcard Duel makes revision addictive. My mock scores jumped in 2 weeks.",
+      name: "Rishi, JRF Horti",
+    },
+    {
+      quote: "Ultra plan’s weekly upskilling helped me switch to an analyst role.",
+      name: "Meera, Banking",
+    },
+  ];
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-12">
+      <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 grid md:grid-cols-3 gap-6">
+        {list.map((t, i) => (
+          <div key={i} className="space-y-3">
+            <p className="text-slate-200">“{t.quote}”</p>
+            <div className="text-sm text-slate-400">— {t.name}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FAQ() {
+  const items = [
+    {
+      q: "What do I get free?",
+      a: "Career Quiz, dashboard access, and 3 free plays of Interactive Games.",
+    },
+    {
+      q: "How are plans different?",
+      a: "Books = content access; Pro = games + alumni connect + adaptive plan; Ultra = weekly upskilling + priority support.",
+    },
+    {
+      q: "Can I switch tracks?",
+      a: "Yes—your plan adapts as you learn and you can explore ABM, Banking, and JRF Horticulture.",
+    },
+  ];
+  return (
+    <section id="faq" className="mx-auto max-w-7xl px-4 py-12">
+      <div className="grid md:grid-cols-3 gap-6">
+        {items.map((f, i) => (
+          <Card key={i} className="bg-slate-900/60 border-slate-800 rounded-3xl">
+            <CardHeader>
+              <CardTitle className="text-base">{f.q}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-400">{f.a}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CTA() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-16">
+      <div className="rounded-3xl bg-gradient-to-br from-emerald-600/20 to-cyan-600/10 border border-emerald-500/30 p-8 text-center">
+        <h3 className="text-2xl md:text-3xl font-semibold">Ready to find your best-fit path?</h3>
+        <p className="text-slate-300 mt-2">Take the free quiz, preview games, and get your 4‑week micro‑plan today.</p>
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400">Start Free</Button>
+          <Button size="lg" variant="secondary" className="bg-white text-slate-900 hover:bg-slate-100">Watch Demo</Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="mx-auto max-w-7xl px-4 py-10 text-sm text-slate-400">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-emerald-400"/><span>TAV Career Compass</span></div>
+        <div className="flex items-center gap-4">
+          <a className="hover:text-slate-200" href="#">Privacy</a>
+          <a className="hover:text-slate-200" href="#">Terms</a>
+          <a className="hover:text-slate-200" href="#">Contact</a>
+        </div>
+      </div>
+      <p className="mt-3 opacity-60">© {new Date().getFullYear()} TAV Career Compass. All rights reserved.</p>
+    </footer>
+  );
+}
+
+function MockHeroCard() {
+  return (
+    <div className="rounded-2xl bg-slate-950/60 border border-slate-800 p-5">
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-sm font-medium">Your Fit</div>
+        <div className="text-xs text-emerald-300">Personalized</div>
+      </div>
+      <div className="grid grid-cols-3 gap-3">
+        <MiniStat label="ABM" value="87%" />
+        <MiniStat label="Banking" value="79%" />
+        <MiniStat label="JRF Horti" value="72%" />
+      </div>
+      <div className="mt-4">
+        <div className="text-xs text-slate-400 mb-1">This week’s plan</div>
+        <ul className="space-y-2 text-sm">
+          <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400"/>Flashcard Duel (15 min)</li>
+          <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400"/>Mock Test – Floriculture</li>
+          <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400"/>Alumni Connect – Banking</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-3 text-center">
+      <div className="text-xl font-semibold">{value}</div>
+      <div className="text-xs text-slate-400">{label}</div>
+    </div>
+  );
+}
+
+function GradientBG() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+      <div className="absolute -top-20 right-10 h-72 w-72 rounded-full blur-3xl bg-emerald-500/20" />
+      <div className="absolute bottom-10 left-10 h-72 w-72 rounded-full blur-3xl bg-cyan-500/10" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.04),_rgba(2,6,23,0))]" />
+    </div>
+  );
+}
+
+function GlowDot({ className = "", color = "from-emerald-400 to-emerald-200" }: { className?: string; color?: string }) {
+  return (
+    <div className={`pointer-events-none absolute h-28 w-28 rounded-full blur-2xl bg-gradient-to-br ${color} opacity-30 ${className}`} />
+  );
+}
