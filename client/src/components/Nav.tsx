@@ -1,13 +1,14 @@
-import { Sparkles, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logoPath from "@assets/image_1759852944967.png";
 
 export default function Nav() {
   return (
     <div className="sticky top-0 z-40 backdrop-blur-md bg-slate-950/70 border-b border-slate-800">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Sparkles className="h-5 w-5 text-emerald-400" data-testid="icon-logo" />
-          <span className="font-semibold tracking-tight" data-testid="text-brand">TAV Career Compass</span>
+          <img src={logoPath} alt="The Agri Vision" className="h-8 w-8" data-testid="img-logo" />
+          <span className="font-semibold tracking-tight" data-testid="text-brand">The Agri Vision</span>
         </div>
         <div className="hidden md:flex items-center gap-6 text-sm">
           <a href="#features" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-features">Features</a>
