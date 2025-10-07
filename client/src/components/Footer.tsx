@@ -1,0 +1,52 @@
+import { Sparkles } from "lucide-react";
+
+export default function Footer() {
+  return (
+    <footer className="border-t border-slate-800 bg-slate-950/50">
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        <div className="grid md:grid-cols-4 gap-8">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-emerald-400" />
+              <span className="font-semibold" data-testid="footer-brand">TAV Career Compass</span>
+            </div>
+            <p className="text-sm text-slate-400" data-testid="footer-tagline">
+              AI-guided career pathways for Agri students
+            </p>
+          </div>
+          
+          <div>
+            <h4 className="font-medium mb-3" data-testid="footer-product-heading">Product</h4>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li><a href="#features" className="hover:text-slate-300 transition-colors" data-testid="link-footer-features">Features</a></li>
+              <li><a href="#pricing" className="hover:text-slate-300 transition-colors" data-testid="link-footer-pricing">Pricing</a></li>
+              <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-games">Interactive Games</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 className="font-medium mb-3" data-testid="footer-resources-heading">Resources</h4>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-notes">Notes & PYQs</a></li>
+              <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-alumni">Alumni Connect</a></li>
+              <li><a href="#faq" className="hover:text-slate-300 transition-colors" data-testid="link-footer-faq">FAQ</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 className="font-medium mb-3" data-testid="footer-company-heading">Company</h4>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-about">About</a></li>
+              <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-contact">Contact</a></li>
+              <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-privacy">Privacy</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
+          <p data-testid="footer-copyright">© 2025 TAV Career Compass. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
