@@ -6,6 +6,11 @@ The Agri Vision is an AI-powered career guidance platform designed specifically 
 
 The application aims to solve career clarity challenges by providing instant fit scores, adaptive study plans, gamified learning experiences, and direct alumni mentorship - all within a single cohesive platform.
 
+### Current Pages
+1. **Landing Page** (`/`) - Main marketing page with hero, features, pricing, and FAQ sections
+2. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
+3. **Wellness Centre** (`/wellness`) - Calm corner with yoga videos, breathing exercises, mental sharpness tips, and daily check-ins
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -82,6 +87,7 @@ Preferred communication style: Simple, everyday language.
 **Browser Storage:**
 - LocalStorage for study session tracking (`agrivision_swm_sessions` key)
 - Client-side data persistence for "Study With Me" timer and statistics
+- Wellness Centre data (`wellness_morning_yoga`, `wellness_night_yoga`, `wellness_checkins`)
 - No sensitive data stored client-side
 
 **Rationale:** The dual-layer approach allows immediate development with in-memory storage while having PostgreSQL infrastructure ready for production deployment. Drizzle provides type-safe queries and automatic schema synchronization.

@@ -15,7 +15,7 @@ export default function Nav() {
           <a href="#pricing" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-pricing">Plans</a>
           <a href="#faq" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-faq">FAQ</a>
           <a href="/swm" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-binaural">SWM</a>
-          <a href="#wellness" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-wellness">Wellness Centre</a>
+          <a href="/wellness" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-wellness">Wellness Centre</a>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="hidden md:inline-flex" data-testid="button-signin">Sign in</Button>
