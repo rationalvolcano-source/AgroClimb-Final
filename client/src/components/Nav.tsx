@@ -17,8 +17,8 @@ export default function Nav() {
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="hidden md:inline-flex" data-testid="button-signin">Sign in</Button>
           <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" data-testid="button-quiz-cta">
-            <span className="hidden sm:inline">Take Free Career Quiz</span>
-            <span className="sm:hidden">Quiz</span>
+            <span className="hidden sm:inline">Get My Career Plan →</span>
+            <span className="sm:hidden">Plan →</span>
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

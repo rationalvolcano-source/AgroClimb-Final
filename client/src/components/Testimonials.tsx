@@ -1,6 +1,6 @@
 const testimonials = [
   {
-    quote: "The quiz nailed my fit and the alumni calls kept me consistent.",
+    quote: "TAV didn't just tell me my path — it showed me how to reach it.",
     name: "Ananya, ABM",
   },
   {

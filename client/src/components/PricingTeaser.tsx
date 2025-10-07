@@ -19,7 +19,7 @@ const tiers = [
   {
     name: "Ultra",
     price: "₹5,000",
-    bullets: ["Weekly upskilling classes", "AI study assistant", "Priority support"],
+    bullets: ["Your AI-powered finishing school — polish every week, grow every month."],
     cta: "Get Ultra",
     highlight: false,
   },

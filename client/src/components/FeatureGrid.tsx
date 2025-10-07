@@ -6,7 +6,7 @@ export default function FeatureGrid() {
       <div className="grid md:grid-cols-2 gap-6">
         <Card className="bg-slate-900/60 border-slate-800 rounded-3xl">
           <CardHeader>
-            <CardTitle data-testid="feature-title-1">Learn by doing</CardTitle>
+            <CardTitle data-testid="feature-title-1">Turn study into strategy.</CardTitle>
           </CardHeader>
           <CardContent className="text-slate-300 text-sm" data-testid="feature-desc-1">
             Build momentum with micro-assignments, flashcard duels, and live alumni sessions.

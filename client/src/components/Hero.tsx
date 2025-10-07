@@ -17,14 +17,14 @@ export default function Hero() {
           <ShieldCheck className="h-3.5 w-3.5"/> AI-guided, exam-proven learning
         </div>
         <h1 className="text-3xl md:text-5xl font-semibold leading-tight" data-testid="text-headline">
-          Clarity today. <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">Career wins</span> all year.
+          Find your direction in minutes. <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">Stay ahead</span> all year.
         </h1>
         <p className="text-slate-300 text-base md:text-lg max-w-xl" data-testid="text-subheadline">
-          India's first AI-guided career platform for Agri students — combining coaching, games, and upskilling into one clear path. Find your clarity today and build your career momentum all year.
+          Built for Agri students who want clarity, speed, and results — not confusion. Your AI mentor is ready.
         </p>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-quiz-primary">
-            Take Free Career Quiz <PlayCircle className="ml-2 h-5 w-5" />
+            Get My Career Plan → <PlayCircle className="ml-2 h-5 w-5" />
           </Button>
           <Button size="lg" variant="secondary" data-testid="button-games">
             Explore Interactive Games
