@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 const tiers = [
   {
@@ -53,9 +54,22 @@ export default function PricingTeaser() {
                   </li>
                 ))}
               </ul>
-              <Button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white" data-testid={`button-${t.cta.toLowerCase().replace(/\s+/g, '-')}`}>
-                {t.cta}
-              </Button>
+              {t.cta === "Buy Books" ? (
+                <Button 
+                  asChild
+                  className="w-full bg-emerald-500 hover:bg-emerald-400 text-white" 
+                  data-testid={`button-${t.cta.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <Link href="/books">{t.cta}</Link>
+                </Button>
+              ) : (
+                <Button 
+                  className="w-full bg-emerald-500 hover:bg-emerald-400 text-white" 
+                  data-testid={`button-${t.cta.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  {t.cta}
+                </Button>
+              )}
             </CardContent>
           </Card>
         ))}

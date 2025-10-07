@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { GraduationCap, BookOpen, Gamepad2, LineChart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "wouter";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -36,19 +37,29 @@ export default function ValueProps() {
       <div className="grid md:grid-cols-4 gap-4">
         {items.map((it, i) => {
           const Icon = it.icon;
+          const cardContent = (
+            <Card className="bg-slate-900/60 border-slate-800 hover:border-slate-700 transition-all rounded-2xl h-full">
+              <CardHeader>
+                <div className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-300">
+                  <Icon className="h-5 w-5" data-testid={`icon-${i}`} />
+                </div>
+                <CardTitle className="text-base mt-3" data-testid={`card-title-${i}`}>{it.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-slate-400" data-testid={`card-desc-${i}`}>{it.desc}</p>
+              </CardContent>
+            </Card>
+          );
+          
           return (
             <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-              <Card className="bg-slate-900/60 border-slate-800 hover:border-slate-700 transition-all rounded-2xl h-full">
-                <CardHeader>
-                  <div className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-300">
-                    <Icon className="h-5 w-5" data-testid={`icon-${i}`} />
-                  </div>
-                  <CardTitle className="text-base mt-3" data-testid={`card-title-${i}`}>{it.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-slate-400" data-testid={`card-desc-${i}`}>{it.desc}</p>
-                </CardContent>
-              </Card>
+              {it.title === "Notes, PYQs & Mocks" ? (
+                <Link href="/books" className="block cursor-pointer">
+                  {cardContent}
+                </Link>
+              ) : (
+                cardContent
+              )}
             </motion.div>
           );
         })}
