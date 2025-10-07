@@ -16,7 +16,7 @@ const steps = [
   {
     icon: Target,
     title: "See Your Fit",
-    desc: "ABM, Banking, or JRF Horticulture.",
+    desc: "Get an honest, unbiased career recommendation: ABM, Banking, or JRF Horticulture.",
   },
   {
     icon: RouteIcon,
