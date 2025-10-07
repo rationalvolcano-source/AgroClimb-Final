@@ -11,7 +11,7 @@ const items = [
   {
     icon: GraduationCap,
     title: "Career Guidance Quiz",
-    desc: "Instant fit score across ABM, Banking & JRF Horticulture with a personalized plan.",
+    desc: "Discover your true fit across Agri and allied domains with our data-driven quiz. Based on your responses, you'll get a personalized plan—or, if another field suits you better, we'll recommend the right course elsewhere.",
   },
   {
     icon: BookOpen,
