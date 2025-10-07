@@ -1,0 +1,62 @@
+🧭 HTML <head> Metadata (for Replit or index.html)
+
+Paste this inside your <head> section or into the Next.js metadata export.
+
+<title>TAV Career Compass | AI-Guided Clarity for Agri Students</title>
+
+<meta name="description" content="Find your clarity today and build your career momentum all year. TAV Career Compass helps Agri students discover their best-fit path with AI-guided quizzes, interactive games, alumni workshops, and upskilling programs. Take the free quiz and unlock your next career move." />
+
+<meta name="keywords" content="TAV Career Compass, Agri students, ICAR JRF, ABM, Banking, Agri career, AI career quiz, Agri education, Interactive learning, Agri coaching, Horticulture exams, Career guidance" />
+
+<meta name="robots" content="index, follow" />
+<meta name="author" content="TAV Career Compass Team" />
+
+<meta property="og:title" content="TAV Career Compass | AI-Guided Clarity for Agri Students" />
+<meta property="og:description" content="Discover where you fit best. India's first AI-guided career platform for Agri students — combining coaching, games, and upskilling into one clear path." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://tavcareercompass.repl.co/" />
+<meta property="og:image" content="https://tavcareercompass.repl.co/og-cover.png" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="TAV Career Compass | Clarity Today. Career Wins All Year." />
+<meta name="twitter:description" content="Take the free AI-guided Career Quiz and find your best-fit pathway in the Agri world." />
+<meta name="twitter:image" content="https://tavcareercompass.repl.co/og-cover.png" />
+
+🧠 Recommended OG Image (for high click-through)
+
+Create an image named og-cover.png with these visual cues:
+
+Left: tagline — “AI-Guided Career Clarity for Agri Students”
+
+Right: a glowing “Start Quiz” button mockup
+
+Background: gradient from deep green (#0f172a) to emerald (#34d399)
+
+Subline: “Clarity today. Career wins all year.”
+
+Resolution: 1200 × 630 px
+
+⚙️ Next.js (if using App Router)
+
+Add inside your layout.tsx or metadata export:
+
+export const metadata = {
+  title: "TAV Career Compass | AI-Guided Clarity for Agri Students",
+  description:
+    "Find your clarity today and build your career momentum all year. Discover your best-fit Agri path with AI-guided quizzes, games, and alumni mentorship.",
+  openGraph: {
+    title: "TAV Career Compass | AI-Guided Clarity for Agri Students",
+    description:
+      "India’s first AI-guided career platform for Agri students — combining coaching, games, and upskilling into one focused path.",
+    url: "https://tavcareercompass.repl.co/",
+    images: ["/og-cover.png"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TAV Career Compass | Clarity Today. Career Wins All Year.",
+    description:
+      "Take the free AI-guided Career Quiz and find your best-fit pathway in the Agri world.",
+    images: ["/og-cover.png"],
+  },
+};
