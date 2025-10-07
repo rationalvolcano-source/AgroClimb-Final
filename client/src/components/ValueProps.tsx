@@ -25,7 +25,7 @@ const items = [
   },
   {
     icon: LineChart,
-    title: "Adaptive Engine",
+    title: "Recorded Classes",
     desc: "Next-best-item suggestions to keep you in the sweet spot of challenge.",
   },
 ];
