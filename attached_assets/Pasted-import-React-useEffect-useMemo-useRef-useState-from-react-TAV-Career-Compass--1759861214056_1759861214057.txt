@@ -1,0 +1,421 @@
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
+/**
+ * TAV Career Compass — Study With Me (SWM)
+ * Single-file React page/component for Replit/Vite.
+ * - Toggleable ambient binaural beats (generated with Web Audio API; no assets required)
+ * - Positive affirmations that gently rise up the screen
+ * - Timer: user selects duration; start/pause/reset
+ * - Session logging to localStorage with weekly stats & streaks
+ * - Simple SVG bar chart for last 14 days
+ * - Screen-dim tip to reduce exposure once audio/timer start
+ *
+ * Usage:
+ * 1) Create a React app (Vite/CRA) and replace App.jsx with this file's default export.
+ * 2) Ensure Tailwind (optional) or basic CSS below. Works fine without Tailwind too.
+ * 3) All data is stored locally under key: 'tav_swm_sessions'
+ */
+
+// ---------- Minimal styles (works even without Tailwind) ----------
+const baseStyles = `
+  :root { --brand:#22e4b5; --bg:#0b1020; --card:#0f1530; --text:#e7f6f2; --muted:#a6b5c3; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif; background:var(--bg); color:var(--text); }
+  .container { max-width:1100px; margin:0 auto; padding:24px; }
+  .grid { display:grid; gap:16px; }
+  .grid-3 { grid-template-columns: 1.2fr 1fr 1fr; }
+  .card { background:linear-gradient(145deg, #0b1020, #11183a); border:1px solid rgba(255,255,255,0.06); border-radius:20px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.25); }
+  .title { font-weight:800; letter-spacing:0.2px; font-size:28px; }
+  .subtitle { color:var(--muted); margin-top:8px; }
+  .btn { display:inline-flex; align-items:center; gap:10px; background:var(--brand); color:#041a16; border:none; padding:12px 18px; border-radius:12px; font-weight:700; cursor:pointer; transition:transform .08s ease, box-shadow .2s ease; }
+  .btn:hover { transform: translateY(-1px); box-shadow:0 10px 24px rgba(34,228,181,.25); }
+  .btn.secondary { background:#172039; color:#d6e6e2; border:1px solid rgba(255,255,255,.08); }
+  .controls { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .field { display:flex; flex-direction:column; gap:6px; }
+  .label { font-size:12px; color:#b8c5d4; }
+  .input, .select { padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); background:#0f1530; color:#e6f5f1; }
+  .kpi { display:flex; gap:14px; }
+  .kpi .box { background:#0d142c; border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:14px 16px; min-width:120px; }
+  .kpi .h { font-size:12px; color:#9fb0be; }
+  .kpi .v { font-size:22px; font-weight:800; }
+  .affirm { position:relative; height:160px; overflow:hidden; }
+  .affirm-line { position:absolute; left:0; right:0; bottom:-40px; opacity:0; text-align:center; font-weight:700; color:#cfeae5; }
+  .affirm-line.show { animation: rise 8s ease-out forwards; }
+  @keyframes rise { 0%{ transform:translateY(30px); opacity:0 } 10%{opacity:.7} 60%{opacity:1} 100%{ transform:translateY(-160px); opacity:0 }
+  }
+  .chart-wrap { background:#0d142c; border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:12px; }
+  .muted { color:#9fb0be; }
+  .tiny { font-size:12px; }
+`;
+
+const addBaseStyles = () => {
+  if (document.getElementById("tav-swm-styles")) return;
+  const style = document.createElement("style");
+  style.id = "tav-swm-styles";
+  style.innerHTML = baseStyles;
+  document.head.appendChild(style);
+};
+
+// ---------- Utilities ----------
+const pad = (n) => (n < 10 ? `0${n}` : `${n}`);
+const fmtTime = (seconds) => {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${pad(m)}:${pad(s)}`;
+};
+
+const todayKey = (d = new Date()) => d.toISOString().slice(0, 10);
+const loadSessions = () => {
+  try { return JSON.parse(localStorage.getItem("tav_swm_sessions") || "[]"); } catch { return []; }
+};
+const saveSessions = (arr) => localStorage.setItem("tav_swm_sessions", JSON.stringify(arr));
+
+// ---------- Affirmations ----------
+const AFFIRMATIONS = [
+  "Deep breath in. You’re safe and focused.",
+  "Clarity grows with every minute.",
+  "Small steps. Strong momentum.",
+  "Your future self thanks you.",
+  "Attention is your advantage.",
+  "One page at a time. Steady.",
+  "You remember what matters.",
+  "Progress over perfection.",
+  "Stay curious. Stay kind to yourself.",
+];
+
+// ---------- Audio Engine (Binaural Beats) ----------
+function useBinaural({ carrier = 220, beat = 6, volume = 0.15 }) {
+  const ctxRef = useRef(null);
+  const nodesRef = useRef(null);
+  const [isOn, setIsOn] = useState(false);
+
+  const start = () => {
+    if (isOn) return;
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    ctxRef.current = ctx;
+
+    const merger = ctx.createChannelMerger(2);
+    const gain = ctx.createGain();
+    gain.gain.value = volume; // master volume
+
+    // Left / Right oscillators with small frequency difference = binaural beat
+    const oscL = ctx.createOscillator();
+    const oscR = ctx.createOscillator();
+    oscL.type = "sine"; oscR.type = "sine";
+    oscL.frequency.value = carrier - beat / 2;
+    oscR.frequency.value = carrier + beat / 2;
+
+    // soft lowpass to make it warmer
+    const filter = ctx.createBiquadFilter();
+    filter.type = "lowpass"; filter.frequency.value = 1200;
+
+    // very gentle pink-ish noise for lofi texture
+    const noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const data = noiseBuf.getChannelData(0);
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < data.length; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+      data[i] *= 0.05; // quiet
+      b6 = white * 0.115926;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = noiseBuf; noise.loop = true;
+    const noiseGain = ctx.createGain(); noiseGain.gain.value = 0.05;
+
+    // Wire graph
+    oscL.connect(merger, 0, 0);
+    oscR.connect(merger, 0, 1);
+    merger.connect(filter);
+    noise.connect(noiseGain).connect(filter);
+    filter.connect(gain).connect(ctx.destination);
+
+    // Start
+    oscL.start(); oscR.start(); noise.start();
+
+    nodesRef.current = { oscL, oscR, noise, gain };
+    setIsOn(true);
+  };
+
+  const stop = () => {
+    const ctx = ctxRef.current; const nodes = nodesRef.current;
+    if (!ctx || !nodes) return;
+    const t = ctx.currentTime;
+    nodes.gain.gain.linearRampToValueAtTime(0.0001, t + 0.8);
+    setTimeout(() => { ctx.close(); ctxRef.current = null; nodesRef.current = null; setIsOn(false); }, 820);
+  };
+
+  const setVolume = (v) => {
+    const nodes = nodesRef.current; if (nodes) nodes.gain.gain.value = v;
+  };
+
+  const retune = (carrierNew, beatNew) => {
+    const nodes = nodesRef.current; if (!nodes) return;
+    nodes.oscL.frequency.value = carrierNew - beatNew / 2;
+    nodes.oscR.frequency.value = carrierNew + beatNew / 2;
+  };
+
+  return { isOn, start, stop, setVolume, retune };
+}
+
+// ---------- Stats helpers ----------
+function computeStats(sessions) {
+  const now = new Date();
+  const msDay = 24 * 60 * 60 * 1000;
+  const last14 = Array.from({ length: 14 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (13 - i));
+    const key = todayKey(d);
+    const total = sessions.filter(s => s.date === key).reduce((a, b) => a + b.duration, 0);
+    return { key, minutes: Math.round(total / 60) };
+  });
+
+  const thisWeekStart = new Date(now);
+  const day = thisWeekStart.getDay();
+  const diffToMon = (day + 6) % 7; // Monday-start
+  thisWeekStart.setDate(now.getDate() - diffToMon);
+  const weekMinutes = sessions
+    .filter(s => new Date(s.date) >= thisWeekStart)
+    .reduce((a, b) => a + Math.round(b.duration / 60), 0);
+
+  // Streak (consecutive days with any study ending today going backwards)
+  let streak = 0; let offset = 0;
+  while (true) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset);
+    const key = todayKey(d);
+    const any = sessions.some(s => s.date === key);
+    if (any) { streak++; offset++; } else { break; }
+  }
+
+  const totalMinutes = Math.round(sessions.reduce((a, b) => a + b.duration, 0) / 60);
+  const avg = sessions.length ? Math.round(totalMinutes / sessions.length) : 0;
+
+  return { last14, weekMinutes, streak, totalMinutes, avg };
+}
+
+// ---------- Bar Chart (Simple SVG) ----------
+function MiniBarChart({ data }) {
+  const max = Math.max(30, ...data.map(d => d.minutes));
+  const h = 120; const w = 14 * 18 + 20;
+  return (
+    <svg width={w} height={h} role="img" aria-label="Study minutes last 14 days">
+      {data.map((d, i) => {
+        const barH = (d.minutes / max) * (h - 30);
+        const x = 10 + i * 18; const y = h - 20 - barH;
+        return (
+          <g key={d.key}>
+            <rect x={x} y={y} width={12} height={barH} rx={3} fill="#22e4b5" opacity={0.9} />
+          </g>
+        );
+      })}
+      <text x={10} y={h - 6} fill="#9fb0be" fontSize="10">Last 14 days</text>
+    </svg>
+  );
+}
+
+// ---------- Main Component ----------
+export default function SWMPage() {
+  useEffect(addBaseStyles, []);
+
+  // Timer State
+  const [minutes, setMinutes] = useState(30);
+  const [secondsLeft, setSecondsLeft] = useState(minutes * 60);
+  const [running, setRunning] = useState(false);
+
+  // Audio State
+  const [carrier, setCarrier] = useState(220);
+  const [beat, setBeat] = useState(6); // 6Hz ~ focus/clarity; 8-10Hz memory
+  const [volume, setVolume] = useState(0.12);
+  const audio = useBinaural({ carrier, beat, volume });
+
+  // Sessions
+  const [sessions, setSessions] = useState(() => loadSessions());
+  const stats = useMemo(() => computeStats(sessions), [sessions]);
+
+  // Affirmations
+  const [affirmIndex, setAffirmIndex] = useState(0);
+  const [showAffirm, setShowAffirm] = useState(false);
+
+  // Tick
+  useEffect(() => { setSecondsLeft(minutes * 60); }, [minutes]);
+
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) { clearInterval(id); handleFinish(); return 0; }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [running]);
+
+  // Affirmations cycle every 10s when running
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => {
+      setAffirmIndex((i) => (i + 1) % AFFIRMATIONS.length);
+      setShowAffirm(false);
+      setTimeout(() => setShowAffirm(true), 50);
+    }, 10000);
+    setShowAffirm(true);
+    return () => clearInterval(id);
+  }, [running]);
+
+  function handleStart() {
+    setRunning(true);
+    if (!audio.isOn) audio.start();
+  }
+  function handlePause() { setRunning(false); }
+  function handleReset() { setRunning(false); setSecondsLeft(minutes * 60); }
+
+  function handleFinish() {
+    setRunning(false);
+    const dur = minutes * 60 - secondsLeft;
+    const entry = { date: todayKey(), duration: dur, carrier, beat };
+    const next = [...sessions, entry];
+    setSessions(next); saveSessions(next);
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(sessions, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `tav_swm_sessions_${todayKey()}.json`; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="container">
+      <div className="grid" style={{ gap: 20 }}>
+        <header className="card">
+          <div className="title">Study With Me — Focus Mode</div>
+          <div className="subtitle">
+            Play ambient binaural beats, set a timer, and let your momentum build. After you start, you can dim your screen or turn it face-down to reduce exposure. Your progress is logged privately on this device.
+          </div>
+          <div style={{ marginTop: 14 }} className="kpi">
+            <div className="box"><div className="h">This Week</div><div className="v">{stats.weekMinutes} min</div></div>
+            <div className="box"><div className="h">Streak</div><div className="v">{stats.streak} day{stats.streak===1?"":"s"}</div></div>
+            <div className="box"><div className="h">Avg / Session</div><div className="v">{stats.avg} min</div></div>
+          </div>
+        </header>
+
+        <div className="grid grid-3">
+          {/* Left: Timer + Controls */}
+          <section className="card">
+            <div className="row" style={{ justifyContent: "space-between" }}>
+              <div>
+                <div className="label">Timer</div>
+                <div style={{ fontSize: 56, fontWeight: 800, letterSpacing: 1 }}>{fmtTime(secondsLeft)}</div>
+              </div>
+              <div className="field">
+                <label className="label">Session length (minutes)</label>
+                <input className="input" type="number" min={5} max={180} value={minutes} onChange={(e)=>setMinutes(parseInt(e.target.value||"0"))} />
+              </div>
+            </div>
+
+            <div className="controls" style={{ marginTop: 12 }}>
+              {!running && <button className="btn" onClick={handleStart}>▶ Start Focus</button>}
+              {running && <button className="btn secondary" onClick={handlePause}>❚❚ Pause</button>}
+              <button className="btn secondary" onClick={handleReset}>↺ Reset</button>
+              {audio.isOn ? (
+                <button className="btn secondary" onClick={audio.stop}>🔇 Stop Audio</button>
+              ) : (
+                <button className="btn" onClick={audio.start}>🔊 Play Ambient</button>
+              )}
+            </div>
+
+            <div className="row" style={{ marginTop: 14 }}>
+              <div className="field">
+                <label className="label">Mode</label>
+                <select className="select" value={beat} onChange={(e)=>{ const v = parseFloat(e.target.value); setBeat(v); audio.retune(carrier, v); }}>
+                  <option value={4}>Deep Calm (4Hz)</option>
+                  <option value={6}>Focus/Clarity (6Hz)</option>
+                  <option value={8}>Memory (8Hz)</option>
+                  <option value={10}>Alert Memory (10Hz)</option>
+                </select>
+              </div>
+              <div className="field">
+                <label className="label">Carrier Frequency</label>
+                <select className="select" value={carrier} onChange={(e)=>{ const v=parseInt(e.target.value); setCarrier(v); audio.retune(v, beat); }}>
+                  <option value={180}>Warm (180Hz)</option>
+                  <option value={220}>Neutral (220Hz)</option>
+                  <option value={260}>Bright (260Hz)</option>
+                  <option value={320}>Airy (320Hz)</option>
+                </select>
+              </div>
+              <div className="field" style={{ minWidth: 200 }}>
+                <label className="label">Volume</label>
+                <input className="input" type="range" min={0} max={0.35} step={0.01} value={volume} onChange={(e)=>{ const v=parseFloat(e.target.value); setVolume(v); audio.setVolume(v); }} />
+              </div>
+            </div>
+
+            <p className="muted tiny" style={{ marginTop: 8 }}>
+              Tip: Start audio + timer, then dim your screen or place the phone face-down to avoid over-exposure.
+            </p>
+          </section>
+
+          {/* Middle: Affirmations */}
+          <section className="card">
+            <div className="label">Positive Affirmations</div>
+            <div className="affirm">
+              <div className={`affirm-line ${showAffirm ? "show" : ""}`} key={affirmIndex}>
+                {AFFIRMATIONS[affirmIndex]}
+              </div>
+            </div>
+            <div className="row" style={{ justifyContent:"space-between"}}>
+              <button className="btn secondary" onClick={()=>{setAffirmIndex((i)=> (i+1)%AFFIRMATIONS.length); setShowAffirm(false); setTimeout(()=>setShowAffirm(true), 30);}}>Next line</button>
+              <div className="tiny muted">Lines gently rise and fade while you study.</div>
+            </div>
+          </section>
+
+          {/* Right: Stats */}
+          <section className="card">
+            <div className="label">Your Momentum</div>
+            <div className="chart-wrap"><MiniBarChart data={stats.last14} /></div>
+            <div className="row" style={{ marginTop: 8 }}>
+              <div className="field">
+                <div className="label">Total Minutes</div>
+                <div style={{ fontWeight:800, fontSize:24 }}>{stats.totalMinutes}</div>
+              </div>
+              <div className="field">
+                <div className="label">Sessions</div>
+                <div style={{ fontWeight:800, fontSize:24 }}>{sessions.length}</div>
+              </div>
+              <div className="field">
+                <div className="label">Export</div>
+                <button className="btn secondary" onClick={exportJSON}>Download JSON</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* History */}
+        <section className="card">
+          <div className="label" style={{ marginBottom: 8 }}>Session Log (recent)</div>
+          <div className="tiny muted" style={{ marginBottom: 8 }}>Stored locally on this device only.</div>
+          <div className="grid" style={{ gridTemplateColumns: "160px 1fr 1fr 1fr" }}>
+            <div className="muted tiny">Date</div>
+            <div className="muted tiny">Duration</div>
+            <div className="muted tiny">Mode</div>
+            <div className="muted tiny">Carrier</div>
+            {sessions.slice(-10).reverse().map((s, i) => (
+              <React.Fragment key={i}>
+                <div>{s.date}</div>
+                <div>{Math.round(s.duration/60)} min</div>
+                <div>{s.beat} Hz</div>
+                <div>{s.carrier} Hz</div>
+              </React.Fragment>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
