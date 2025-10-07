@@ -26,7 +26,7 @@ const items = [
   {
     icon: LineChart,
     title: "Recorded Classes",
-    desc: "Next-best-item suggestions to keep you in the sweet spot of challenge.",
+    desc: "Master every topic on your schedule. Full-length, reusable sessions that cover concepts, PYQs, and tricks—anytime, anywhere.",
   },
 ];
 
