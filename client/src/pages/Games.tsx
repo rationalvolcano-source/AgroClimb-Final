@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star } from "lucide-react";
+import { Brain, Zap, BookOpen, Gamepad2 } from "lucide-react";
 import Nav from "@/components/Nav";
 
 const duelBaseUrl = "https://duel-quiz-react.lovable.app/";
@@ -67,8 +67,13 @@ const GAME_INFO = {
 
 export default function Games() {
   const [stream, setStream] = useState<string>("");
+  const streamSelectorRef = useRef<HTMLDivElement>(null);
 
   const availableGames = stream ? STREAM_GAMES[stream] || [] : [];
+
+  function scrollToStreamSelector() {
+    streamSelectorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 
   function launchGame(gameId: GameId) {
     if (!stream) return;
@@ -88,9 +93,9 @@ export default function Games() {
       <Nav />
       
       <main className="mx-auto max-w-7xl px-4 py-12">
-        <Hero />
+        <Hero onGameClick={scrollToStreamSelector} />
         
-        <Card className="bg-slate-900/60 border-slate-800 p-6 mt-8">
+        <Card ref={streamSelectorRef} className="bg-slate-900/60 border-slate-800 p-6 mt-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex-1">
               <h3 className="text-lg font-semibold mb-1" data-testid="text-stream-selector-title">
@@ -155,7 +160,7 @@ export default function Games() {
   );
 }
 
-function Hero() {
+function Hero({ onGameClick }: { onGameClick: () => void }) {
   return (
     <Card className="bg-slate-900/60 border-slate-800 p-8">
       <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -168,28 +173,36 @@ function Hero() {
           </p>
           <ul className="text-sm text-slate-400 grid grid-cols-2 gap-3 mt-6">
             <li className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-emerald-400" />
+              <Gamepad2 className="h-4 w-4 text-emerald-400" />
               Recall & reinforcement
             </li>
             <li className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-emerald-400" />
+              <Brain className="h-4 w-4 text-cyan-400" />
               Visual pattern recognition
             </li>
             <li className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-emerald-400" />
+              <Zap className="h-4 w-4 text-violet-400" />
               Processing speed
             </li>
             <li className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-emerald-400" />
+              <BookOpen className="h-4 w-4 text-amber-400" />
               Language intelligence
             </li>
           </ul>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <LogoDuel className="w-full" />
-          <LogoOrchard className="w-full" />
-          <LogoSprint className="w-full" />
-          <LogoWord className="w-full" />
+          <button type="button" onClick={onGameClick} className="transition-transform hover:scale-105" data-testid="button-hero-flashcard">
+            <LogoDuel className="w-full" />
+          </button>
+          <button type="button" onClick={onGameClick} className="transition-transform hover:scale-105" data-testid="button-hero-logic">
+            <LogoOrchard className="w-full" />
+          </button>
+          <button type="button" onClick={onGameClick} className="transition-transform hover:scale-105" data-testid="button-hero-sprint">
+            <LogoSprint className="w-full" />
+          </button>
+          <button type="button" onClick={onGameClick} className="transition-transform hover:scale-105" data-testid="button-hero-word">
+            <LogoWord className="w-full" />
+          </button>
         </div>
       </div>
     </Card>
@@ -239,14 +252,14 @@ function GameCard({ title, subtitle, description, onClick, Logo, accent }: {
 // ---------------- Logos (inline SVG) ----------------
 function LogoDuel({ className = "h-16" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+    <svg className={className} viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="g1" x1="0" x2="1">
           <stop offset="0" stopColor="#34d399" />
           <stop offset="1" stopColor="#22d3ee" />
         </linearGradient>
       </defs>
-      <rect x="0" y="0" width="200" height="80" rx="16" fill="#0b1220" stroke="#1f2937" />
+      <rect x="0" y="0" width="260" height="80" rx="16" fill="#0b1220" stroke="#1f2937" />
       <circle cx="40" cy="40" r="22" fill="url(#g1)" opacity="0.25" />
       <text x="40" y="46" textAnchor="middle" fontFamily="ui-sans-serif,system-ui" fontSize="18" fill="#34d399">VS</text>
       <text x="78" y="47" fontFamily="ui-sans-serif,system-ui" fontSize="22" fill="#e5e7eb">Flashcard Duel</text>
