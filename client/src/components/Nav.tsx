@@ -22,8 +22,8 @@ export default function Nav() {
     <div className="sticky top-0 z-40 backdrop-blur-md bg-slate-950/70 border-b border-slate-800 transition-all duration-300">
       <div className={`mx-auto max-w-7xl px-4 flex items-center justify-between gap-4 transition-all duration-300 ${scrolled ? 'py-2' : 'py-3'}`}>
         <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-          <img src={logoPath} alt="The Agri Vision" className="h-7 w-7 sm:h-8 sm:w-8" data-testid="img-logo" />
-          <span className="font-semibold tracking-tight text-sm sm:text-base" data-testid="text-brand">The Agri Vision</span>
+          <img src={logoPath} alt="The Agro Vision" className="h-7 w-7 sm:h-8 sm:w-8" data-testid="img-logo" />
+          <span className="font-semibold tracking-tight text-sm sm:text-base" data-testid="text-brand">The Agro Vision</span>
         </Link>
         <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm">
           {isLandingPage ? (

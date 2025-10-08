@@ -1,6 +1,6 @@
 const testimonials = [
   {
-    quote: "The Agri Vision didn't just tell me my path — it showed me how to reach it.",
+    quote: "The Agro Vision didn't just tell me my path — it showed me how to reach it.",
     name: "Ananya, ABM",
   },
   {

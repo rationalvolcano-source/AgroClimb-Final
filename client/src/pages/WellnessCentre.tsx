@@ -491,7 +491,7 @@ export default function WellnessCentre() {
           <div className="wellness-card" data-testid="wellness-header">
             <div className="wellness-title">Wellness Centre — Placeholders Ready</div>
             <div className="wellness-subtitle">
-              A calm corner inside The Agri Vision: quick tools and slots for guided videos. Add links now; upload full classes later.
+              A calm corner inside The Agro Vision: quick tools and slots for guided videos. Add links now; upload full classes later.
             </div>
           </div>
 

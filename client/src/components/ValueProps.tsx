@@ -12,7 +12,7 @@ const items = [
   {
     icon: GraduationCap,
     title: "Career Guidance Quiz",
-    desc: "A 100% unbiased, data-backed fit analysis for ABM, Banking, and JRF Horticulture. If your strengths align better with another path, The Agri Vision will suggest trusted alternatives instead of forcing a mismatch.",
+    desc: "A 100% unbiased, data-backed fit analysis for ABM, Banking, and JRF Horticulture. If your strengths align better with another path, The Agro Vision will suggest trusted alternatives instead of forcing a mismatch.",
   },
   {
     icon: BookOpen,

@@ -1,8 +1,8 @@
-# The Agri Vision - AI-Guided Career Platform
+# The Agro Vision - AI-Guided Career Platform
 
 ## Overview
 
-The Agri Vision is an AI-powered career guidance platform designed specifically for agricultural students in India. The platform helps students discover their best-fit career paths across ABM (Agribusiness Management), Banking, and JRF Horticulture through AI-guided quizzes, interactive learning games, and personalized study plans. It combines psychological engagement patterns from platforms like Duolingo with professional design aesthetics inspired by Linear and Notion to create an experience-focused education-tech solution.
+The Agro Vision is an AI-powered career guidance platform designed specifically for agricultural students in India. The platform helps students discover their best-fit career paths across ABM (Agribusiness Management), Banking, and JRF Horticulture through AI-guided quizzes, interactive learning games, and personalized study plans. It combines psychological engagement patterns from platforms like Duolingo with professional design aesthetics inspired by Linear and Notion to create an experience-focused education-tech solution.
 
 The application aims to solve career clarity challenges by providing instant fit scores, adaptive study plans, gamified learning experiences, and direct alumni mentorship - all within a single cohesive platform.
 
