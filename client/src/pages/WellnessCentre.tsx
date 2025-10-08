@@ -8,12 +8,15 @@ import Nav from "@/components/Nav";
 function DeepBreathingLoop() {
   const [phase, setPhase] = useState<"inhale" | "hold" | "exhale">("inhale");
   const [count, setCount] = useState(0);
+  const [isRunning, setIsRunning] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const phaseDurations = { inhale: 4, hold: 4, exhale: 4 };
+  const phaseDurations = { inhale: 8, hold: 8, exhale: 8 };
   const phaseLabels = { inhale: "Breathe In", hold: "Hold", exhale: "Breathe Out" };
 
   useEffect(() => {
+    if (!isRunning) return;
+
     const duration = phaseDurations[phase];
     
     if (count >= duration) {
@@ -33,10 +36,21 @@ function DeepBreathingLoop() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [phase, count, phaseDurations]);
+  }, [phase, count, phaseDurations, isRunning]);
 
   const duration = phaseDurations[phase];
   const progress = (count / duration) * 100;
+
+  function handleStop() {
+    setIsRunning(false);
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }
+
+  function handleStart() {
+    setIsRunning(true);
+    setPhase("inhale");
+    setCount(0);
+  }
 
   return (
     <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-breathing">
@@ -44,7 +58,7 @@ function DeepBreathingLoop() {
         <Wind className="h-5 w-5 text-emerald-400" />
         <h3 className="text-lg font-semibold">Deep Breathing Loop</h3>
       </div>
-      <p className="text-sm text-slate-400 mb-6">4-4-4 breathing technique — autoplay looping timer</p>
+      <p className="text-sm text-slate-400 mb-6">8-8-8 breathing technique — autoplay looping timer</p>
       
       <div className="relative w-48 h-48 mx-auto mb-6">
         <svg className="transform -rotate-90" width="192" height="192">
@@ -71,7 +85,28 @@ function DeepBreathingLoop() {
         </div>
       </div>
 
-      <p className="text-center text-xs text-slate-500">Automatically looping</p>
+      <div className="flex justify-center gap-3">
+        {isRunning ? (
+          <Button 
+            onClick={handleStop} 
+            variant="outline" 
+            size="sm"
+            className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10"
+            data-testid="button-breathing-stop"
+          >
+            Stop
+          </Button>
+        ) : (
+          <Button 
+            onClick={handleStart} 
+            className="bg-emerald-500 hover:bg-emerald-400"
+            size="sm"
+            data-testid="button-breathing-start"
+          >
+            Start
+          </Button>
+        )}
+      </div>
     </Card>
   );
 }
@@ -260,7 +295,7 @@ export default function WellnessCentre() {
         {/* Header */}
         <div className="text-center mb-12" data-testid="wellness-header">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">
-            🪴 Mind & Motion — Stay calm, sharp & ready.
+            Wellness Centre - Stay Calm, Sharp and Ready!
           </h1>
           <p className="text-lg text-slate-400">
             Micro-sessions for stress, focus & rest — built for agri aspirants.
