@@ -1,525 +1,289 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Sunrise, Moon, Wind, Lightbulb, Heart, Video, type LucideIcon } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Wind, Eye, Sprout } from "lucide-react";
 import Nav from "@/components/Nav";
 
-// Utility functions
-const todayKey = () => new Date().toISOString().slice(0, 10);
-
-function useLocalVar<T>(key: string, defaultVal: T): [T, (val: T) => void] {
-  const storageKey = `wellness_${key}`;
-  const [val, setVal] = useState<T>(() => {
-    try {
-      const stored = localStorage.getItem(storageKey);
-      return stored ? JSON.parse(stored) : defaultVal;
-    } catch {
-      return defaultVal;
-    }
-  });
-  
-  useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(val));
-  }, [val, storageKey]);
-  
-  return [val, setVal];
-}
-
-// Styles hook
-function useStyles() {
-  useEffect(() => {
-    const id = "wellness-styles";
-    if (document.getElementById(id)) return;
-    const style = document.createElement("style");
-    style.id = id;
-    style.textContent = `
-      .wellness-container {
-        min-height: 100vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 80px 16px 40px;
-      }
-      .wellness-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .wellness-card {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      }
-      .wellness-title {
-        font-size: 28px;
-        font-weight: 800;
-        color: #4c51bf;
-        margin-bottom: 8px;
-      }
-      .wellness-subtitle {
-        font-size: 15px;
-        color: #718096;
-        line-height: 1.6;
-      }
-      .wellness-grid-2 {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 16px;
-      }
-      .wellness-tile-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 16px;
-        gap: 16px;
-      }
-      .wellness-tile-title {
-        font-weight: 700;
-        font-size: 18px;
-        color: #5a67d8;
-      }
-      .wellness-tip {
-        font-size: 13px;
-        color: #a0aec0;
-        margin-top: 4px;
-      }
-      .wellness-kpi {
-        display: flex;
-        gap: 12px;
-        margin-top: 16px;
-      }
-      .wellness-kpi-box {
-        flex: 1;
-        background: #f7fafc;
-        border-radius: 12px;
-        padding: 16px;
-        text-align: center;
-      }
-      .wellness-kpi-label {
-        font-size: 12px;
-        color: #718096;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-      }
-      .wellness-kpi-value {
-        font-size: 24px;
-        font-weight: 800;
-        color: #5a67d8;
-      }
-      .wellness-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      .wellness-list li {
-        padding: 12px 0;
-        border-bottom: 1px solid #e2e8f0;
-        color: #4a5568;
-        line-height: 1.6;
-      }
-      .wellness-list li:last-child {
-        border-bottom: none;
-      }
-      .wellness-check {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 15px;
-        color: #4a5568;
-        cursor: pointer;
-      }
-      .wellness-check input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-        accent-color: #5a67d8;
-      }
-      .wellness-video-container {
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%;
-        background: #f7fafc;
-        border-radius: 12px;
-        overflow: hidden;
-        margin-top: 12px;
-      }
-      .wellness-video-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
-      .wellness-video-placeholder {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #a0aec0;
-        font-size: 14px;
-      }
-      .wellness-breathing-circle {
-        width: 200px;
-        height: 200px;
-        margin: 24px auto;
-        position: relative;
-      }
-      .wellness-breathing-svg {
-        transform: rotate(-90deg);
-      }
-      .wellness-breathing-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-      }
-      .wellness-breathing-phase {
-        font-size: 18px;
-        font-weight: 700;
-        color: #5a67d8;
-      }
-      .wellness-breathing-count {
-        font-size: 14px;
-        color: #718096;
-        margin-top: 4px;
-      }
-    `;
-    document.head.appendChild(style);
-  }, []);
-}
-
-// Video Tile Component
-function VideoTile({ title, storageKey, defaultTip, icon: Icon }: { title: string; storageKey: string; defaultTip: string; icon: LucideIcon }) {
-  const [url, setUrl] = useLocalVar(storageKey, "");
-  const [editing, setEditing] = useState(false);
-  const [tempUrl, setTempUrl] = useState("");
-
-  function handleEdit() {
-    setTempUrl(url);
-    setEditing(true);
-  }
-
-  function handleSave() {
-    setUrl(tempUrl);
-    setEditing(false);
-  }
-
-  function handleCancel() {
-    setEditing(false);
-    setTempUrl("");
-  }
-
-  function getEmbedUrl(rawUrl: string) {
-    if (!rawUrl) return "";
-    if (rawUrl.includes("youtube.com/watch")) {
-      const videoId = new URL(rawUrl).searchParams.get("v");
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-    if (rawUrl.includes("youtu.be/")) {
-      const videoId = rawUrl.split("youtu.be/")[1].split("?")[0];
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-    if (rawUrl.includes("vimeo.com/")) {
-      const videoId = rawUrl.split("vimeo.com/")[1].split("?")[0];
-      return `https://player.vimeo.com/video/${videoId}`;
-    }
-    return rawUrl;
-  }
-
-  const embedUrl = getEmbedUrl(url);
-
-  return (
-    <div className="wellness-card" data-testid={`video-tile-${storageKey}`}>
-      <div className="wellness-tile-head">
-        <div className="flex items-center gap-2">
-          <Icon className="h-5 w-5 text-indigo-500" />
-          <div className="wellness-tile-title">{title}</div>
-        </div>
-        {!editing && (
-          <Button variant="ghost" size="sm" onClick={handleEdit} data-testid={`button-edit-${storageKey}`}>
-            {url ? "Change" : "Add"}
-          </Button>
-        )}
-      </div>
-      
-      {editing ? (
-        <div className="space-y-3">
-          <Input
-            placeholder="Paste YouTube, Vimeo, or MP4 URL..."
-            value={tempUrl}
-            onChange={(e) => setTempUrl(e.target.value)}
-            data-testid={`input-url-${storageKey}`}
-          />
-          <div className="flex gap-2">
-            <Button onClick={handleSave} size="sm" className="flex-1" data-testid={`button-save-${storageKey}`}>
-              Save
-            </Button>
-            <Button onClick={handleCancel} variant="outline" size="sm" className="flex-1" data-testid={`button-cancel-${storageKey}`}>
-              Cancel
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <>
-          {embedUrl ? (
-            <div className="wellness-video-container">
-              <iframe
-                src={embedUrl}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                data-testid={`iframe-${storageKey}`}
-              />
-            </div>
-          ) : (
-            <div className="wellness-video-container">
-              <div className="wellness-video-placeholder" data-testid={`placeholder-${storageKey}`}>
-                {defaultTip}
-              </div>
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
-}
-
-// Breathing Tool Component
-function BreathingTool() {
-  const [running, setRunning] = useState(false);
+// Deep Breathing Loop Component
+function DeepBreathingLoop() {
   const [phase, setPhase] = useState<"inhale" | "hold" | "exhale">("inhale");
   const [count, setCount] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const phaseDurations = { inhale: 4, hold: 7, exhale: 8 };
+  const phaseDurations = { inhale: 4, hold: 4, exhale: 4 };
   const phaseLabels = { inhale: "Breathe In", hold: "Hold", exhale: "Breathe Out" };
 
   useEffect(() => {
-    if (!running) return;
-
     const duration = phaseDurations[phase];
+    
     if (count >= duration) {
-      const nextPhase = phase === "inhale" ? "hold" : phase === "hold" ? "exhale" : "inhale";
-      setPhase(nextPhase);
+      setPhase((currentPhase) => {
+        if (currentPhase === "inhale") return "hold";
+        if (currentPhase === "hold") return "exhale";
+        return "inhale";
+      });
       setCount(0);
       return;
     }
 
     timerRef.current = setTimeout(() => {
-      setCount(count + 1);
+      setCount((prevCount) => prevCount + 1);
     }, 1000);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [running, phase, count]);
-
-  function handleStart() {
-    setRunning(true);
-    setPhase("inhale");
-    setCount(0);
-  }
-
-  function handleStop() {
-    setRunning(false);
-    setPhase("inhale");
-    setCount(0);
-    if (timerRef.current) clearTimeout(timerRef.current);
-  }
+  }, [phase, count, phaseDurations]);
 
   const duration = phaseDurations[phase];
   const progress = (count / duration) * 100;
 
   return (
-    <div className="wellness-card" data-testid="breathing-tool">
-      <div className="flex items-center gap-2 mb-2">
-        <Wind className="h-5 w-5 text-indigo-500" />
-        <div className="wellness-tile-title">Anxiety Alleviation</div>
+    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-breathing">
+      <div className="flex items-center gap-2 mb-4">
+        <Wind className="h-5 w-5 text-emerald-400" />
+        <h3 className="text-lg font-semibold">Deep Breathing Loop</h3>
       </div>
-      <div className="wellness-tip">4-7-8 breathing technique — scientifically proven to calm your nervous system</div>
+      <p className="text-sm text-slate-400 mb-6">4-4-4 breathing technique — autoplay looping timer</p>
       
-      <div className="wellness-breathing-circle">
-        <svg className="wellness-breathing-svg" width="200" height="200">
-          <circle cx="100" cy="100" r="90" fill="none" stroke="#e2e8f0" strokeWidth="12" />
+      <div className="relative w-48 h-48 mx-auto mb-6">
+        <svg className="transform -rotate-90" width="192" height="192">
+          <circle cx="96" cy="96" r="80" fill="none" stroke="rgb(51 65 85)" strokeWidth="12" />
           <circle
-            cx="100"
-            cy="100"
-            r="90"
+            cx="96"
+            cy="96"
+            r="80"
             fill="none"
-            stroke="#5a67d8"
+            stroke="rgb(52 211 153)"
             strokeWidth="12"
-            strokeDasharray={`${2 * Math.PI * 90}`}
-            strokeDashoffset={`${2 * Math.PI * 90 * (1 - progress / 100)}`}
+            strokeDasharray={`${2 * Math.PI * 80}`}
+            strokeDashoffset={`${2 * Math.PI * 80 * (1 - progress / 100)}`}
             style={{ transition: "stroke-dashoffset 1s linear" }}
           />
         </svg>
-        <div className="wellness-breathing-text">
-          <div className="wellness-breathing-phase" data-testid="breathing-phase">
-            {running ? phaseLabels[phase] : "Ready"}
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <div className="text-xl font-bold text-emerald-400" data-testid="text-breathing-phase">
+            {phaseLabels[phase]}
           </div>
-          <div className="wellness-breathing-count" data-testid="breathing-count">
-            {running ? `${count}/${duration}s` : "Click Start"}
+          <div className="text-sm text-slate-400 mt-1" data-testid="text-breathing-count">
+            {count}/{duration}s
           </div>
         </div>
       </div>
 
-      <div className="flex justify-center">
-        {!running ? (
-          <Button onClick={handleStart} className="bg-indigo-600 hover:bg-indigo-700" data-testid="button-breathing-start">
-            Start
-          </Button>
-        ) : (
-          <Button onClick={handleStop} variant="outline" data-testid="button-breathing-stop">
-            Stop
-          </Button>
-        )}
-      </div>
-    </div>
+      <p className="text-center text-xs text-slate-500">Automatically looping</p>
+    </Card>
   );
 }
 
-// Mental Sharpness Tips Component
-function SharpnessTips() {
-  return (
-    <div className="wellness-card" data-testid="sharpness-tips">
-      <div className="flex items-center gap-2 mb-2">
-        <Lightbulb className="h-5 w-5 text-indigo-500" />
-        <div className="wellness-tile-title">Tricks to Stay Mentally Sharp</div>
-      </div>
-      <div className="wellness-tip">Science-backed micro-habits for sustained focus</div>
-      <ul className="wellness-list">
-        <li data-testid="tip-0">
-          <b>Hydrate first thing:</b> 300–500 ml water after waking supports attention.
-        </li>
-        <li data-testid="tip-1">
-          <b>Light exposure:</b> 2–5 minutes of morning sunlight anchors your body clock.
-        </li>
-        <li data-testid="tip-2">
-          <b>90/20 rule:</b> Study 90 minutes, move for 2–5 minutes, then continue.
-        </li>
-        <li data-testid="tip-3">
-          <b>Eyes & neck reset:</b> 20–20–20: every 20 minutes, look 20 feet away for 20 seconds.
-        </li>
-        <li data-testid="tip-4">
-          <b>Micro journaling:</b> Write one line: "Today I'll complete ___."
-        </li>
-        <li data-testid="tip-5">
-          <b>Protein + fiber breakfast:</b> stabilizes energy for morning sessions.
-        </li>
-      </ul>
-    </div>
-  );
-}
+// 5-4-3-2-1 Grounding Component
+function GroundingExercise() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isActive, setIsActive] = useState(false);
 
-// Daily Check-in Component
-function CheckIn() {
-  const [log, setLog] = useLocalVar<string[]>("checkins", []);
-  const today = todayKey();
-  const practiced = log.includes(today);
+  const steps = [
+    "Find 5 things you can see around you",
+    "Find 4 things you can touch",
+    "Find 3 things you can hear",
+    "Find 2 things you can smell",
+    "Find 1 thing you can taste"
+  ];
 
-  function toggle() {
-    if (practiced) {
-      setLog(log.filter((d) => d !== today));
+  function handleStart() {
+    setIsActive(true);
+    setCurrentStep(0);
+  }
+
+  function handleNext() {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
     } else {
-      setLog([...log, today]);
+      setIsActive(false);
+      setCurrentStep(0);
     }
   }
 
-  // Calculate streak
-  let streak = 0;
-  const now = new Date();
-  while (true) {
-    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - streak);
-    const key = d.toISOString().slice(0, 10);
-    if (log.includes(key)) streak++;
-    else break;
+  function handleReset() {
+    setIsActive(false);
+    setCurrentStep(0);
   }
 
   return (
-    <div className="wellness-card" data-testid="check-in">
-      <div className="wellness-tile-head">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Heart className="h-5 w-5 text-indigo-500" />
-            <div className="wellness-tile-title">Daily Wellness Check‑in</div>
-          </div>
-          <div className="wellness-tip">Mark your practice once a day. Builds consistency and motivation.</div>
-        </div>
-        <label className="wellness-check">
-          <input
-            type="checkbox"
-            checked={practiced}
-            onChange={toggle}
-            data-testid="checkbox-practiced"
-          />
-          I practiced today
-        </label>
+    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-grounding">
+      <div className="flex items-center gap-2 mb-4">
+        <Eye className="h-5 w-5 text-cyan-400" />
+        <h3 className="text-lg font-semibold">5-4-3-2-1 Grounding</h3>
       </div>
-      <div className="wellness-kpi">
-        <div className="wellness-kpi-box">
-          <div className="wellness-kpi-label">Current Streak</div>
-          <div className="wellness-kpi-value" data-testid="value-streak">
-            {streak} day{streak === 1 ? "" : "s"}
+      <p className="text-sm text-slate-400 mb-6">Interactive text walk-through to anchor yourself in the present</p>
+
+      {!isActive ? (
+        <div className="text-center py-8">
+          <p className="text-slate-300 mb-6">A simple sensory exercise to calm anxiety and bring you back to the present moment.</p>
+          <Button onClick={handleStart} className="bg-cyan-500 hover:bg-cyan-400" data-testid="button-grounding-start">
+            Begin Exercise
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <div className="min-h-[120px] flex items-center justify-center">
+            <p className="text-lg text-slate-200 text-center" data-testid="text-grounding-step">
+              {steps[currentStep]}
+            </p>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-500" data-testid="text-grounding-progress">Step {currentStep + 1} of {steps.length}</span>
+            <div className="flex gap-2">
+              <Button onClick={handleReset} variant="outline" size="sm" data-testid="button-grounding-reset">
+                Reset
+              </Button>
+              <Button onClick={handleNext} className="bg-cyan-500 hover:bg-cyan-400" size="sm" data-testid="button-grounding-next">
+                {currentStep === steps.length - 1 ? "Complete" : "Next"}
+              </Button>
+            </div>
           </div>
         </div>
-        <div className="wellness-kpi-box">
-          <div className="wellness-kpi-label">Total Check‑ins</div>
-          <div className="wellness-kpi-value" data-testid="value-total">
-            {log.length}
+      )}
+    </Card>
+  );
+}
+
+// Narration array defined outside component to prevent recreation on every render
+const farmNarration = [
+  "Close your eyes and imagine...",
+  "Early dawn mist over green fields...",
+  "The soft rustling of wheat in the gentle breeze...",
+  "Birds chirping as the sun rises...",
+  "The earth beneath your feet, solid and grounding...",
+  "Peace flows through you like a quiet stream.",
+  "You are calm, centered, and ready."
+];
+
+// Calm Farm Visualization Component
+function CalmFarmVisualization() {
+  const [currentLine, setCurrentLine] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (currentLine >= farmNarration.length - 1) {
+      timerRef.current = setTimeout(() => {
+        setCurrentLine(0);
+      }, 3000);
+    } else {
+      timerRef.current = setTimeout(() => {
+        setCurrentLine((prev) => prev + 1);
+      }, 3000);
+    }
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [currentLine]);
+
+  return (
+    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-visualization">
+      <div className="flex items-center gap-2 mb-4">
+        <Sprout className="h-5 w-5 text-emerald-400" />
+        <h3 className="text-lg font-semibold">Calm Farm Visualization</h3>
+      </div>
+      <p className="text-sm text-slate-400 mb-6">Gentle guided imagery for instant calm</p>
+
+      <div className="space-y-6">
+        <div className="w-full h-40 bg-gradient-to-br from-emerald-900/30 to-cyan-900/30 rounded-lg flex items-center justify-center">
+          <div className="min-h-[80px] flex items-center justify-center px-6">
+            <p className="text-lg text-slate-200 text-center italic" data-testid="text-visualization-line">
+              {farmNarration[currentLine]}
+            </p>
           </div>
         </div>
+        <div className="flex items-center justify-center">
+          <span className="text-xs text-slate-500" data-testid="text-visualization-progress">
+            {currentLine + 1} / {farmNarration.length} • Auto-progressing
+          </span>
+        </div>
       </div>
-      <div className="wellness-tip" style={{ marginTop: "16px" }}>
-        Data is stored locally on this device. You can safely refresh or come back later.
+    </Card>
+  );
+}
+
+// Feeling Better Component
+function FeelingBetter() {
+  const [rating, setRating] = useState<number | null>(null);
+
+  const emojis = ["😔", "😟", "😐", "🙂", "😊"];
+
+  return (
+    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-feeling-better">
+      <h3 className="text-lg font-semibold mb-4 text-center">Feeling better?</h3>
+      <div className="flex justify-center gap-4 mb-6">
+        {emojis.map((emoji, index) => (
+          <button
+            key={index}
+            onClick={() => setRating(index + 1)}
+            className={`text-4xl transition-all ${
+              rating === index + 1 ? "scale-125" : "scale-100 opacity-60 hover:opacity-100 hover:scale-110"
+            }`}
+            data-testid={`button-emoji-${index + 1}`}
+          >
+            {emoji}
+          </button>
+        ))}
       </div>
-    </div>
+      {rating !== null && rating <= 2 && (
+        <div className="text-center" data-testid="text-try-again">
+          <p className="text-sm text-slate-400 mb-3">That's okay. Sometimes it takes a few tries.</p>
+          <a 
+            href="#" 
+            onClick={(e) => { e.preventDefault(); setRating(null); }}
+            className="text-sm text-emerald-400 hover:text-emerald-300 underline"
+            data-testid="link-try-again"
+          >
+            Try again or take a short break
+          </a>
+        </div>
+      )}
+      {rating !== null && rating > 2 && (
+        <p className="text-center text-sm text-emerald-400" data-testid="text-great">
+          Great! You're ready to get back to studying. 📚
+        </p>
+      )}
+    </Card>
   );
 }
 
 // Main Wellness Centre Component
 export default function WellnessCentre() {
-  useStyles();
-
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-slate-950 text-slate-50">
       <Nav />
-      <div className="wellness-container" style={{ paddingTop: '40px' }}>
-        <div className="wellness-inner">
-          <div className="wellness-card" data-testid="wellness-header">
-            <div className="wellness-title">Wellness Centre — Placeholders Ready</div>
-            <div className="wellness-subtitle">
-              A calm corner inside The Agro Vision: quick tools and slots for guided videos. Add links now; upload full classes later.
-            </div>
-          </div>
-
-          <div className="wellness-grid-2" style={{ marginTop: 16 }}>
-            <VideoTile
-              title="Daily Morning Yoga"
-              storageKey="morning_yoga"
-              defaultTip="Morning flow — video coming soon"
-              icon={Sunrise}
-            />
-            <VideoTile
-              title="Daily Night Yoga (Wind Down)"
-              storageKey="night_yoga"
-              defaultTip="Night routine — video coming soon"
-              icon={Moon}
-            />
-          </div>
-
-          <div className="wellness-grid-2" style={{ marginTop: 16 }}>
-            <BreathingTool />
-            <SharpnessTips />
-          </div>
-
-          <div style={{ marginTop: 16 }}>
-            <CheckIn />
-          </div>
+      
+      <main className="mx-auto max-w-7xl px-4 py-12">
+        {/* Header */}
+        <div className="text-center mb-12" data-testid="wellness-header">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+            🪴 Mind & Motion — Stay calm, sharp & ready.
+          </h1>
+          <p className="text-lg text-slate-400">
+            Micro-sessions for stress, focus & rest — built for agri aspirants.
+          </p>
         </div>
-      </div>
+
+        {/* Section 1: Quick Calm */}
+        <div className="mb-8">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold mb-2" data-testid="text-section-title">Quick Calm (Anxiety Relief)</h2>
+            <p className="text-slate-400 mb-1">⏱ Duration: 2–3 minutes</p>
+            <p className="text-lg text-emerald-400 italic">"When your thoughts scatter, breathe them back."</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <DeepBreathingLoop />
+            <GroundingExercise />
+            <CalmFarmVisualization />
+          </div>
+
+          <FeelingBetter />
+        </div>
+      </main>
     </div>
   );
 }
