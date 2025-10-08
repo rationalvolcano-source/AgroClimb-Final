@@ -1,10 +1,13 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logoPath from "@assets/image_1759852944967.png";
 import { useEffect, useState } from "react";
+import { Link, useLocation } from "wouter";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [location] = useLocation();
+  const isLandingPage = location === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,17 +21,31 @@ export default function Nav() {
   return (
     <div className="sticky top-0 z-40 backdrop-blur-md bg-slate-950/70 border-b border-slate-800 transition-all duration-300">
       <div className={`mx-auto max-w-7xl px-4 flex items-center justify-between gap-4 transition-all duration-300 ${scrolled ? 'py-2' : 'py-3'}`}>
-        <div className="flex items-center gap-3">
-          <img src={logoPath} alt="The Agri Vision" className="h-8 w-8" data-testid="img-logo" />
-          <span className="font-semibold tracking-tight" data-testid="text-brand">The Agri Vision</span>
-        </div>
-        <div className="hidden md:flex items-center gap-6 text-sm">
-          <a href="#features" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-features">Features</a>
-          <a href="#pricing" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-pricing">Plans</a>
-          <a href="#faq" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-faq">FAQ</a>
-          <a href="/books" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-books">Books</a>
-          <a href="/swm" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-binaural">SWM</a>
-          <a href="/wellness" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-wellness">Wellness Centre</a>
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
+          <img src={logoPath} alt="The Agri Vision" className="h-7 w-7 sm:h-8 sm:w-8" data-testid="img-logo" />
+          <span className="font-semibold tracking-tight text-sm sm:text-base" data-testid="text-brand">The Agri Vision</span>
+        </Link>
+        <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm">
+          {isLandingPage ? (
+            <>
+              <a href="#features" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-features">Features</a>
+              <a href="#pricing" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-pricing">Plans</a>
+              <a href="#faq" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-faq">FAQ</a>
+            </>
+          ) : (
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/" data-testid="link-home">
+                <Home className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Home</span>
+              </Link>
+            </Button>
+          )}
+          <Link href="/books" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-books">Books</Link>
+          <Link href="/swm" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-binaural">SWM</Link>
+          <Link href="/wellness" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-wellness">
+            <span className="hidden sm:inline">Wellness</span>
+            <span className="sm:hidden">Well.</span>
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="hidden md:inline-flex" data-testid="button-signin">Sign in</Button>

@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Play, Pause, RotateCcw, Volume2, VolumeX, Download, Home } from "lucide-react";
+import { Play, Pause, RotateCcw, Volume2, VolumeX, Download } from "lucide-react";
+import Nav from "@/components/Nav";
 
 // ---------- Utilities ----------
 const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
@@ -229,23 +230,15 @@ export default function StudyWithMe() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 py-20 px-4">
-      <div className="mx-auto max-w-7xl space-y-6">
+    <div className="min-h-screen bg-slate-950">
+      <Nav />
+      <div className="mx-auto max-w-7xl px-4 py-12 space-y-6">
         <Card className="bg-slate-900/60 border-slate-800" data-testid="card-header">
           <CardHeader>
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <CardTitle className="text-3xl font-bold" data-testid="title-swm">Study With Me — Focus Mode</CardTitle>
-                <p className="text-slate-400 mt-2" data-testid="text-subtitle">
-                  Play ambient binaural beats, set a timer, and let your momentum build. After you start, you can dim your screen or turn it face-down to reduce exposure. Your progress is logged privately on this device.
-                </p>
-              </div>
-              <a href="/" data-testid="link-home">
-                <Button variant="ghost" size="icon" className="shrink-0">
-                  <Home className="h-5 w-5" />
-                </Button>
-              </a>
-            </div>
+            <CardTitle className="text-3xl font-bold" data-testid="title-swm">Study With Me — Focus Mode</CardTitle>
+            <p className="text-slate-400 mt-2" data-testid="text-subtitle">
+              Play ambient binaural beats, set a timer, and let your momentum build. After you start, you can dim your screen or turn it face-down to reduce exposure. Your progress is logged privately on this device.
+            </p>
           </CardHeader>
           <CardContent>
             <div className="flex gap-4 flex-wrap">

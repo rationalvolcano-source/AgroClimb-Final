@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Home, Sunrise, Moon, Wind, Lightbulb, Heart, Video, type LucideIcon } from "lucide-react";
+import { Sunrise, Moon, Wind, Lightbulb, Heart, Video, type LucideIcon } from "lucide-react";
+import Nav from "@/components/Nav";
 
 // Utility functions
 const todayKey = () => new Date().toISOString().slice(0, 10);
@@ -483,46 +484,40 @@ export default function WellnessCentre() {
   useStyles();
 
   return (
-    <div className="wellness-container">
-      <div className="wellness-inner">
-        <div className="wellness-card" data-testid="wellness-header">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <div className="wellness-title">Wellness Centre — Placeholders Ready</div>
-              <div className="wellness-subtitle">
-                A calm corner inside The Agri Vision: quick tools and slots for guided videos. Add links now; upload full classes later.
-              </div>
+    <div className="min-h-screen bg-slate-950">
+      <Nav />
+      <div className="wellness-container" style={{ paddingTop: '40px' }}>
+        <div className="wellness-inner">
+          <div className="wellness-card" data-testid="wellness-header">
+            <div className="wellness-title">Wellness Centre — Placeholders Ready</div>
+            <div className="wellness-subtitle">
+              A calm corner inside The Agri Vision: quick tools and slots for guided videos. Add links now; upload full classes later.
             </div>
-            <a href="/" data-testid="link-home-wellness">
-              <Button variant="ghost" size="icon" className="shrink-0">
-                <Home className="h-5 w-5" />
-              </Button>
-            </a>
           </div>
-        </div>
 
-        <div className="wellness-grid-2" style={{ marginTop: 16 }}>
-          <VideoTile
-            title="Daily Morning Yoga"
-            storageKey="morning_yoga"
-            defaultTip="Morning flow — video coming soon"
-            icon={Sunrise}
-          />
-          <VideoTile
-            title="Daily Night Yoga (Wind Down)"
-            storageKey="night_yoga"
-            defaultTip="Night routine — video coming soon"
-            icon={Moon}
-          />
-        </div>
+          <div className="wellness-grid-2" style={{ marginTop: 16 }}>
+            <VideoTile
+              title="Daily Morning Yoga"
+              storageKey="morning_yoga"
+              defaultTip="Morning flow — video coming soon"
+              icon={Sunrise}
+            />
+            <VideoTile
+              title="Daily Night Yoga (Wind Down)"
+              storageKey="night_yoga"
+              defaultTip="Night routine — video coming soon"
+              icon={Moon}
+            />
+          </div>
 
-        <div className="wellness-grid-2" style={{ marginTop: 16 }}>
-          <BreathingTool />
-          <SharpnessTips />
-        </div>
+          <div className="wellness-grid-2" style={{ marginTop: 16 }}>
+            <BreathingTool />
+            <SharpnessTips />
+          </div>
 
-        <div style={{ marginTop: 16 }}>
-          <CheckIn />
+          <div style={{ marginTop: 16 }}>
+            <CheckIn />
+          </div>
         </div>
       </div>
     </div>
