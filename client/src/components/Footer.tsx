@@ -1,4 +1,5 @@
 import logoPath from "@assets/image_1759852944967.png";
+import { Link } from "wouter";
 
 export default function Footer() {
   return (
@@ -26,14 +27,14 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-slate-400">
               <li><a href="#features" className="hover:text-slate-300 transition-colors" data-testid="link-footer-features">Features</a></li>
               <li><a href="#pricing" className="hover:text-slate-300 transition-colors" data-testid="link-footer-pricing">Pricing</a></li>
-              <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-games">Interactive Games</a></li>
+              <li><Link href="/games" className="hover:text-slate-300 transition-colors" data-testid="link-footer-games">Interactive Games</Link></li>
             </ul>
           </div>
           
           <div>
             <h4 className="font-medium mb-3" data-testid="footer-resources-heading">Resources</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li><a href="/books" className="hover:text-slate-300 transition-colors" data-testid="link-footer-notes">Notes & PYQs</a></li>
+              <li><Link href="/books" className="hover:text-slate-300 transition-colors" data-testid="link-footer-notes">Notes & PYQs</Link></li>
               <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-alumni">Alumni Connect</a></li>
               <li><a href="#faq" className="hover:text-slate-300 transition-colors" data-testid="link-footer-faq">FAQ</a></li>
             </ul>

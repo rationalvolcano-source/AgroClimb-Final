@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle } from "lucide-react";
+import { Link } from "wouter";
 
 export default function CTA() {
   return (
@@ -11,8 +12,10 @@ export default function CTA() {
           <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-cta-quiz">
             Get My Career Plan → <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          <Button size="lg" variant="outline" className="border-slate-700 hover:bg-slate-800" data-testid="button-cta-preview">
-            Preview Games <PlayCircle className="ml-2 h-5 w-5" />
+          <Button asChild size="lg" variant="outline" className="border-slate-700 hover:bg-slate-800" data-testid="button-cta-preview">
+            <Link href="/games">
+              Preview Games <PlayCircle className="ml-2 h-5 w-5" />
+            </Link>
           </Button>
         </div>
       </div>

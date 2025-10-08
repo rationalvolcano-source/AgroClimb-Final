@@ -41,11 +41,9 @@ export default function Nav() {
             </Button>
           )}
           <Link href="/books" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-books">Books</Link>
+          <Link href="/games" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-games">Games</Link>
           <Link href="/swm" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-binaural">SWM</Link>
-          <Link href="/wellness" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-wellness">
-            <span className="hidden sm:inline">Wellness</span>
-            <span className="sm:hidden">Well.</span>
-          </Link>
+          <Link href="/wellness" className="text-slate-300 hover:text-slate-50 transition-colors hidden sm:inline" data-testid="link-wellness">Wellness</Link>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="hidden md:inline-flex" data-testid="button-signin">Sign in</Button>

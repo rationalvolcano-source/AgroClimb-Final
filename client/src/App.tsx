@@ -7,6 +7,7 @@ import LandingPage from "@/pages/LandingPage";
 import StudyWithMe from "@/pages/StudyWithMe";
 import WellnessCentre from "@/pages/WellnessCentre";
 import Books from "@/pages/Books";
+import Games from "@/pages/Games";
 
 function Router() {
   return (
@@ -15,6 +16,7 @@ function Router() {
       <Route path="/swm" component={StudyWithMe}/>
       <Route path="/wellness" component={WellnessCentre}/>
       <Route path="/books" component={Books}/>
+      <Route path="/games" component={Games}/>
       <Route path="*" component={LandingPage} />
     </Switch>
   );

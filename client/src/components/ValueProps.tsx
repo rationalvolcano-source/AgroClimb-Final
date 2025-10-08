@@ -57,6 +57,10 @@ export default function ValueProps() {
                 <Link href="/books" className="block cursor-pointer">
                   {cardContent}
                 </Link>
+              ) : it.title === "Interactive Games" ? (
+                <Link href="/games" className="block cursor-pointer">
+                  {cardContent}
+                </Link>
               ) : (
                 cardContent
               )}

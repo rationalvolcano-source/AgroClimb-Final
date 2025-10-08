@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ShieldCheck, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import MockHeroCard from "./MockHeroCard";
 import GlowDot from "./GlowDot";
 
@@ -31,8 +32,10 @@ export default function Hero() {
           <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-quiz-primary">
             Get My Career Plan → <PlayCircle className="ml-2 h-5 w-5" />
           </Button>
-          <Button size="lg" variant="secondary" data-testid="button-games">
-            Preview Games
+          <Button asChild size="lg" variant="secondary" data-testid="button-games">
+            <Link href="/games">
+              Preview Games
+            </Link>
           </Button>
         </div>
         <ul className="text-sm text-slate-400 grid grid-cols-1 sm:grid-cols-3 gap-2 max-w-xl mt-2">
