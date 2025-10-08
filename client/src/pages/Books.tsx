@@ -49,7 +49,7 @@ const books = [
   {
     id: "finance",
     title: "Finance & Economics Essentials",
-    subtitle: "Build Your Wealth",
+    subtitle: "Learn how money works",
     image: financeImg,
     price: "₹600",
   },
