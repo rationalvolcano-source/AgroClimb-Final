@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import Nav from "@/components/Nav";
 
-import horticultureImg from "@assets/image_1759876737120.png";
+import horticultureImg from "@assets/image_1759944361004.png";
 import agricultureImg from "@assets/image_1759877033749.png";
 import mathsImg from "@assets/image_1759877325302.png";
 import reasoningImg from "@assets/image_1759877494047.png";
