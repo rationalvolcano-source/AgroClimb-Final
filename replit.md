@@ -7,9 +7,9 @@ The Agri Vision is an AI-powered career guidance platform designed specifically 
 The application aims to solve career clarity challenges by providing instant fit scores, adaptive study plans, gamified learning experiences, and direct alumni mentorship - all within a single cohesive platform.
 
 ### Current Pages
-1. **Landing Page** (`/`) - Main marketing page with hero, features, pricing, and FAQ sections
+1. **Landing Page** (`/`) - Main marketing page with hero, features, pricing, and testimonials sections
 2. **Books** (`/books`) - Study materials and books page with 7 books for ABM, Banking, and JRF Horticulture
-3. **Interactive Games** (`/games`) - Gaming hub with three learning games: Flashcard Duel (functional), Logic Orchard, and Number Sprint (under construction). Includes stream chooser modal for 9 academic streams
+3. **Interactive Games** (`/games`) - Stream-based gaming hub with four pedagogically designed learning games: Flashcard Duel (functional), Logic Orchard, Number Sprint, and Word Sprint (under construction). Users select their academic stream first, then see only the games allocated to that stream
 4. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
 5. **Wellness Centre** (`/wellness`) - Calm corner with yoga videos, breathing exercises, mental sharpness tips, and daily check-ins
 
@@ -21,16 +21,36 @@ The application aims to solve career clarity challenges by providing instant fit
   - **Mobile**: Abbreviated text for space efficiency ("Well." for Wellness, icon-only for Home)
 - Logo always clickable and navigates to home
 - Conditional rendering based on current page:
-  - Landing page: Shows Features, Plans, FAQ anchor links
+  - Landing page: Shows Features, Plans anchor links
   - Other pages: Shows Home button to return to landing
 - All pages include the Nav component for consistent navigation experience
 
 ### Games Integration
-- **Games Page** (`client/src/pages/Games.tsx`) - Central hub for interactive learning games
-  - **Flashcard Duel**: Fully functional game linking to external Lovable app with stream parameter
-  - **Logic Orchard**: Under construction placeholder
-  - **Number Sprint**: Under construction placeholder
-- **Stream Chooser Modal**: Allows selection from 9 academic streams (JRF Horticulture, ABM, Banking, etc.)
+- **Games Page** (`client/src/pages/Games.tsx`) - Stream-based hub for pedagogically designed learning games
+  - **Four Games Available**:
+    - **Flashcard Duel**: Fully functional, links to external Lovable app with stream parameter. For recall and reinforcement (semantic memory)
+    - **Logic Orchard**: Under construction. For reasoning and visual pattern recognition (fluid intelligence)
+    - **Number Sprint**: Under construction. For timed computational fluency (processing speed)
+    - **Word Sprint**: Under construction. For reading comprehension and vocabulary breadth (language intelligence)
+  
+- **Stream-Based Game Allocation** (Pedagogical Rationale):
+  - JRF Horticulture → Flashcard Duel
+  - Banking – English → Word Sprint
+  - Banking – Quants & DI → Number Sprint
+  - Banking – Logical Reasoning → Logic Orchard
+  - Banking – Financial & Banking Affairs → Flashcard Duel
+  - ABM – VARC → Word Sprint
+  - ABM – DILR → Logic Orchard, Number Sprint
+  - ABM – QA → Number Sprint
+  - Banking – Agri Affairs → Flashcard Duel
+
+- **User Flow**:
+  1. User selects academic stream from dropdown
+  2. Only games allocated to that stream are displayed
+  3. User clicks game to launch it
+  4. Flashcard Duel opens in new tab with stream parameter
+  5. Other games show "coming soon" alert (pending implementation)
+
 - **Navigation to Games**: All mentions of "games" or "interactive games" across the site link to `/games`:
   - Hero section: "Preview Games" button
   - CTA section: "Preview Games" button  
