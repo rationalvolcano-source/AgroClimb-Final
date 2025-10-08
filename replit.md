@@ -8,8 +8,21 @@ The application aims to solve career clarity challenges by providing instant fit
 
 ### Current Pages
 1. **Landing Page** (`/`) - Main marketing page with hero, features, pricing, and FAQ sections
-2. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
-3. **Wellness Centre** (`/wellness`) - Calm corner with yoga videos, breathing exercises, mental sharpness tips, and daily check-ins
+2. **Books** (`/books`) - Study materials and books page with 7 books for ABM, Banking, and JRF Horticulture
+3. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
+4. **Wellness Centre** (`/wellness`) - Calm corner with yoga videos, breathing exercises, mental sharpness tips, and daily check-ins
+
+### Navigation System
+- **Nav Component** (`client/src/components/Nav.tsx`) - Unified navigation bar used across all pages
+- Uses Wouter Link for SPA routing (no page reloads)
+- Responsive design for mobile and desktop:
+  - **Desktop**: Full text for all links (Home, Books, SWM, Wellness)
+  - **Mobile**: Abbreviated text for space efficiency ("Well." for Wellness, icon-only for Home)
+- Logo always clickable and navigates to home
+- Conditional rendering based on current page:
+  - Landing page: Shows Features, Plans, FAQ anchor links
+  - Other pages: Shows Home button to return to landing
+- All pages include the Nav component for consistent navigation experience
 
 ## User Preferences
 
