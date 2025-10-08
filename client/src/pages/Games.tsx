@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Star } from "lucide-react";
 import Nav from "@/components/Nav";
 
@@ -11,7 +10,7 @@ const duelBaseUrl = "https://duel-quiz-react.lovable.app/";
 const STREAMS = [
   "JRF Horticulture",
   "Banking – English",
-  "Banking – Quants & Data Interpretation",
+  "Banking – Quants & DI",
   "Banking – Logical Reasoning",
   "Banking – Financial & Banking Affairs",
   "ABM – VARC",
@@ -20,25 +19,68 @@ const STREAMS = [
   "Banking – Agri Affairs",
 ];
 
-export type GameId = "flashcard" | "logic" | "sprint";
+export type GameId = "flashcard" | "logic" | "sprint" | "word";
+
+// Game allocation based on pedagogical rationale
+const STREAM_GAMES: Record<string, GameId[]> = {
+  "JRF Horticulture": ["flashcard"],
+  "Banking – English": ["word"],
+  "Banking – Quants & DI": ["sprint"],
+  "Banking – Logical Reasoning": ["logic"],
+  "Banking – Financial & Banking Affairs": ["flashcard"],
+  "ABM – VARC": ["word"],
+  "ABM – DILR": ["logic", "sprint"],
+  "ABM – QA": ["sprint"],
+  "Banking – Agri Affairs": ["flashcard"],
+};
+
+const GAME_INFO = {
+  flashcard: {
+    title: "Flashcard Duel",
+    subtitle: "Rapid recall battles",
+    description: "Answer fast, build streaks, dominate the leaderboard. Designed for semantic memory and recall reinforcement.",
+    accent: "emerald" as const,
+    Logo: LogoDuel,
+  },
+  logic: {
+    title: "Logic Orchard",
+    subtitle: "Reasoning • Match‑3",
+    description: "Match symbols, unlock combos, train your LR muscle. Built for visual pattern recognition and fluid intelligence.",
+    accent: "cyan" as const,
+    Logo: LogoOrchard,
+  },
+  sprint: {
+    title: "Number Sprint",
+    subtitle: "Quants • Speed run",
+    description: "Timed DI/QA sprints with clean visuals and instant feedback. Optimized for processing speed and computational fluency.",
+    accent: "violet" as const,
+    Logo: LogoSprint,
+  },
+  word: {
+    title: "Word Sprint",
+    subtitle: "Reading • Comprehension",
+    description: "Race through passages, answer questions, build vocabulary. Sharpens reading comprehension and language intelligence.",
+    accent: "amber" as const,
+    Logo: LogoWord,
+  },
+};
 
 export default function Games() {
-  const [pendingGame, setPendingGame] = useState<GameId | null>(null);
   const [stream, setStream] = useState<string>("");
 
-  function openChooser(game: GameId) {
-    setPendingGame(game);
-  }
+  const availableGames = stream ? STREAM_GAMES[stream] || [] : [];
 
-  function startGame() {
-    if (!pendingGame || !stream) return;
-    if (pendingGame === "flashcard") {
+  function launchGame(gameId: GameId) {
+    if (!stream) return;
+    
+    if (gameId === "flashcard") {
       const url = new URL(duelBaseUrl);
       url.searchParams.set("stream", stream);
       window.open(url.toString(), "_blank", "noopener,noreferrer");
+    } else {
+      // Other games - under construction
+      alert(`${GAME_INFO[gameId].title} is coming soon!`);
     }
-    setPendingGame(null);
-    setStream("");
   }
 
   return (
@@ -48,42 +90,67 @@ export default function Games() {
       <main className="mx-auto max-w-7xl px-4 py-12">
         <Hero />
         
-        <div className="grid md:grid-cols-3 gap-6 mt-8">
-          <GameCard
-            title="Flashcard Duel"
-            subtitle="Rapid recall battles"
-            description="Answer fast, build streaks, dominate the leaderboard."
-            onClick={() => openChooser("flashcard")}
-            Logo={LogoDuel}
-            accent="emerald"
-          />
-          <GameCard
-            title="Logic Orchard"
-            subtitle="Reasoning • Match‑3"
-            description="Match symbols, unlock combos, train your LR muscle."
-            onClick={() => openChooser("logic")}
-            Logo={LogoOrchard}
-            accent="cyan"
-          />
-          <GameCard
-            title="Number Sprint"
-            subtitle="Quants • Speed run"
-            description="Timed DI/QA sprints with clean visuals and instant feedback."
-            onClick={() => openChooser("sprint")}
-            Logo={LogoSprint}
-            accent="violet"
-          />
-        </div>
-      </main>
+        <Card className="bg-slate-900/60 border-slate-800 p-6 mt-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold mb-1" data-testid="text-stream-selector-title">
+                Choose Your Stream
+              </h3>
+              <p className="text-sm text-slate-400">
+                Select your academic stream to see recommended games
+              </p>
+            </div>
+            <Select value={stream} onValueChange={setStream}>
+              <SelectTrigger className="bg-slate-950 border-slate-700 w-full sm:w-[320px]" data-testid="select-stream">
+                <SelectValue placeholder="-- Select a stream --" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-950 border-slate-700">
+                {STREAMS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </Card>
 
-      <ChooserModal
-        open={!!pendingGame}
-        onClose={() => setPendingGame(null)}
-        onStart={startGame}
-        value={stream}
-        setValue={setStream}
-        game={pendingGame}
-      />
+        {stream && availableGames.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold mb-6" data-testid="text-recommended-games">
+              Recommended Games for {stream}
+            </h2>
+            <div className={`grid gap-6 ${availableGames.length === 1 ? 'md:grid-cols-1 max-w-xl' : availableGames.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
+              {availableGames.map((gameId) => {
+                const game = GAME_INFO[gameId];
+                return (
+                  <GameCard
+                    key={gameId}
+                    title={game.title}
+                    subtitle={game.subtitle}
+                    description={game.description}
+                    onClick={() => launchGame(gameId)}
+                    Logo={game.Logo}
+                    accent={game.accent}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {stream && availableGames.length === 0 && (
+          <div className="mt-8 text-center py-12">
+            <p className="text-slate-400">No games available for this stream yet.</p>
+          </div>
+        )}
+
+        {!stream && (
+          <div className="mt-8 text-center py-12">
+            <p className="text-slate-400">Select a stream above to see your recommended games</p>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
@@ -97,31 +164,32 @@ function Hero() {
             Play your way to mastery.
           </h1>
           <p className="text-slate-300 mt-4 text-lg" data-testid="text-games-subtitle">
-            Three visually clean games designed for fast learning. Pick a stream and start.
+            Pedagogically designed games for fast learning. Pick your stream and start.
           </p>
           <ul className="text-sm text-slate-400 grid grid-cols-2 gap-3 mt-6">
             <li className="flex items-center gap-2">
               <Star className="h-4 w-4 text-emerald-400" />
-              Fast loads
+              Recall & reinforcement
             </li>
             <li className="flex items-center gap-2">
               <Star className="h-4 w-4 text-emerald-400" />
-              Minimal deps
+              Visual pattern recognition
             </li>
             <li className="flex items-center gap-2">
               <Star className="h-4 w-4 text-emerald-400" />
-              Clean typography
+              Processing speed
             </li>
             <li className="flex items-center gap-2">
               <Star className="h-4 w-4 text-emerald-400" />
-              Mobile‑friendly
+              Language intelligence
             </li>
           </ul>
         </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <LogoDuel className="w-full" />
           <LogoOrchard className="w-full" />
           <LogoSprint className="w-full" />
+          <LogoWord className="w-full" />
         </div>
       </div>
     </Card>
@@ -134,13 +202,15 @@ function GameCard({ title, subtitle, description, onClick, Logo, accent }: {
   description: string;
   onClick: () => void;
   Logo: React.FC<any>;
-  accent: "emerald" | "cyan" | "violet";
+  accent: "emerald" | "cyan" | "violet" | "amber";
 }) {
   const accentRing = accent === "emerald" 
     ? "ring-emerald-400/40 hover:border-emerald-400/30" 
     : accent === "cyan" 
     ? "ring-cyan-400/40 hover:border-cyan-400/30" 
-    : "ring-violet-400/40 hover:border-violet-400/30";
+    : accent === "violet"
+    ? "ring-violet-400/40 hover:border-violet-400/30"
+    : "ring-amber-400/40 hover:border-amber-400/30";
     
   return (
     <button
@@ -163,65 +233,6 @@ function GameCard({ title, subtitle, description, onClick, Logo, accent }: {
         </p>
       </div>
     </button>
-  );
-}
-
-function ChooserModal({ open, onClose, onStart, value, setValue, game }: {
-  open: boolean;
-  onClose: () => void;
-  onStart: () => void;
-  value: string;
-  setValue: (v: string) => void;
-  game: GameId | null;
-}) {
-  const gameTitle = game === "flashcard" 
-    ? "Flashcard Duel" 
-    : game === "logic" 
-    ? "Logic Orchard" 
-    : "Number Sprint";
-
-  return (
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-slate-900 border-slate-800">
-        <DialogHeader>
-          <DialogTitle data-testid="text-chooser-title">Choose your stream</DialogTitle>
-          <DialogDescription className="text-slate-400">
-            Select a stream to launch <span className="font-semibold text-slate-300">{gameTitle}</span>.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <Select value={value} onValueChange={setValue}>
-          <SelectTrigger className="bg-slate-950 border-slate-700" data-testid="select-stream">
-            <SelectValue placeholder="-- Select a stream --" />
-          </SelectTrigger>
-          <SelectContent className="bg-slate-950 border-slate-700">
-            {STREAMS.map((s) => (
-              <SelectItem key={s} value={s}>
-                {s}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <div className="flex items-center gap-3 justify-end mt-4">
-          <Button 
-            variant="outline" 
-            onClick={onClose}
-            data-testid="button-cancel"
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={onStart} 
-            disabled={!value}
-            className="bg-emerald-600 hover:bg-emerald-500"
-            data-testid="button-start-game"
-          >
-            Start
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 }
 
@@ -275,6 +286,28 @@ function LogoSprint({ className = "h-16" }: { className?: string }) {
       <rect x="0" y="0" width="200" height="80" rx="16" fill="#0b1220" stroke="#1f2937" />
       <path d="M28 52c18-10 30-22 48-28 18-6 38-6 64-2" stroke="url(#g3)" strokeWidth="3" fill="none" />
       <text x="110" y="47" fontFamily="ui-sans-serif,system-ui" fontSize="22" fill="#e5e7eb" textAnchor="middle">Number Sprint</text>
+    </svg>
+  );
+}
+
+function LogoWord({ className = "h-16" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g4" x1="0" x2="1">
+          <stop offset="0" stopColor="#fbbf24" />
+          <stop offset="1" stopColor="#f59e0b" />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="200" height="80" rx="16" fill="#0b1220" stroke="#1f2937" />
+      <g transform="translate(20,28)">
+        <rect x="0" y="0" width="8" height="24" rx="2" fill="url(#g4)" opacity="0.6" />
+        <rect x="12" y="0" width="8" height="24" rx="2" fill="url(#g4)" opacity="0.7" />
+        <rect x="24" y="0" width="8" height="24" rx="2" fill="url(#g4)" opacity="0.8" />
+        <rect x="36" y="0" width="8" height="24" rx="2" fill="url(#g4)" opacity="0.6" />
+        <rect x="48" y="0" width="8" height="24" rx="2" fill="url(#g4)" opacity="0.9" />
+      </g>
+      <text x="84" y="47" fontFamily="ui-sans-serif,system-ui" fontSize="22" fill="#e5e7eb">Word Sprint</text>
     </svg>
   );
 }

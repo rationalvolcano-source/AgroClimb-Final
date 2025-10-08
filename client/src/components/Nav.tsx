@@ -30,7 +30,6 @@ export default function Nav() {
             <>
               <a href="#features" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-features">Features</a>
               <a href="#pricing" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-pricing">Plans</a>
-              <a href="#faq" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-faq">FAQ</a>
             </>
           ) : (
             <Button asChild variant="ghost" size="sm">

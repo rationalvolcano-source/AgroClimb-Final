@@ -7,7 +7,6 @@ import ValueProps from "@/components/ValueProps";
 import FeatureGrid from "@/components/FeatureGrid";
 import PricingTeaser from "@/components/PricingTeaser";
 import Testimonials from "@/components/Testimonials";
-import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
@@ -23,7 +22,6 @@ export default function LandingPage() {
       <FeatureGrid />
       <PricingTeaser />
       <Testimonials />
-      <FAQ />
       <CTA />
       <Footer />
     </div>
