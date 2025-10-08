@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Wind, Eye, Sprout } from "lucide-react";
+import { Wind, Eye, Sprout, Sunrise, Moon } from "lucide-react";
 import Nav from "@/components/Nav";
 
 // Deep Breathing Loop Component
@@ -196,7 +196,9 @@ const farmNarration = [
 // Calm Farm Visualization Component
 function CalmFarmVisualization() {
   const [currentLine, setCurrentLine] = useState(0);
+  const [audioPlaying, setAudioPlaying] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (currentLine >= farmNarration.length - 1) {
@@ -214,13 +216,25 @@ function CalmFarmVisualization() {
     };
   }, [currentLine]);
 
+  function toggleAudio() {
+    if (audioRef.current) {
+      if (audioPlaying) {
+        audioRef.current.pause();
+        setAudioPlaying(false);
+      } else {
+        audioRef.current.play();
+        setAudioPlaying(true);
+      }
+    }
+  }
+
   return (
     <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-visualization">
       <div className="flex items-center gap-2 mb-4">
         <Sprout className="h-5 w-5 text-emerald-400" />
         <h3 className="text-lg font-semibold">Calm Farm Visualization</h3>
       </div>
-      <p className="text-sm text-slate-400 mb-6">Gentle guided imagery for instant calm</p>
+      <p className="text-sm text-slate-400 mb-6">Gentle guided imagery with ambient agri sounds</p>
 
       <div className="space-y-6">
         <div className="w-full h-40 bg-gradient-to-br from-emerald-900/30 to-cyan-900/30 rounded-lg flex items-center justify-center">
@@ -230,12 +244,28 @@ function CalmFarmVisualization() {
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center gap-4">
           <span className="text-xs text-slate-500" data-testid="text-visualization-progress">
             {currentLine + 1} / {farmNarration.length} • Auto-progressing
           </span>
+          <Button 
+            onClick={toggleAudio}
+            variant="outline"
+            size="sm"
+            className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10"
+            data-testid="button-toggle-audio"
+          >
+            {audioPlaying ? "🔊 Pause Sound" : "🔇 Play Ambient Sound"}
+          </Button>
         </div>
       </div>
+      
+      <audio 
+        ref={audioRef}
+        loop
+        src="https://cdn.pixabay.com/audio/2022/05/13/audio_c0ca63d4fa.mp3"
+        data-testid="audio-farm"
+      />
     </Card>
   );
 }
@@ -285,6 +315,62 @@ function FeelingBetter() {
   );
 }
 
+// Morning Yoga Component
+function MorningYoga() {
+  return (
+    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-morning-yoga">
+      <div className="flex items-center gap-2 mb-4">
+        <Sunrise className="h-5 w-5 text-amber-400" />
+        <h3 className="text-lg font-semibold">Morning Yoga</h3>
+      </div>
+      <p className="text-sm text-slate-400 mb-6">Start your day with gentle stretches and mindful breathing</p>
+      
+      <div className="aspect-video w-full bg-slate-800 rounded-lg overflow-hidden mb-4">
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/VaoV1PrYft4"
+          title="Morning Yoga"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="w-full h-full"
+          data-testid="iframe-morning-yoga"
+        ></iframe>
+      </div>
+      
+      <p className="text-xs text-slate-500 text-center">⏱ 15-20 minutes • Perfect for pre-study energizing</p>
+    </Card>
+  );
+}
+
+// Evening Yoga Component
+function EveningYoga() {
+  return (
+    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-evening-yoga">
+      <div className="flex items-center gap-2 mb-4">
+        <Moon className="h-5 w-5 text-indigo-400" />
+        <h3 className="text-lg font-semibold">Evening Yoga</h3>
+      </div>
+      <p className="text-sm text-slate-400 mb-6">Wind down with relaxing poses for better sleep and recovery</p>
+      
+      <div className="aspect-video w-full bg-slate-800 rounded-lg overflow-hidden mb-4">
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/BiWDsfZ3zbo"
+          title="Evening Yoga"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="w-full h-full"
+          data-testid="iframe-evening-yoga"
+        ></iframe>
+      </div>
+      
+      <p className="text-xs text-slate-500 text-center">⏱ 15-20 minutes • Ideal for post-study relaxation</p>
+    </Card>
+  );
+}
+
 // Main Wellness Centre Component
 export default function WellnessCentre() {
   return (
@@ -317,6 +403,19 @@ export default function WellnessCentre() {
           </div>
 
           <FeelingBetter />
+        </div>
+
+        {/* Section 2: Yoga Sessions */}
+        <div className="mb-8">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold mb-2" data-testid="text-yoga-section-title">Yoga Sessions</h2>
+            <p className="text-slate-400">Strengthen body & mind through mindful movement</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <MorningYoga />
+            <EveningYoga />
+          </div>
         </div>
       </main>
     </div>
