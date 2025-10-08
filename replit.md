@@ -9,20 +9,35 @@ The application aims to solve career clarity challenges by providing instant fit
 ### Current Pages
 1. **Landing Page** (`/`) - Main marketing page with hero, features, pricing, and FAQ sections
 2. **Books** (`/books`) - Study materials and books page with 7 books for ABM, Banking, and JRF Horticulture
-3. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
-4. **Wellness Centre** (`/wellness`) - Calm corner with yoga videos, breathing exercises, mental sharpness tips, and daily check-ins
+3. **Interactive Games** (`/games`) - Gaming hub with three learning games: Flashcard Duel (functional), Logic Orchard, and Number Sprint (under construction). Includes stream chooser modal for 9 academic streams
+4. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
+5. **Wellness Centre** (`/wellness`) - Calm corner with yoga videos, breathing exercises, mental sharpness tips, and daily check-ins
 
 ### Navigation System
 - **Nav Component** (`client/src/components/Nav.tsx`) - Unified navigation bar used across all pages
 - Uses Wouter Link for SPA routing (no page reloads)
 - Responsive design for mobile and desktop:
-  - **Desktop**: Full text for all links (Home, Books, SWM, Wellness)
+  - **Desktop**: Full text for all links (Home, Books, Games, SWM, Wellness)
   - **Mobile**: Abbreviated text for space efficiency ("Well." for Wellness, icon-only for Home)
 - Logo always clickable and navigates to home
 - Conditional rendering based on current page:
   - Landing page: Shows Features, Plans, FAQ anchor links
   - Other pages: Shows Home button to return to landing
 - All pages include the Nav component for consistent navigation experience
+
+### Games Integration
+- **Games Page** (`client/src/pages/Games.tsx`) - Central hub for interactive learning games
+  - **Flashcard Duel**: Fully functional game linking to external Lovable app with stream parameter
+  - **Logic Orchard**: Under construction placeholder
+  - **Number Sprint**: Under construction placeholder
+- **Stream Chooser Modal**: Allows selection from 9 academic streams (JRF Horticulture, ABM, Banking, etc.)
+- **Navigation to Games**: All mentions of "games" or "interactive games" across the site link to `/games`:
+  - Hero section: "Preview Games" button
+  - CTA section: "Preview Games" button  
+  - ValueProps: "Interactive Games" feature card
+  - Footer: "Interactive Games" link
+  - Nav: "Games" link
+- All links use Wouter Link for SPA routing (no full page reloads)
 
 ## User Preferences
 
