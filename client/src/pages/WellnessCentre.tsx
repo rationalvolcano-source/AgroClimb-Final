@@ -9,6 +9,7 @@ function DeepBreathingLoop() {
   const [phase, setPhase] = useState<"inhale" | "hold" | "exhale">("inhale");
   const [count, setCount] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
+  const startDelayRef = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const phaseDurations = { inhale: 8, hold: 8, exhale: 8 };
@@ -43,13 +44,30 @@ function DeepBreathingLoop() {
 
   function handleStop() {
     setIsRunning(false);
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    if (startDelayRef.current) {
+      clearTimeout(startDelayRef.current);
+      startDelayRef.current = null;
+    }
   }
 
   function handleStart() {
-    setIsRunning(true);
+    // Clear any existing timers
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (startDelayRef.current) clearTimeout(startDelayRef.current);
+    
+    // Reset to initial state
     setPhase("inhale");
     setCount(0);
+    setIsRunning(false);
+    
+    //Force a render with reset state, then start timer
+    setTimeout(() => {
+      setIsRunning(true);
+    }, 0);
   }
 
   return (
