@@ -11,7 +11,15 @@ The application aims to solve career clarity challenges by providing instant fit
 2. **Books** (`/books`) - Study materials and books page with 7 books for ABM, Banking, and JRF Horticulture
 3. **Interactive Games** (`/games`) - Stream-based gaming hub with four pedagogically designed learning games: Flashcard Duel (functional), Logic Orchard, Number Sprint, and Word Sprint (under construction). Users select their academic stream first, then see only the games allocated to that stream
 4. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
-5. **Wellness Centre** (`/wellness`) - Free videos and tools including yoga sessions, breathing exercises, mental sharpness tips, and daily check-ins. No paid webinar emphasis - focused on accessible wellness resources
+5. **Wellness Centre** (`/wellness`) - Complete mind-body wellness toolkit with interactive tools:
+   - **Yoga Sessions**: Morning (6-9 AM IST) and Evening (9-11 PM IST) yoga with Start/End controls and on-demand video playback
+   - **2-Minute Breathing Reset**: 4-4-4-4 box breathing timer with auto-repeating cycles
+   - **Focus Soundscape**: Pomodoro timer (15/25/45min options) with background audio and optional task tracking
+   - **5-4-3-2-1 Grounding**: Interactive sensory grounding exercise to reduce anxiety
+   - **Weekly Reflection**: Quick journaling tool for goal tracking and stress checks
+   - **Micro-Stretch Routine**: 5-minute posture and eye relief video exercises
+   - **Motivational Thought**: Daily mantra/quote placeholder
+   - All tools feature Start/End buttons with no auto-play interference
 6. **Plan B & Webinars Hub** (`/planb-webinars`) - Navigation hub with two aesthetic card options: Plan B Skills (upskilling tracks) and Alumni Webinars (₹9 live sessions). Subheading includes clickable "Unlock with a Pro plan" link to pricing section
 
 ### Navigation System
