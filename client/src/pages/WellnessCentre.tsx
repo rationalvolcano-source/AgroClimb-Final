@@ -134,9 +134,9 @@ function FocusSoundscape() {
   const [remaining, setRemaining] = useState(0);
 
   const soundtracks = {
-    Euphoria: "/attached_assets/ambient-background-347405_1760011359751.mp3",
-    Ambrossia: "/attached_assets/ambient-background-339939_1760011815059.mp3",
-    Elixir: "/attached_assets/solitude-dark-ambient-music-354468_1760011815058.mp3",
+    Euphoria: "/ambient-background-347405_1760011359751.mp3",
+    Ambrossia: "/ambient-background-339939_1760011815059.mp3",
+    Elixir: "/solitude-dark-ambient-music-354468_1760011815058.mp3",
   };
 
   useEffect(() => {
