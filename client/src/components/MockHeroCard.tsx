@@ -1,5 +1,6 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 export default function MockHeroCard() {
   return (
@@ -13,8 +14,10 @@ export default function MockHeroCard() {
         <p className="text-slate-400 text-sm" data-testid="text-mock-subtitle">Discover where you fit best</p>
       </div>
       
-      <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/30" data-testid="button-take-quiz">
-        Take Quiz Now <ArrowRight className="ml-2 h-5 w-5" />
+      <Button asChild size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/30" data-testid="button-take-quiz">
+        <Link href="/career-quiz">
+          Take Quiz Now <ArrowRight className="ml-2 h-5 w-5" />
+        </Link>
       </Button>
       
       <div className="text-xs text-slate-500" data-testid="text-quiz-info">Free • 5 minutes • AI-powered</div>

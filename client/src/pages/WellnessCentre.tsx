@@ -419,7 +419,7 @@ export default function WellnessCentre() {
         </div>
 
         {/* Section 2: Yoga Sessions */}
-        <div className="mb-8">
+        <div className="mb-8" id="yoga-videos">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold mb-2" data-testid="text-yoga-section-title">Yoga Sessions</h2>
             <p className="text-slate-400">Strengthen body & mind through mindful movement</p>

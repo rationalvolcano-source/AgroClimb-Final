@@ -9,8 +9,10 @@ export default function CTA() {
         <h3 className="text-2xl md:text-3xl font-semibold" data-testid="cta-headline">Ready to discover where you fit best?</h3>
         <p className="text-slate-300 mt-2" data-testid="cta-subheadline">5 minutes. 1 quiz. A personalized roadmap to your best-fit career.</p>
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-cta-quiz">
-            Get My Career Plan → <ArrowRight className="ml-2 h-5 w-5" />
+          <Button asChild size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-cta-quiz">
+            <Link href="/career-quiz">
+              Get My Career Plan → <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
           </Button>
           <Button asChild size="lg" variant="outline" className="border-slate-700 hover:bg-slate-800" data-testid="button-cta-preview">
             <Link href="/games">

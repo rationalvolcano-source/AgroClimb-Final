@@ -29,8 +29,10 @@ export default function Hero() {
           With AI-backed quizzes, personalized pathways, and outcome-first guidance — your path becomes clear, not crowded.
         </p>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-quiz-primary">
-            Get My Career Plan → <PlayCircle className="ml-2 h-5 w-5" />
+          <Button asChild size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-quiz-primary">
+            <Link href="/career-quiz">
+              Get My Career Plan → <PlayCircle className="ml-2 h-5 w-5" />
+            </Link>
           </Button>
           <Button asChild size="lg" variant="secondary" data-testid="button-games">
             <Link href="/games">

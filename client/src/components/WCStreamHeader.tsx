@@ -6,14 +6,14 @@ export default function WCStreamHeader() {
           <h1 className="text-3xl md:text-5xl font-semibold" data-testid="text-wellness-title">Wellness Centre</h1>
           <p className="text-slate-300 mt-2" data-testid="text-wellness-description">
             Micro-sessions for stress, focus & rest — built for agri aspirants.
-            Weekly ₹9 live webinars + free tools below.
+            Free guided videos and tools to support your study journey.
           </p>
           <div className="mt-4 flex gap-3">
-            <a className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" href="#register-webinar" data-testid="link-register-webinar">
-              Register for ₹9
-            </a>
-            <a className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" href="#quick-calm" data-testid="link-quick-calm">
+            <a className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" href="#quick-calm" data-testid="link-quick-calm">
               Try Quick Calm
+            </a>
+            <a className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" href="#yoga-videos" data-testid="link-yoga-videos">
+              Watch Yoga Videos
             </a>
           </div>
         </div>

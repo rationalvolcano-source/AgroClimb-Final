@@ -47,10 +47,12 @@ export default function Nav() {
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="hidden md:inline-flex" data-testid="button-signin">Sign in</Button>
           <div className="relative group">
-            <Button className="bg-emerald-500 hover:bg-emerald-400 text-white" data-testid="button-quiz-cta">
-              <span className="hidden sm:inline">Get My Career Plan →</span>
-              <span className="sm:hidden">Plan →</span>
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-white" data-testid="button-quiz-cta">
+              <Link href="/career-quiz">
+                <span className="hidden sm:inline">Get My Career Plan →</span>
+                <span className="sm:hidden">Plan →</span>
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
             <div className="hidden md:block absolute top-full mt-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
               <span className="text-xs text-slate-400 whitespace-nowrap">Takes 5 minutes</span>
