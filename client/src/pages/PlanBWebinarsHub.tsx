@@ -12,7 +12,10 @@ export default function PlanBWebinarsHub() {
             Plan B & Webinars
           </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto" data-testid="text-hub-description">
-            Choose your path: upskill for alternate income or connect with alumni experts
+            Choose your path: upskill for alternate income or connect with alumni experts.{" "}
+            <Link href="/#pricing" className="text-emerald-400 hover:text-emerald-300 underline transition-colors" data-testid="link-unlock-pro">
+              Unlock with a Pro plan
+            </Link>
           </p>
         </div>
 
@@ -53,7 +56,6 @@ export default function PlanBWebinarsHub() {
                 <h2 className="text-3xl font-bold mb-3" data-testid="text-webinars-title">Alumni Webinars</h2>
                 <p className="text-slate-300 mb-6" data-testid="text-webinars-description">
                   Weekly ₹9 live sessions with alumni for real insights, motivation, and personalized doubt-clearing.
-                  <span className="block mt-2 text-emerald-400 font-semibold">Free for Pro members!</span>
                 </p>
                 
                 <div className="inline-flex items-center text-cyan-400 font-medium group-hover:translate-x-2 transition-transform">

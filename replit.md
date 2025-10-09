@@ -12,7 +12,7 @@ The application aims to solve career clarity challenges by providing instant fit
 3. **Interactive Games** (`/games`) - Stream-based gaming hub with four pedagogically designed learning games: Flashcard Duel (functional), Logic Orchard, Number Sprint, and Word Sprint (under construction). Users select their academic stream first, then see only the games allocated to that stream
 4. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
 5. **Wellness Centre** (`/wellness`) - Free videos and tools including yoga sessions, breathing exercises, mental sharpness tips, and daily check-ins. No paid webinar emphasis - focused on accessible wellness resources
-6. **Plan B & Webinars Hub** (`/planb-webinars`) - Navigation hub with two aesthetic card options: Plan B Skills (upskilling tracks) and Alumni Webinars (₹9 live sessions, free for Pro members)
+6. **Plan B & Webinars Hub** (`/planb-webinars`) - Navigation hub with two aesthetic card options: Plan B Skills (upskilling tracks) and Alumni Webinars (₹9 live sessions). Subheading includes clickable "Unlock with a Pro plan" link to pricing section
 
 ### Navigation System
 - **Nav Component** (`client/src/components/Nav.tsx`) - Unified navigation bar used across all pages
