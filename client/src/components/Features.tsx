@@ -6,32 +6,38 @@ export default function Features() {
     { 
       icon: Brain, 
       title: "Career Guidance Quiz", 
-      desc: "AI-powered fit analysis across 8 career clusters—Academia to Banking, Corporate to Entrepreneurship." 
+      desc: "AI-powered fit analysis across 8 career clusters—Academia to Banking, Corporate to Entrepreneurship.",
+      link: "/career-quiz"
     },
     { 
       icon: FlaskConical, 
       title: "Subject Recommender", 
-      desc: "Academic path? Get precise subject recommendations starting with Horticulture JRF." 
+      desc: "Academic path? Get precise subject recommendations starting with Horticulture JRF.",
+      link: "/subject-recommender"
     },
     { 
       icon: Gamepad2, 
       title: "Interactive Games", 
-      desc: "Master recall, reasoning, and speed through Flashcard Duel, Logic Orchard & Number Sprint." 
+      desc: "Master recall, reasoning, and speed through Flashcard Duel, Logic Orchard & Number Sprint.",
+      link: "/games"
     },
     { 
       icon: BookOpen, 
       title: "Books & PYQs", 
-      desc: "High-yield PDFs and topic-wise practice tests. Single titles or complete bundles." 
+      desc: "High-yield PDFs and topic-wise practice tests. Single titles or complete bundles.",
+      link: "/books"
     },
     { 
       icon: Video, 
       title: "Recorded Classes", 
-      desc: "Learn anytime with expert educators. Ultra courses expand pathway-by-pathway." 
+      desc: "Learn anytime with expert educators. Ultra courses expand pathway-by-pathway.",
+      link: "/recorded-classes"
     },
     { 
       icon: Heart, 
       title: "Wellness Centre", 
-      desc: "Free micro-sessions for focus and calm. Embedded tools for sustainable study habits." 
+      desc: "Free micro-sessions for focus and calm. Embedded tools for sustainable study habits.",
+      link: "/wellness"
     },
     { 
       icon: Puzzle, 
@@ -42,7 +48,8 @@ export default function Features() {
     { 
       icon: Users, 
       title: "Alumni Webinars", 
-      desc: "Weekly ₹9 live sessions for real insights, motivation & personalized doubt-clearing." 
+      desc: "Weekly ₹9 live sessions for real insights, motivation & personalized doubt-clearing.",
+      link: "/alumni-webinars"
     },
   ];
 

@@ -34,7 +34,6 @@ export default function Plans() {
             <li className="text-slate-400" data-testid="text-plan-pro-feature-4"><b>Pro = your starter toolkit</b> —not a full course.</li>
           </ul>
           <a href="#buy-pro" className="mt-5 inline-block px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" data-testid="link-buy-pro">Go Pro</a>
-          <div className="text-xs text-slate-400 mt-2" data-testid="text-plan-pro-note">3 free game plays per Gmail before upgrade lock.</div>
         </div>
 
         {/* Ultra */}

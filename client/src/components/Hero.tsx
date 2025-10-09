@@ -44,7 +44,11 @@ export default function Hero() {
               Up-skilling for Plan B (Excel, PPT, AI)
             </Link>
           </li>
-          <li data-testid="text-feature-2">Alumni Connect – live workshops</li>
+          <li data-testid="text-feature-2">
+            <Link href="/alumni-webinars" className="hover:text-emerald-400 transition-colors">
+              Alumni Connect – live workshops
+            </Link>
+          </li>
           <li data-testid="text-feature-3">
             <Link href="/books" className="hover:text-emerald-400 transition-colors">
               Flashcards • PYQs • Notes

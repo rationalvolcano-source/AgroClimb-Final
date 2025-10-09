@@ -9,6 +9,10 @@ import WellnessCentre from "@/pages/WellnessCentre";
 import Books from "@/pages/Books";
 import Games from "@/pages/Games";
 import PlanB from "@/pages/PlanB";
+import CareerQuizComingSoon from "@/pages/CareerQuizComingSoon";
+import SubjectRecommenderComingSoon from "@/pages/SubjectRecommenderComingSoon";
+import RecordedClassesComingSoon from "@/pages/RecordedClassesComingSoon";
+import AlumniWebinarsComingSoon from "@/pages/AlumniWebinarsComingSoon";
 
 function Router() {
   return (
@@ -19,6 +23,10 @@ function Router() {
       <Route path="/books" component={Books}/>
       <Route path="/games" component={Games}/>
       <Route path="/planb" component={PlanB}/>
+      <Route path="/career-quiz" component={CareerQuizComingSoon}/>
+      <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
+      <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
+      <Route path="/alumni-webinars" component={AlumniWebinarsComingSoon}/>
       <Route path="*" component={LandingPage} />
     </Switch>
   );
