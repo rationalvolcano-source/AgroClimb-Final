@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Wind, Eye, Sprout, Sunrise, Moon } from "lucide-react";
 import Nav from "@/components/Nav";
+import WCStreamHeader from "@/components/WCStreamHeader";
 
 // Deep Breathing Loop Component
 function DeepBreathingLoop() {
@@ -396,18 +397,12 @@ export default function WellnessCentre() {
       <Nav />
       
       <main className="mx-auto max-w-7xl px-4 py-12">
-        {/* Header */}
-        <div className="text-center mb-12" data-testid="wellness-header">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
-            Welness Centre
-          </h1>
-          <p className="text-lg text-slate-400">
-            Micro-sessions for stress, focus & rest — built for agri aspirants.
-          </p>
+        <div id="register-webinar">
+          <WCStreamHeader />
         </div>
 
         {/* Section 1: Quick Calm */}
-        <div className="mb-8">
+        <div className="mb-8" id="quick-calm">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold mb-2" data-testid="text-section-title">Quick Calm (Anxiety Relief)</h2>
             <p className="text-slate-400 mb-1">⏱ Duration: 2–3 minutes</p>

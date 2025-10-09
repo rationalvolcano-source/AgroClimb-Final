@@ -1,0 +1,251 @@
+🌱 FILE STRUCTURE OVERVIEW
+
+You’ll add / update only these React components:
+
+/components
+  ├── HowItWorks.jsx          ← updated copy
+  ├── Features.jsx            ← updated copy
+  ├── Plans.jsx               ← updated pricing text
+  ├── WCStreamHeader.jsx      ← new (livestreams only for Wellness)
+
+
+Then wire them on:
+
+/pages
+  ├── Home.jsx                ← imports HowItWorks, Features, Plans
+  ├── Wellness.jsx            ← imports WCStreamHeader (top only)
+
+🧩 1. UPDATED COMPONENTS
+✅ components/HowItWorks.jsx
+import React from "react";
+
+export default function HowItWorks() {
+  const items = [
+    {
+      title: "Take Quiz",
+      desc: "5 minutes • 8 career clusters • no fluff.",
+      icon: "🧭",
+    },
+    {
+      title: "See Your Fit (Plan A + Plan B)",
+      desc: "Get an unbiased recommendation for your best career path today — plus a practical Plan B to stay future-proof.",
+      icon: "✨",
+    },
+    {
+      title: "Start with Pro • Ultra Rolling Out",
+      desc: "Begin with Pro (for everyone now). Ultra subject-deep courses roll out gradually for every pathway.",
+      icon: "🚀",
+    },
+  ];
+
+  return (
+    <section id="how-it-works" className="mt-10">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-center">How It Works</h2>
+      <p className="text-slate-400 text-center mt-1">Three simple steps to clarity</p>
+
+      <div className="grid md:grid-cols-3 gap-4 md:gap-6 mt-6">
+        {items.map((it) => (
+          <div key={it.title} className="rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+            <div className="text-2xl">{it.icon}</div>
+            <h3 className="text-xl font-semibold mt-2">{it.title}</h3>
+            <p className="text-slate-300 mt-2">{it.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+✅ components/Features.jsx
+import React from "react";
+
+export default function Features() {
+  const data = [
+    { icon: "🎯", title: "Career Guidance Quiz", desc: "AI-guided fit across 8 clusters — from Academia/Research to Banking/ABM, Corporate, Govt, NGO, Boards, Entrepreneurship & Diversified roles." },
+    { icon: "🧪", title: "Subject Recommender", desc: "If you lean academic, take the second quiz to pinpoint your subject — starting with Horticulture JRF, more coming soon." },
+    { icon: "🎮", title: "Interactive Games", desc: "Flashcard Duel, Logic Orchard & Number Sprint — fun recall, reasoning and speed training." },
+    { icon: "📚", title: "Books & PYQs", desc: "High-yield PDFs and topic-wise tests. Buy single titles or bundled collections." },
+    { icon: "🎥", title: "Recorded Classes", desc: "Learn anytime from top educators. Ultra courses expand pathway-by-pathway." },
+    { icon: "🧘", title: "Wellness Centre (Free)", desc: "Micro-sessions for focus & calm — with embedded YouTube autoplay for steady study rhythm." },
+    { icon: "🧩", title: "Plan B (Coming Soon)", desc: "Practical upskilling in Excel • PPT • AI tools • Freelancing • Agri-consulting." },
+    { icon: "📣", title: "Alumni Webinars", desc: "Weekly ₹9 live sessions for insights, motivation & doubt-clearing." },
+  ];
+
+  return (
+    <section id="features" className="mt-12">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-center">Features</h2>
+      <p className="text-slate-400 text-center mt-1">Focused tools for learning, clarity & momentum</p>
+
+      <div className="grid md:grid-cols-4 gap-4 md:gap-6 mt-6">
+        {data.map((f) => (
+          <div key={f.title} className="rounded-3xl border border-slate-800 bg-slate-900/60 p-5">
+            <div className="text-2xl">{f.icon}</div>
+            <h3 className="text-lg font-semibold mt-2">{f.title}</h3>
+            <p className="text-slate-300 mt-2">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+✅ components/Plans.jsx
+import React from "react";
+
+export default function Plans() {
+  return (
+    <section id="plans" className="mt-12">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-center">Plans</h2>
+      <p className="text-slate-400 text-center mt-1">Start with Pro today • Ultra courses rolling out for every pathway</p>
+
+      <div className="grid md:grid-cols-3 gap-6 mt-6">
+        {/* Books */}
+        <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
+          <h3 className="text-2xl font-bold">Books</h3>
+          <div className="text-4xl font-extrabold mt-2">₹600</div>
+          <ul className="text-slate-300 mt-3 space-y-2">
+            <li>Complete PDFs & PYQs</li>
+            <li>Topic-wise tests</li>
+            <li>Starter roadmap</li>
+          </ul>
+          <a href="#buy-books" className="mt-5 inline-block px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500">Buy Books</a>
+        </div>
+
+        {/* Pro */}
+        <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 ring-1 ring-emerald-400/30">
+          <h3 className="text-2xl font-bold">Pro</h3>
+          <div className="text-4xl font-extrabold mt-2">₹2 000</div>
+          <ul className="text-slate-300 mt-3 space-y-2">
+            <li>Interactive games (Flashcard Duel, Logic Orchard, Number Sprint)</li>
+            <li>AI study roadmap & dashboard</li>
+            <li>Alumni webinars (₹9 access)</li>
+            <li>Recorded class previews</li>
+            <li className="text-slate-400"><b>Pro = your starter toolkit</b> —not a full course.</li>
+          </ul>
+          <a href="#buy-pro" className="mt-5 inline-block px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500">Go Pro</a>
+          <div className="text-xs text-slate-400 mt-2">3 free game plays per Gmail before upgrade lock.</div>
+        </div>
+
+        {/* Ultra */}
+        <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-bold">Ultra</h3>
+            <span className="text-xs px-2 py-1 rounded-full bg-emerald-700/40 border border-emerald-700/60">Popular</span>
+          </div>
+          <div className="text-4xl font-extrabold mt-2">₹5 000</div>
+          <ul className="text-slate-300 mt-3 space-y-2">
+            <li>Your AI-powered finishing school</li>
+            <li>Deep subject courses rolling out for every pathway</li>
+            <li>Full recorded classes + mentor webinars</li>
+            <li>Books & PYQs integration</li>
+          </ul>
+          <a href="#ultra-waitlist" className="mt-5 inline-block px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700">Join Ultra Waitlist</a>
+          <div className="text-xs text-slate-400 mt-2">Existing Ultra users get new subjects free as released.</div>
+        </div>
+      </div>
+
+      <div className="text-center mt-6">
+        <a href="#plan-b" className="inline-flex items-center gap-2 text-emerald-400 underline">
+          Plan B (Coming Soon): Practical upskilling for alternate income
+        </a>
+      </div>
+    </section>
+  );
+}
+
+✅ components/WCStreamHeader.jsx
+import React from "react";
+
+export default function WCStreamHeader() {
+  return (
+    <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 md:p-6 mb-6">
+      <div className="grid md:grid-cols-2 gap-4 md:gap-6 items-center">
+        <div>
+          <h1 className="text-3xl md:text-5xl font-semibold">Wellness Centre</h1>
+          <p className="text-slate-300 mt-2">
+            Micro-sessions for stress, focus & rest — built for agri aspirants.
+            Weekly ₹9 live webinars + free tools below.
+          </p>
+          <div className="mt-4 flex gap-3">
+            <a className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" href="#register-webinar">
+              Register for ₹9
+            </a>
+            <a className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" href="#quick-calm">
+              Try Quick Calm
+            </a>
+          </div>
+        </div>
+        <div className="aspect-video w-full rounded-xl overflow-hidden border border-slate-800 bg-black">
+          <iframe
+            title="TAV Wellness Livestream"
+            className="w-full h-full"
+            src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID&autoplay=1&mute=1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+🏗 2. PAGE INTEGRATION
+Home.jsx
+import React from "react";
+import HowItWorks from "../components/HowItWorks";
+import Features from "../components/Features";
+import Plans from "../components/Plans";
+
+export default function Home() {
+  return (
+    <main className="max-w-6xl mx-auto px-4 py-6">
+      {/* keep your existing hero/header unchanged */}
+      <HowItWorks />
+      <Features />
+      <Plans />
+      {/* existing footer etc. */}
+    </main>
+  );
+}
+
+Wellness.jsx
+import React from "react";
+import WCStreamHeader from "../components/WCStreamHeader";
+
+export default function Wellness() {
+  return (
+    <main className="max-w-6xl mx-auto px-4 py-6">
+      <WCStreamHeader />
+      {/* Keep all your existing Wellness modules exactly as they are */}
+      {/* e.g. <QuickCalm />, <DeepBreathingLoop />, <Grounding />, etc. */}
+    </main>
+  );
+}
+
+🪄 3. FINAL INSTRUCTIONS (step-by-step for Replit)
+
+Upload these four component files into /components.
+
+Replace your old HowItWorks, Features, and Plans code with the versions above.
+
+In Home.jsx, remove any Livestream or Hero embed; keep only these three sections.
+
+In Wellness.jsx, import and render <WCStreamHeader /> at the very top.
+
+Replace "YOUR_CHANNEL_ID" in WCStreamHeader.jsx with your actual YouTube channel ID.
+
+Save all files → Replit auto-reloads → verify layout.
+
+Run Lighthouse or Replit Preview to ensure no duplicate imports and no minified React loop warnings.
+
+🧠 Why this build is safe & efficient
+
+Zero state hooks → no setState inside renders (prevents infinite loop errors).
+
+Minimal token footprint → pure JSX, no redundant code.
+
+SEO-optimized → keywords: career quiz, agri students, Plan B, Ultra courses, stress management, webinars.
+
+Psychological hooks → phrases like “5 minutes no fluff”, “Plan B future-proof”, “finishing school”.
+
+Theme consistent → same color tokens (bg-slate-900, text-emerald-400) and typography.
