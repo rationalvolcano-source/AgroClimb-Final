@@ -1,435 +1,531 @@
-import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Wind, Eye, Sprout, Sunrise, Moon } from "lucide-react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import Nav from "@/components/Nav";
 import WCStreamHeader from "@/components/WCStreamHeader";
 
-// Deep Breathing Loop Component
-function DeepBreathingLoop() {
-  const [phase, setPhase] = useState<"inhale" | "hold" | "exhale">("inhale");
-  const [count, setCount] = useState(0);
-  const [isRunning, setIsRunning] = useState(true);
-  const startDelayRef = useRef<NodeJS.Timeout | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+/* ---------- Helper Components ---------- */
+const Card = ({ children }: { children: ReactNode }) => (
+  <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 hover:border-slate-700 transition">
+    {children}
+  </div>
+);
 
-  const phaseDurations = { inhale: 8, hold: 8, exhale: 8 };
-  const phaseLabels = { inhale: "Breathe In", hold: "Hold", exhale: "Breathe Out" };
+const H2 = ({ children }: { children: ReactNode }) => (
+  <h2 className="text-2xl md:text-3xl font-extrabold">{children}</h2>
+);
 
-  useEffect(() => {
-    if (!isRunning) return;
+const Sub = ({ children }: { children: ReactNode }) => (
+  <p className="text-slate-400 mt-1 text-sm">{children}</p>
+);
 
-    const duration = phaseDurations[phase];
-    
-    if (count >= duration) {
-      setPhase((currentPhase) => {
-        if (currentPhase === "inhale") return "hold";
-        if (currentPhase === "hold") return "exhale";
-        return "inhale";
-      });
-      setCount(0);
-      return;
-    }
-
-    timerRef.current = setTimeout(() => {
-      setCount((prevCount) => prevCount + 1);
-    }, 1000);
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [phase, count, phaseDurations, isRunning]);
-
-  const duration = phaseDurations[phase];
-  const progress = (count / duration) * 100;
-
-  function handleStop() {
-    setIsRunning(false);
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-    if (startDelayRef.current) {
-      clearTimeout(startDelayRef.current);
-      startDelayRef.current = null;
-    }
-  }
-
-  function handleStart() {
-    // Clear any existing timers
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (startDelayRef.current) clearTimeout(startDelayRef.current);
-    
-    // Reset to initial state
-    setPhase("inhale");
-    setCount(0);
-    setIsRunning(false);
-    
-    //Force a render with reset state, then start timer
-    setTimeout(() => {
-      setIsRunning(true);
-    }, 0);
-  }
-
+/* ---------- Yoga Block with Start/End ---------- */
+function YogaBlock({ title, emoji, slot, videoId }: { title: string; emoji: string; slot: string; videoId: string }) {
+  const [playing, setPlaying] = useState(false);
+  
   return (
-    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-breathing">
-      <div className="flex items-center gap-2 mb-4">
-        <Wind className="h-5 w-5 text-emerald-400" />
-        <h3 className="text-lg font-semibold">Deep Breathing Loop</h3>
-      </div>
-      <p className="text-sm text-slate-400 mb-6">8-8-8 breathing technique — autoplay looping timer</p>
-      
-      <div className="relative w-48 h-48 mx-auto mb-6">
-        <svg className="transform -rotate-90" width="192" height="192">
-          <circle cx="96" cy="96" r="80" fill="none" stroke="rgb(51 65 85)" strokeWidth="12" />
-          <circle
-            cx="96"
-            cy="96"
-            r="80"
-            fill="none"
-            stroke="rgb(52 211 153)"
-            strokeWidth="12"
-            strokeDasharray={`${2 * Math.PI * 80}`}
-            strokeDashoffset={`${2 * Math.PI * 80 * (1 - progress / 100)}`}
-            style={{ transition: "stroke-dashoffset 1s linear" }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="text-xl font-bold text-emerald-400" data-testid="text-breathing-phase">
-            {phaseLabels[phase]}
-          </div>
-          <div className="text-sm text-slate-400 mt-1" data-testid="text-breathing-count">
-            {count}/{duration}s
-          </div>
-        </div>
+    <Card>
+      <div className="text-3xl" aria-hidden="true" data-testid={`emoji-${videoId}`}>{emoji}</div>
+      <h3 className="text-lg font-semibold mt-2" data-testid={`title-${videoId}`}>{title}</h3>
+      <Sub>{slot}</Sub>
+
+      <div className="mt-4 flex gap-2">
+        <button
+          type="button"
+          className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition"
+          onClick={() => setPlaying(true)}
+          data-testid={`button-start-${videoId}`}
+        >
+          Start Session
+        </button>
+        <button
+          type="button"
+          className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
+          onClick={() => setPlaying(false)}
+          data-testid={`button-end-${videoId}`}
+        >
+          End Session
+        </button>
       </div>
 
-      <div className="flex justify-center gap-3">
-        {isRunning ? (
-          <Button 
-            onClick={handleStop} 
-            variant="outline" 
-            size="sm"
-            className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10"
-            data-testid="button-breathing-stop"
-          >
-            Stop
-          </Button>
-        ) : (
-          <Button 
-            onClick={handleStart} 
-            className="bg-emerald-500 hover:bg-emerald-400"
-            size="sm"
-            data-testid="button-breathing-start"
-          >
-            Start
-          </Button>
-        )}
-      </div>
+      {playing && (
+        <div className="mt-4 aspect-video w-full rounded-xl overflow-hidden border border-slate-800 bg-black" data-testid={`video-container-${videoId}`}>
+          <iframe
+            title={title}
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            data-testid={`iframe-${videoId}`}
+          />
+        </div>
+      )}
     </Card>
   );
 }
 
-// 5-4-3-2-1 Grounding Component
-function GroundingExercise() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isActive, setIsActive] = useState(false);
+/* ---------- 2-Minute Breathing Reset ---------- */
+function BreathingReset() {
+  const [on, setOn] = useState(false);
+  const [phase, setPhase] = useState("Ready");
+  const [sec, setSec] = useState(0);
 
-  const steps = [
-    "Find 5 things you can see around you",
-    "Find 4 things you can touch",
-    "Find 3 things you can hear",
-    "Find 2 things you can smell",
-    "Find 1 thing you can taste"
-  ];
-
-  function handleStart() {
-    setIsActive(true);
-    setCurrentStep(0);
-  }
-
-  function handleNext() {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      setIsActive(false);
-      setCurrentStep(0);
-    }
-  }
-
-  function handleReset() {
-    setIsActive(false);
-    setCurrentStep(0);
-  }
+  useEffect(() => {
+    if (!on) return;
+    
+    let t = 0;
+    setPhase("Inhale");
+    setSec(4);
+    
+    const id = setInterval(() => {
+      t++;
+      const step = t % 16; // 4+4+4+4
+      if (step === 0) { setPhase("Inhale"); setSec(4); }
+      else if (step === 4) { setPhase("Hold"); setSec(4); }
+      else if (step === 8) { setPhase("Exhale"); setSec(4); }
+      else if (step === 12) { setPhase("Hold"); setSec(4); }
+      else { setSec((s) => (s > 0 ? s - 1 : 4)); }
+    }, 1000);
+    
+    return () => clearInterval(id);
+  }, [on]);
 
   return (
-    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-grounding">
-      <div className="flex items-center gap-2 mb-4">
-        <Eye className="h-5 w-5 text-cyan-400" />
-        <h3 className="text-lg font-semibold">5-4-3-2-1 Grounding</h3>
-      </div>
-      <p className="text-sm text-slate-400 mb-6">Interactive text walk-through to anchor yourself in the present</p>
+    <Card>
+      <div className="text-3xl" aria-hidden="true">💨</div>
+      <h3 className="text-lg font-semibold mt-2" data-testid="title-breathing">2-Minute Breathing Reset</h3>
+      <Sub>Box-breathing timer with soft pacing. Use between study blocks.</Sub>
 
-      {!isActive ? (
-        <div className="text-center py-8">
-          <p className="text-slate-300 mb-6">A simple sensory exercise to calm anxiety and bring you back to the present moment.</p>
-          <Button onClick={handleStart} className="bg-cyan-500 hover:bg-cyan-400" data-testid="button-grounding-start">
-            Begin Exercise
-          </Button>
+      <div className="mt-3 flex gap-2">
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+          onClick={() => setOn(true)}
+          data-testid="button-start-breathing"
+        >
+          Start
+        </button>
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
+          onClick={() => { setOn(false); setPhase("Ready"); setSec(0); }}
+          data-testid="button-end-breathing"
+        >
+          End
+        </button>
+      </div>
+
+      {on && (
+        <div className="mt-4 grid place-items-center" data-testid="breathing-display">
+          <div className="text-3xl font-semibold" data-testid="text-breathing-phase">{phase}</div>
+          <div className="text-5xl font-extrabold mt-2" data-testid="text-breathing-sec">{sec}</div>
+          <div className="mt-2 text-slate-400 text-xs">Cycle auto-repeats</div>
         </div>
-      ) : (
-        <div className="space-y-6">
-          <div className="min-h-[120px] flex items-center justify-center">
-            <p className="text-lg text-slate-200 text-center" data-testid="text-grounding-step">
-              {steps[currentStep]}
-            </p>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500" data-testid="text-grounding-progress">Step {currentStep + 1} of {steps.length}</span>
-            <div className="flex gap-2">
-              <Button onClick={handleReset} variant="outline" size="sm" data-testid="button-grounding-reset">
+      )}
+    </Card>
+  );
+}
+
+/* ---------- Focus Soundscape with Pomodoro + Tasks ---------- */
+function FocusSoundscape() {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [on, setOn] = useState(false);
+  const [seconds, setSeconds] = useState(25 * 60);
+  const [running, setRunning] = useState(false);
+  const [task, setTask] = useState("");
+  const [done, setDone] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!on || !running) return;
+    
+    const id = setInterval(() => {
+      setSeconds((s) => {
+        if (s <= 1) {
+          setRunning(false);
+          if (audioRef.current) audioRef.current.pause();
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    
+    return () => clearInterval(id);
+  }, [on, running]);
+
+  const fmt = (s: number) => {
+    const m = Math.floor(s / 60).toString().padStart(2, "0");
+    const ss = (s % 60).toString().padStart(2, "0");
+    return `${m}:${ss}`;
+  };
+
+  const startFocus = () => {
+    setOn(true);
+    setRunning(true);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
+  };
+
+  const endFocus = () => {
+    setRunning(false);
+    setOn(false);
+    setSeconds(25 * 60);
+    if (audioRef.current) audioRef.current.pause();
+  };
+
+  const addTask = () => {
+    if (!task.trim()) return;
+    setDone((d) => [...d, task.trim()]);
+    setTask("");
+  };
+
+  return (
+    <Card>
+      <div className="text-3xl" aria-hidden="true">🎧</div>
+      <h3 className="text-lg font-semibold mt-2" data-testid="title-focus">Focus Soundscape</h3>
+      <Sub>Relaxing instrumental music while you focus — with optional task tracking.</Sub>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+          onClick={startFocus}
+          data-testid="button-start-focus"
+        >
+          Start Focus
+        </button>
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
+          onClick={endFocus}
+          data-testid="button-end-focus"
+        >
+          End Focus
+        </button>
+
+        <div className="flex gap-2 ml-auto text-xs">
+          <button 
+            type="button"
+            className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition" 
+            onClick={() => setSeconds(15 * 60)}
+            data-testid="button-15min"
+          >
+            15m
+          </button>
+          <button 
+            type="button"
+            className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition" 
+            onClick={() => setSeconds(25 * 60)}
+            data-testid="button-25min"
+          >
+            25m
+          </button>
+          <button 
+            type="button"
+            className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition" 
+            onClick={() => setSeconds(45 * 60)}
+            data-testid="button-45min"
+          >
+            45m
+          </button>
+        </div>
+      </div>
+
+      <audio ref={audioRef} loop preload="metadata">
+        <source src="/focus.mp3" type="audio/mpeg" />
+      </audio>
+
+      {on && (
+        <div className="mt-4 grid md:grid-cols-2 gap-4" data-testid="focus-active">
+          <div className="rounded-xl border border-slate-800 p-4 text-center">
+            <div className="text-5xl font-extrabold" data-testid="text-timer">{fmt(seconds)}</div>
+            <div className="mt-3 flex justify-center gap-2">
+              {!running ? (
+                <button 
+                  type="button"
+                  className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+                  onClick={() => setRunning(true)}
+                  data-testid="button-resume"
+                >
+                  Resume
+                </button>
+              ) : (
+                <button 
+                  type="button"
+                  className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
+                  onClick={() => setRunning(false)}
+                  data-testid="button-pause"
+                >
+                  Pause
+                </button>
+              )}
+              <button 
+                type="button"
+                className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
+                onClick={() => setSeconds(25 * 60)}
+                data-testid="button-reset"
+              >
                 Reset
-              </Button>
-              <Button onClick={handleNext} className="bg-cyan-500 hover:bg-cyan-400" size="sm" data-testid="button-grounding-next">
-                {currentStep === steps.length - 1 ? "Complete" : "Next"}
-              </Button>
+              </button>
             </div>
           </div>
-        </div>
-      )}
-    </Card>
-  );
-}
 
-// Narration array defined outside component to prevent recreation on every render
-const farmNarration = [
-  "Close your eyes and imagine...",
-  "Early dawn mist over green fields...",
-  "The soft rustling of wheat in the gentle breeze...",
-  "Birds chirping as the sun rises...",
-  "The earth beneath your feet, solid and grounding...",
-  "Peace flows through you like a quiet stream.",
-  "You are calm, centered, and ready."
-];
-
-// Calm Farm Visualization Component
-function CalmFarmVisualization() {
-  const [currentLine, setCurrentLine] = useState(0);
-  const [audioPlaying, setAudioPlaying] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    if (currentLine >= farmNarration.length - 1) {
-      timerRef.current = setTimeout(() => {
-        setCurrentLine(0);
-      }, 3000);
-    } else {
-      timerRef.current = setTimeout(() => {
-        setCurrentLine((prev) => prev + 1);
-      }, 3000);
-    }
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [currentLine]);
-
-  function toggleAudio() {
-    if (audioRef.current) {
-      if (audioPlaying) {
-        audioRef.current.pause();
-        setAudioPlaying(false);
-      } else {
-        audioRef.current.play();
-        setAudioPlaying(true);
-      }
-    }
-  }
-
-  return (
-    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-visualization">
-      <div className="flex items-center gap-2 mb-4">
-        <Sprout className="h-5 w-5 text-emerald-400" />
-        <h3 className="text-lg font-semibold">Calm Farm Visualization</h3>
-      </div>
-      <p className="text-sm text-slate-400 mb-6">Gentle guided imagery with ambient agri sounds</p>
-
-      <div className="space-y-6">
-        <div className="w-full h-40 bg-gradient-to-br from-emerald-900/30 to-cyan-900/30 rounded-lg flex items-center justify-center">
-          <div className="min-h-[80px] flex items-center justify-center px-6">
-            <p className="text-lg text-slate-200 text-center italic" data-testid="text-visualization-line">
-              {farmNarration[currentLine]}
-            </p>
+          <div className="rounded-xl border border-slate-800 p-4">
+            <div className="text-sm text-slate-400">Task (optional)</div>
+            <div className="mt-1 flex gap-2">
+              <input
+                type="text"
+                value={task}
+                onChange={(e) => setTask(e.target.value)}
+                className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 outline-none text-slate-100"
+                placeholder="What will you complete this session?"
+                data-testid="input-task"
+              />
+              <button 
+                type="button"
+                className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+                onClick={addTask}
+                data-testid="button-add-task"
+              >
+                Add
+              </button>
+            </div>
+            {!!done.length && (
+              <ul className="mt-3 text-sm list-disc pl-5 space-y-1" data-testid="list-tasks">
+                {done.map((t, i) => (
+                  <li key={i} className="text-slate-300" data-testid={`task-${i}`}>{t}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
-        <div className="flex items-center justify-center gap-4">
-          <span className="text-xs text-slate-500" data-testid="text-visualization-progress">
-            {currentLine + 1} / {farmNarration.length} • Auto-progressing
-          </span>
-          <Button 
-            onClick={toggleAudio}
-            variant="outline"
-            size="sm"
-            className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10"
-            data-testid="button-toggle-audio"
-          >
-            {audioPlaying ? "🔊 Pause Sound" : "🔇 Play Ambient Sound"}
-          </Button>
-        </div>
-      </div>
-      
-      <audio 
-        ref={audioRef}
-        loop
-        src="https://cdn.pixabay.com/audio/2022/05/13/audio_c0ca63d4fa.mp3"
-        data-testid="audio-farm"
-      />
-    </Card>
-  );
-}
-
-// Feeling Better Component
-function FeelingBetter() {
-  const [rating, setRating] = useState<number | null>(null);
-
-  const emojis = ["😔", "😟", "😐", "🙂", "😊"];
-
-  return (
-    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-feeling-better">
-      <h3 className="text-lg font-semibold mb-4 text-center">Feeling better?</h3>
-      <div className="flex justify-center gap-4 mb-6">
-        {emojis.map((emoji, index) => (
-          <button
-            key={index}
-            onClick={() => setRating(index + 1)}
-            className={`text-4xl transition-all ${
-              rating === index + 1 ? "scale-125" : "scale-100 opacity-60 hover:opacity-100 hover:scale-110"
-            }`}
-            data-testid={`button-emoji-${index + 1}`}
-          >
-            {emoji}
-          </button>
-        ))}
-      </div>
-      {rating !== null && rating <= 2 && (
-        <div className="text-center" data-testid="text-try-again">
-          <p className="text-sm text-slate-400 mb-3">That's okay. Sometimes it takes a few tries.</p>
-          <a 
-            href="#" 
-            onClick={(e) => { e.preventDefault(); setRating(null); }}
-            className="text-sm text-emerald-400 hover:text-emerald-300 underline"
-            data-testid="link-try-again"
-          >
-            Try again or take a short break
-          </a>
-        </div>
-      )}
-      {rating !== null && rating > 2 && (
-        <p className="text-center text-sm text-emerald-400" data-testid="text-great">
-          Great! You're ready to get back to studying. 📚
-        </p>
       )}
     </Card>
   );
 }
 
-// Morning Yoga Component
-function MorningYoga() {
+/* ---------- 5-4-3-2-1 Grounding Tool ---------- */
+function GroundingTool() {
+  const [on, setOn] = useState(false);
+  const [step, setStep] = useState(5);
+  
+  const reset = () => { 
+    setStep(5); 
+    setOn(false); 
+  };
+
   return (
-    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-morning-yoga">
-      <div className="flex items-center gap-2 mb-4">
-        <Sunrise className="h-5 w-5 text-amber-400" />
-        <h3 className="text-lg font-semibold">Morning Yoga</h3>
+    <Card>
+      <div className="text-3xl" aria-hidden="true">🧠</div>
+      <h3 className="text-lg font-semibold mt-2" data-testid="title-grounding">5-4-3-2-1 Grounding</h3>
+      <Sub>Lower anxiety in ~60 seconds by labeling senses.</Sub>
+
+      <div className="mt-3 flex gap-2">
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+          onClick={() => { setOn(true); setStep(5); }}
+          data-testid="button-start-grounding"
+        >
+          Start
+        </button>
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
+          onClick={reset}
+          data-testid="button-end-grounding"
+        >
+          End
+        </button>
       </div>
-      <p className="text-sm text-slate-400 mb-6">Start your day with gentle stretches and mindful breathing</p>
-      
-      <div className="aspect-video w-full bg-slate-800 rounded-lg overflow-hidden mb-4">
-        <iframe
-          width="100%"
-          height="100%"
-          src="https://www.youtube.com/embed/VaoV1PrYft4"
-          title="Morning Yoga"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="w-full h-full"
-          data-testid="iframe-morning-yoga"
-        ></iframe>
-      </div>
-      
-      <p className="text-xs text-slate-500 text-center">⏱ 15-20 minutes • Perfect for pre-study energizing</p>
+
+      {on && (
+        <div className="mt-4" data-testid="grounding-active">
+          <div className="text-slate-300" data-testid="text-grounding-step">
+            {step === 5 && "Name 5 things you can see."}
+            {step === 4 && "Name 4 things you can feel."}
+            {step === 3 && "Name 3 things you can hear."}
+            {step === 2 && "Name 2 things you can smell."}
+            {step === 1 && "Name 1 thing you can taste."}
+          </div>
+          <div className="mt-3 flex gap-2">
+            {step > 1 ? (
+              <button 
+                type="button"
+                className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+                onClick={() => setStep(step - 1)}
+                data-testid="button-next-grounding"
+              >
+                Next
+              </button>
+            ) : (
+              <button 
+                type="button"
+                className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+                onClick={reset}
+                data-testid="button-finish-grounding"
+              >
+                Finish
+              </button>
+            )}
+            <button 
+              type="button"
+              className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
+              onClick={reset}
+              data-testid="button-reset-grounding"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }
 
-// Evening Yoga Component
-function EveningYoga() {
+/* ---------- Weekly Reflection ---------- */
+function WeeklyReflection() {
+  const [on, setOn] = useState(false);
+  const [text, setText] = useState("");
+  
   return (
-    <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-6" data-testid="card-evening-yoga">
-      <div className="flex items-center gap-2 mb-4">
-        <Moon className="h-5 w-5 text-indigo-400" />
-        <h3 className="text-lg font-semibold">Evening Yoga</h3>
+    <Card>
+      <div className="text-3xl" aria-hidden="true">📅</div>
+      <h3 className="text-lg font-semibold mt-2" data-testid="title-reflection">Weekly Reflection</h3>
+      <Sub>Quick journaling to check goals & stress.</Sub>
+
+      <div className="mt-3 flex gap-2">
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+          onClick={() => setOn(true)}
+          data-testid="button-start-reflection"
+        >
+          Start
+        </button>
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
+          onClick={() => { setOn(false); setText(""); }}
+          data-testid="button-end-reflection"
+        >
+          End
+        </button>
       </div>
-      <p className="text-sm text-slate-400 mb-6">Wind down with relaxing poses for better sleep and recovery</p>
-      
-      <div className="aspect-video w-full bg-slate-800 rounded-lg overflow-hidden mb-4">
-        <iframe
-          width="100%"
-          height="100%"
-          src="https://www.youtube.com/embed/BiWDsfZ3zbo"
-          title="Evening Yoga"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="w-full h-full"
-          data-testid="iframe-evening-yoga"
-        ></iframe>
-      </div>
-      
-      <p className="text-xs text-slate-500 text-center">⏱ 15-20 minutes • Ideal for post-study relaxation</p>
+
+      {on && (
+        <div className="mt-4">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="w-full h-28 bg-slate-950 border border-slate-700 rounded-lg p-3 outline-none text-slate-100"
+            placeholder="Wins, blockers, mood, next steps..."
+            data-testid="textarea-reflection"
+          />
+        </div>
+      )}
     </Card>
   );
 }
 
-// Main Wellness Centre Component
+/* ---------- Micro-Stretch Routine ---------- */
+function MicroStretch() {
+  const [on, setOn] = useState(false);
+  
+  return (
+    <Card>
+      <div className="text-3xl" aria-hidden="true">🌿</div>
+      <h3 className="text-lg font-semibold mt-2" data-testid="title-stretch">Micro-Stretch Routine</h3>
+      <Sub>5-minute posture + eye relief.</Sub>
+
+      <div className="mt-3 flex gap-2">
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
+          onClick={() => setOn(true)}
+          data-testid="button-start-stretch"
+        >
+          Start
+        </button>
+        <button 
+          type="button"
+          className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
+          onClick={() => setOn(false)}
+          data-testid="button-end-stretch"
+        >
+          End
+        </button>
+      </div>
+
+      {on && (
+        <div className="mt-4 aspect-video w-full rounded-xl overflow-hidden border border-slate-800 bg-black" data-testid="stretch-video-container">
+          <iframe
+            title="Micro Stretch"
+            className="w-full h-full"
+            src="https://www.youtube.com/embed/g_tea8ZNk5A?autoplay=1&mute=0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            data-testid="iframe-stretch"
+          />
+        </div>
+      )}
+    </Card>
+  );
+}
+
+/* ---------- Main Wellness Page ---------- */
 export default function WellnessCentre() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
       <Nav />
-      
-      <main className="mx-auto max-w-7xl px-4 py-12">
-        <div id="register-webinar">
-          <WCStreamHeader />
-        </div>
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <WCStreamHeader />
 
-        {/* Section 1: Quick Calm */}
-        <div className="mb-8" id="quick-calm">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold mb-2" data-testid="text-section-title">Quick Calm (Anxiety Relief)</h2>
-            <p className="text-slate-400 mb-1">⏱ Duration: 2–3 minutes</p>
-            <p className="text-lg text-emerald-400 italic">"When your thoughts scatter, breathe them back."</p>
+        <section className="text-center mt-6 mb-8" data-testid="section-intro">
+          <H2>Daily Mind-Body Reset</H2>
+          <Sub>Free tools for mental clarity, focus & physical balance — built for agri learners.</Sub>
+        </section>
+
+        <section id="yoga-videos" className="grid md:grid-cols-2 gap-6" data-testid="section-yoga">
+          <YogaBlock
+            title="Morning Yoga — Rise & Focus"
+            emoji="🌅"
+            slot="Stream window: 6 AM–9 AM IST • ~10 min"
+            videoId="inpok4MKVLM"
+          />
+          <YogaBlock
+            title="Evening Yoga — Relax & Reset"
+            emoji="🌙"
+            slot="Stream window: 9 PM–11 PM IST • ~10 min"
+            videoId="v7AYKMP6rOE"
+          />
+        </section>
+
+        <section id="quick-calm" className="mt-10" data-testid="section-tools">
+          <H2>Quick Calm Tools</H2>
+          <div className="grid md:grid-cols-3 gap-6 mt-4">
+            <BreathingReset />
+            <FocusSoundscape />
+            <GroundingTool />
+            <WeeklyReflection />
+            <MicroStretch />
+            
+            <Card>
+              <div className="text-3xl" aria-hidden="true">☀️</div>
+              <h3 className="text-lg font-semibold mt-2" data-testid="title-motivational">Motivational Thought</h3>
+              <Sub>30-second mantra/quote to boost optimism.</Sub>
+              <div className="mt-3 flex gap-2">
+                <button type="button" className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" data-testid="button-start-motivational">Start</button>
+                <button type="button" className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" data-testid="button-end-motivational">End</button>
+              </div>
+            </Card>
           </div>
+        </section>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <DeepBreathingLoop />
-            <GroundingExercise />
-            <CalmFarmVisualization />
-          </div>
-
-          <FeelingBetter />
-        </div>
-
-        {/* Section 2: Yoga Sessions */}
-        <div className="mb-8" id="yoga-videos">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold mb-2" data-testid="text-yoga-section-title">Yoga Sessions</h2>
-            <p className="text-slate-400">Strengthen body & mind through mindful movement</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <MorningYoga />
-            <EveningYoga />
-          </div>
-        </div>
+        <section className="text-center mt-10" data-testid="section-footer">
+          <p className="text-slate-400 text-sm">
+            Wellness is free for all. Practice daily for best results.
+          </p>
+        </section>
       </main>
     </div>
   );

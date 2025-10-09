@@ -1,0 +1,444 @@
+1) pages/Wellness.jsx
+// pages/Wellness.jsx
+import React from "react";
+import WCStreamHeader from "../components/WCStreamHeader";
+
+/* ---------- small helpers ---------- */
+const Card = ({ children }) => (
+  <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 hover:border-slate-700 transition">
+    {children}
+  </div>
+);
+const H2 = ({ children }) => (
+  <h2 className="text-2xl md:text-3xl font-extrabold">{children}</h2>
+);
+const Sub = ({ children }) => (
+  <p className="text-slate-400 mt-1 text-sm">{children}</p>
+);
+
+/* ---------- yoga embed (with Start/End) ---------- */
+function YogaBlock({ title, emoji, slot, videoId }) {
+  const [playing, setPlaying] = React.useState(false);
+  return (
+    <Card>
+      <div className="text-3xl" aria-hidden>{emoji}</div>
+      <h3 className="text-lg font-semibold mt-2">{title}</h3>
+      <Sub>{slot}</Sub>
+
+      <div className="mt-4 flex gap-2">
+        <button
+          className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500"
+          onClick={() => setPlaying(true)}
+        >
+          Start Session
+        </button>
+        <button
+          className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700"
+          onClick={() => setPlaying(false)}
+        >
+          End Session
+        </button>
+      </div>
+
+      {playing && (
+        <div className="mt-4 aspect-video w-full rounded-xl overflow-hidden border border-slate-800 bg-black">
+          <iframe
+            title={title}
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      )}
+    </Card>
+  );
+}
+
+/* ---------- 2-min breathing (Start/End) ---------- */
+function BreathingReset() {
+  const [on, setOn] = React.useState(false);
+  const [phase, setPhase] = React.useState("Ready"); // Inhale/Hold/Exhale/Hold
+  const [sec, setSec] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!on) return;
+    let t = 0;
+    setPhase("Inhale");
+    setSec(4);
+    const id = setInterval(() => {
+      t++;
+      const step = t % 16; // 4+4+4+4
+      if (step === 0) { setPhase("Inhale"); setSec(4); }
+      else if (step === 4) { setPhase("Hold"); setSec(4); }
+      else if (step === 8) { setPhase("Exhale"); setSec(4); }
+      else if (step === 12) { setPhase("Hold"); setSec(4); }
+      else { setSec((s) => (s > 0 ? s - 1 : 4)); }
+    }, 1000);
+    return () => clearInterval(id);
+  }, [on]);
+
+  return (
+    <Card>
+      <div className="text-3xl" aria-hidden>💨</div>
+      <h3 className="text-lg font-semibold mt-2">2-Minute Breathing Reset</h3>
+      <Sub>Box-breathing timer with soft pacing. Use between study blocks.</Sub>
+
+      <div className="mt-3 flex gap-2">
+        <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={() => setOn(true)}>Start</button>
+        <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={() => { setOn(false); setPhase("Ready"); setSec(0); }}>End</button>
+      </div>
+
+      {on && (
+        <div className="mt-4 grid place-items-center">
+          <div className="text-3xl font-semibold">{phase}</div>
+          <div className="text-5xl font-extrabold mt-2">{sec}</div>
+          <div className="mt-2 text-slate-400 text-xs">Cycle auto-repeats</div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+/* ---------- Focus Soundscape + Pomodoro + Task ---------- */
+function FocusSoundscape() {
+  const audioRef = React.useRef(null);
+  const [on, setOn] = React.useState(false);
+  const [seconds, setSeconds] = React.useState(25 * 60); // default 25
+  const [running, setRunning] = React.useState(false);
+  const [task, setTask] = React.useState("");
+  const [done, setDone] = React.useState([]);
+
+  // countdown safe effect
+  React.useEffect(() => {
+    if (!on || !running) return;
+    const id = setInterval(() => {
+      setSeconds((s) => {
+        if (s <= 1) {
+          setRunning(false);
+          // auto pause audio
+          if (audioRef.current) audioRef.current.pause();
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [on, running]);
+
+  const fmt = (s) => {
+    const m = Math.floor(s / 60).toString().padStart(2, "0");
+    const ss = (s % 60).toString().padStart(2, "0");
+    return `${m}:${ss}`;
+  };
+
+  const startFocus = () => {
+    setOn(true);
+    setRunning(true);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
+  };
+  const endFocus = () => {
+    setRunning(false);
+    setOn(false);
+    setSeconds(25 * 60);
+    if (audioRef.current) audioRef.current.pause();
+  };
+
+  const addTask = () => {
+    if (!task.trim()) return;
+    setDone((d) => [...d, task.trim()]);
+    setTask("");
+  };
+
+  return (
+    <Card>
+      <div className="text-3xl" aria-hidden>🎧</div>
+      <h3 className="text-lg font-semibold mt-2">Focus Soundscape</h3>
+      <Sub>No text UI — just relaxing, open-source instrumental music while you focus.</Sub>
+
+      {/* controls */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={startFocus}>Start Focus</button>
+        <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={endFocus}>End Focus</button>
+
+        {/* durations */}
+        <div className="flex gap-2 ml-auto text-xs">
+          <button className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700" onClick={()=>setSeconds(15*60)}>15m</button>
+          <button className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700" onClick={()=>setSeconds(25*60)}>25m</button>
+          <button className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700" onClick={()=>setSeconds(45*60)}>45m</button>
+        </div>
+      </div>
+
+      {/* audio: replace src with your open-licensed track */}
+      <audio ref={audioRef} loop preload="metadata">
+        {/* Example placeholder (replace with your own hosted mp3/ogg) */}
+        <source src="/focus.mp3" type="audio/mpeg" />
+      </audio>
+
+      {/* pomodoro + task */}
+      {on && (
+        <div className="mt-4 grid md:grid-cols-2 gap-4">
+          <div className="rounded-xl border border-slate-800 p-4 text-center">
+            <div className="text-5xl font-extrabold">{fmt(seconds)}</div>
+            <div className="mt-3 flex justify-center gap-2">
+              {!running ? (
+                <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={() => setRunning(true)}>Resume</button>
+              ) : (
+                <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={() => setRunning(false)}>Pause</button>
+              )}
+              <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={() => setSeconds(25*60)}>Reset</button>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-slate-800 p-4">
+            <div className="text-sm text-slate-400">Task (optional)</div>
+            <div className="mt-1 flex gap-2">
+              <input
+                value={task}
+                onChange={(e)=>setTask(e.target.value)}
+                className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 outline-none"
+                placeholder="What will you complete this session?"
+              />
+              <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={addTask}>Add</button>
+            </div>
+            {!!done.length && (
+              <ul className="mt-3 text-sm list-disc pl-5 space-y-1">
+                {done.map((t,i)=>(<li key={i} className="text-slate-300">{t}</li>))}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+/* ---------- 5-4-3-2-1 Grounding ---------- */
+function GroundingTool() {
+  const [on, setOn] = React.useState(false);
+  const [step, setStep] = React.useState(5);
+  const reset = () => { setStep(5); setOn(false); };
+
+  return (
+    <Card>
+      <div className="text-3xl" aria-hidden>🧠</div>
+      <h3 className="text-lg font-semibold mt-2">5-4-3-2-1 Grounding</h3>
+      <Sub>Lower anxiety in ~60 seconds by labeling senses.</Sub>
+
+      <div className="mt-3 flex gap-2">
+        <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={() => { setOn(true); setStep(5); }}>Start</button>
+        <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={reset}>End</button>
+      </div>
+
+      {on && (
+        <div className="mt-4">
+          <div className="text-slate-300">
+            {step === 5 && "Name 5 things you can see."}
+            {step === 4 && "Name 4 things you can feel."}
+            {step === 3 && "Name 3 things you can hear."}
+            {step === 2 && "Name 2 things you can smell."}
+            {step === 1 && "Name 1 thing you can taste."}
+          </div>
+          <div className="mt-3 flex gap-2">
+            {step > 1 ? (
+              <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={()=>setStep(step-1)}>Next</button>
+            ) : (
+              <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={reset}>Finish</button>
+            )}
+            <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={reset}>Reset</button>
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+/* ---------- Weekly Reflection ---------- */
+function WeeklyReflection() {
+  const [on, setOn] = React.useState(false);
+  const [text, setText] = React.useState("");
+  return (
+    <Card>
+      <div className="text-3xl" aria-hidden>📅</div>
+      <h3 className="text-lg font-semibold mt-2">Weekly Reflection</h3>
+      <Sub>Quick journaling to check goals & stress.</Sub>
+
+      <div className="mt-3 flex gap-2">
+        <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={()=>setOn(true)}>Start</button>
+        <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={()=>{setOn(false); setText("");}}>End</button>
+      </div>
+
+      {on && (
+        <div className="mt-4">
+          <textarea
+            value={text}
+            onChange={(e)=>setText(e.target.value)}
+            className="w-full h-28 bg-slate-950 border border-slate-700 rounded-lg p-3 outline-none"
+            placeholder="Wins, blockers, mood, next steps..."
+          />
+        </div>
+      )}
+    </Card>
+  );
+}
+
+/* ---------- Micro-Stretch Routine ---------- */
+function MicroStretch() {
+  const [on, setOn] = React.useState(false);
+  return (
+    <Card>
+      <div className="text-3xl" aria-hidden>🌿</div>
+      <h3 className="text-lg font-semibold mt-2">Micro-Stretch Routine</h3>
+      <Sub>5-minute posture + eye relief.</Sub>
+
+      <div className="mt-3 flex gap-2">
+        <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" onClick={()=>setOn(true)}>Start</button>
+        <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={()=>setOn(false)}>End</button>
+      </div>
+
+      {on && (
+        <div className="mt-4 aspect-video w-full rounded-xl overflow-hidden border border-slate-800 bg-black">
+          {/* replace with your open-licensed stretch video */}
+          <iframe
+            title="Micro Stretch"
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/VIDEO_ID_STRETCH?autoplay=1&mute=0`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      )}
+    </Card>
+  );
+}
+
+export default function Wellness() {
+  return (
+    <main className="max-w-6xl mx-auto px-4 py-8">
+      {/* Livestream header (top of Wellness only) */}
+      <WCStreamHeader />
+
+      {/* intro */}
+      <section className="text-center mt-6 mb-8">
+        <H2>Daily Mind-Body Reset</H2>
+        <Sub>Free tools for mental clarity, focus & physical balance — built for agri learners.</Sub>
+      </section>
+
+      {/* Yoga slots */}
+      <section id="yoga" className="grid md:grid-cols-2 gap-6">
+        <YogaBlock
+          title="Morning Yoga — Rise & Focus"
+          emoji="🌅"
+          slot="Stream window: 6 AM–9 AM IST • ~10 min"
+          videoId="VIDEO_ID_MORNING"
+        />
+        <YogaBlock
+          title="Evening Yoga — Relax & Reset"
+          emoji="🌙"
+          slot="Stream window: 9 PM–11 PM IST • ~10 min"
+          videoId="VIDEO_ID_EVENING"
+        />
+      </section>
+
+      {/* Microtools */}
+      <section id="micro-tools" className="mt-10">
+        <H2>Quick Calm Tools</H2>
+        <div className="grid md:grid-cols-3 gap-6 mt-4">
+          <BreathingReset />
+          <FocusSoundscape />
+          <GroundingTool />
+          <WeeklyReflection />
+          <MicroStretch />
+          {/* sixth slot reserved if you add another later */}
+          <Card>
+            <div className="text-3xl" aria-hidden>☀️</div>
+            <h3 className="text-lg font-semibold mt-2">Motivational Thought</h3>
+            <Sub>30-second mantra/quote to boost optimism.</Sub>
+            <div className="mt-3 flex gap-2">
+              <button className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500">Start</button>
+              <button className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700">End</button>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* footer */}
+      <section className="text-center mt-10">
+        <p className="text-slate-400 text-sm">
+          Wellness is free for all. 60% of YouTube ad revenue is shared with wellness partners.
+        </p>
+        <a href="#register-webinar" className="inline-block mt-4 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500">
+          Join the ₹9 Live Wellness Webinar
+        </a>
+      </section>
+    </main>
+  );
+}
+
+2) components/WCStreamHeader.jsx (from earlier)
+import React from "react";
+
+export default function WCStreamHeader() {
+  return (
+    <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-4 md:p-6 mb-6">
+      <div className="grid md:grid-cols-2 gap-4 md:gap-6 items-center">
+        <div>
+          <h1 className="text-3xl md:text-5xl font-semibold">Wellness Centre</h1>
+          <p className="text-slate-300 mt-2">
+            Micro-sessions for stress, focus & rest — free for all AgriVision users.
+          </p>
+          <div className="mt-4 flex gap-3">
+            <a className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500" href="#register-webinar">
+              Register for ₹9
+            </a>
+            <a className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700" href="#micro-tools">
+              Try Quick Calm
+            </a>
+          </div>
+        </div>
+        <div className="aspect-video w-full rounded-xl overflow-hidden border border-slate-800 bg-black">
+          <iframe
+            title="TAV Wellness Livestream"
+            className="w-full h-full"
+            src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID&autoplay=1&mute=1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+3) Integration steps (Replit)
+
+Create/Replace pages/Wellness.jsx with the code above.
+
+Keep/Update components/WCStreamHeader.jsx (replace YOUR_CHANNEL_ID).
+
+Ensure your router (hash or React Router) points to this page (e.g., #wellness or /wellness).
+
+Replace placeholders:
+
+VIDEO_ID_MORNING, VIDEO_ID_EVENING, VIDEO_ID_STRETCH with your YouTube IDs.
+
+Put an open-licensed track at /public/focus.mp3 (or any path) for Focus Soundscape.
+
+No extra dependencies. Everything is plain React.
+
+Test:
+
+Start / End on each card works (no re-render loops).
+
+Focus: starting Pomodoro auto-plays audio; ending stops & resets.
+
+Mobile: grids stack as expected.
+
+4) Notes on open-source audio
+
+Use your own hosted .mp3 / .ogg in /public/focus.mp3.
+
+You can later replace the <audio> with a YouTube ambient loop; current design keeps no text for soundscape, only minimal controls.
