@@ -124,31 +124,54 @@ function BreathingReset() {
   );
 }
 
-/* ---------- Focus Soundscape with Pomodoro + Tasks ---------- */
+/* ---------- Focus Soundscape: Select soundtrack + time limit ---------- */
 function FocusSoundscape() {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [on, setOn] = useState(false);
-  const [seconds, setSeconds] = useState(25 * 60);
-  const [running, setRunning] = useState(false);
-  const [task, setTask] = useState("");
-  const [done, setDone] = useState<string[]>([]);
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [soundtrack, setSoundtrack] = useState("Euphoria");
+  const [timeLimit, setTimeLimit] = useState(25);
+  const [remaining, setRemaining] = useState(0);
+
+  const soundtracks = {
+    Euphoria: "/attached_assets/ambient-background-347405_1760011359751.mp3",
+    Ambrossia: "/attached_assets/ambient-background-339939_1760011815059.mp3",
+    Elixir: "/attached_assets/solitude-dark-ambient-music-354468_1760011815058.mp3",
+  };
 
   useEffect(() => {
-    if (!on || !running) return;
-    
+    if (!started || finished) return;
+
     const id = setInterval(() => {
-      setSeconds((s) => {
-        if (s <= 1) {
-          setRunning(false);
+      setRemaining((r) => {
+        if (r <= 1) {
+          setFinished(true);
           if (audioRef.current) audioRef.current.pause();
           return 0;
         }
-        return s - 1;
+        return r - 1;
       });
     }, 1000);
-    
+
     return () => clearInterval(id);
-  }, [on, running]);
+  }, [started, finished]);
+
+  const startSoundscape = () => {
+    setStarted(true);
+    setFinished(false);
+    setRemaining(timeLimit * 60);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
+  };
+
+  const restartSoundscape = () => {
+    setStarted(false);
+    setFinished(false);
+    setRemaining(0);
+    if (audioRef.current) audioRef.current.pause();
+  };
 
   const fmt = (s: number) => {
     const m = Math.floor(s / 60).toString().padStart(2, "0");
@@ -156,149 +179,91 @@ function FocusSoundscape() {
     return `${m}:${ss}`;
   };
 
-  const startFocus = () => {
-    setOn(true);
-    setRunning(true);
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {});
-    }
-  };
-
-  const endFocus = () => {
-    setRunning(false);
-    setOn(false);
-    setSeconds(25 * 60);
-    if (audioRef.current) audioRef.current.pause();
-  };
-
-  const addTask = () => {
-    if (!task.trim()) return;
-    setDone((d) => [...d, task.trim()]);
-    setTask("");
-  };
-
   return (
     <Card>
       <div className="text-3xl" aria-hidden="true">🎧</div>
       <h3 className="text-lg font-semibold mt-2" data-testid="title-focus">Focus Soundscape</h3>
-      <Sub>Relaxing instrumental music while you focus — with optional task tracking.</Sub>
+      <Sub>Select your soundtrack and set a time limit for focused work.</Sub>
 
-      <div className="mt-3 flex flex-wrap items-center gap-2">
-        <button 
-          type="button"
-          className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
-          onClick={startFocus}
-          data-testid="button-start-focus"
-        >
-          Start Focus
-        </button>
-        <button 
-          type="button"
-          className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
-          onClick={endFocus}
-          data-testid="button-end-focus"
-        >
-          End Focus
-        </button>
-
-        <div className="flex gap-2 ml-auto text-xs">
-          <button 
-            type="button"
-            className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition" 
-            onClick={() => setSeconds(15 * 60)}
-            data-testid="button-15min"
-          >
-            15m
-          </button>
-          <button 
-            type="button"
-            className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition" 
-            onClick={() => setSeconds(25 * 60)}
-            data-testid="button-25min"
-          >
-            25m
-          </button>
-          <button 
-            type="button"
-            className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition" 
-            onClick={() => setSeconds(45 * 60)}
-            data-testid="button-45min"
-          >
-            45m
-          </button>
-        </div>
-      </div>
-
-      <audio ref={audioRef} loop preload="metadata">
-        <source src="/focus.mp3" type="audio/mpeg" />
-      </audio>
-
-      {on && (
-        <div className="mt-4 grid md:grid-cols-2 gap-4" data-testid="focus-active">
-          <div className="rounded-xl border border-slate-800 p-4 text-center">
-            <div className="text-5xl font-extrabold" data-testid="text-timer">{fmt(seconds)}</div>
-            <div className="mt-3 flex justify-center gap-2">
-              {!running ? (
-                <button 
+      {!started && !finished && (
+        <div className="mt-4 space-y-4">
+          <div>
+            <label className="text-sm text-slate-400 block mb-2">Choose Soundtrack:</label>
+            <div className="flex flex-wrap gap-2">
+              {Object.keys(soundtracks).map((name) => (
+                <button
+                  key={name}
                   type="button"
-                  className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
-                  onClick={() => setRunning(true)}
-                  data-testid="button-resume"
+                  className={`px-4 py-2 rounded-lg transition ${
+                    soundtrack === name
+                      ? "bg-emerald-600 hover:bg-emerald-500"
+                      : "bg-slate-800 hover:bg-slate-700"
+                  }`}
+                  onClick={() => setSoundtrack(name)}
+                  data-testid={`button-soundtrack-${name.toLowerCase()}`}
                 >
-                  Resume
+                  {name}
                 </button>
-              ) : (
-                <button 
-                  type="button"
-                  className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
-                  onClick={() => setRunning(false)}
-                  data-testid="button-pause"
-                >
-                  Pause
-                </button>
-              )}
-              <button 
-                type="button"
-                className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" 
-                onClick={() => setSeconds(25 * 60)}
-                data-testid="button-reset"
-              >
-                Reset
-              </button>
+              ))}
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-800 p-4">
-            <div className="text-sm text-slate-400">Task (optional)</div>
-            <div className="mt-1 flex gap-2">
-              <input
-                type="text"
-                value={task}
-                onChange={(e) => setTask(e.target.value)}
-                className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 outline-none text-slate-100"
-                placeholder="What will you complete this session?"
-                data-testid="input-task"
-              />
-              <button 
-                type="button"
-                className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition" 
-                onClick={addTask}
-                data-testid="button-add-task"
-              >
-                Add
-              </button>
-            </div>
-            {!!done.length && (
-              <ul className="mt-3 text-sm list-disc pl-5 space-y-1" data-testid="list-tasks">
-                {done.map((t, i) => (
-                  <li key={i} className="text-slate-300" data-testid={`task-${i}`}>{t}</li>
-                ))}
-              </ul>
-            )}
+          <div>
+            <label className="text-sm text-slate-400 block mb-2">Time Limit (minutes):</label>
+            <input
+              type="number"
+              value={timeLimit}
+              onChange={(e) => setTimeLimit(Math.max(1, parseInt(e.target.value) || 1))}
+              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 outline-none text-slate-100"
+              min="1"
+              data-testid="input-time-limit"
+            />
           </div>
+
+          <button
+            type="button"
+            className="w-full px-4 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition font-semibold"
+            onClick={startSoundscape}
+            data-testid="button-start-soundscape"
+          >
+            Start Soundscape
+          </button>
         </div>
       )}
+
+      {started && !finished && (
+        <div className="mt-4 text-center" data-testid="soundscape-playing">
+          <div className="text-sm text-slate-400 mb-2">Now Playing: {soundtrack}</div>
+          <div className="text-5xl font-extrabold mb-4" data-testid="text-remaining">{fmt(remaining)}</div>
+          <button
+            type="button"
+            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition"
+            onClick={restartSoundscape}
+            data-testid="button-stop-soundscape"
+          >
+            Stop
+          </button>
+        </div>
+      )}
+
+      {finished && (
+        <div className="mt-4 text-center" data-testid="soundscape-finished">
+          <div className="text-lg font-semibold mb-2">Session Complete!</div>
+          <div className="text-slate-400 mb-4">Your focus session has ended.</div>
+          <button
+            type="button"
+            className="px-4 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition font-semibold"
+            onClick={restartSoundscape}
+            data-testid="button-restart-soundscape"
+          >
+            Start New Session
+          </button>
+        </div>
+      )}
+
+      <audio ref={audioRef} loop preload="metadata">
+        <source src={soundtracks[soundtrack as keyof typeof soundtracks]} type="audio/mpeg" />
+      </audio>
     </Card>
   );
 }

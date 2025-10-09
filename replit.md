@@ -14,7 +14,7 @@ The application aims to solve career clarity challenges by providing instant fit
 5. **Wellness Centre** (`/wellness`) - Complete mind-body wellness toolkit with interactive tools:
    - **Yoga Sessions**: Morning (6-9 AM IST) and Evening (9-11 PM IST) yoga with Start/End controls and on-demand video playback
    - **2-Minute Breathing Reset**: 4-4-4-4 box breathing timer with auto-repeating cycles
-   - **Focus Soundscape**: Pomodoro timer (15/25/45min options) with background audio and optional task tracking
+   - **Focus Soundscape**: Select from 3 ambient soundtracks (Euphoria, Ambrossia, Elixir), set custom time limit, and focus with background music
    - **5-4-3-2-1 Grounding**: Interactive sensory grounding exercise to reduce anxiety
    - **Weekly Reflection**: Quick journaling tool for goal tracking and stress checks
    - **Micro-Stretch Routine**: 5-minute posture and eye relief video exercises
