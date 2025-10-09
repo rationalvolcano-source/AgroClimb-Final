@@ -13,6 +13,7 @@ import CareerQuizComingSoon from "@/pages/CareerQuizComingSoon";
 import SubjectRecommenderComingSoon from "@/pages/SubjectRecommenderComingSoon";
 import RecordedClassesComingSoon from "@/pages/RecordedClassesComingSoon";
 import AlumniWebinarsComingSoon from "@/pages/AlumniWebinarsComingSoon";
+import PlanBWebinarsHub from "@/pages/PlanBWebinarsHub";
 
 function Router() {
   return (
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/books" component={Books}/>
       <Route path="/games" component={Games}/>
       <Route path="/planb" component={PlanB}/>
+      <Route path="/planb-webinars" component={PlanBWebinarsHub}/>
       <Route path="/career-quiz" component={CareerQuizComingSoon}/>
       <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
       <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>

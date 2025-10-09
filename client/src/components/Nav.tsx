@@ -41,6 +41,10 @@ export default function Nav() {
           )}
           <Link href="/books" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-books">Books</Link>
           <Link href="/games" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-games">Games</Link>
+          <Link href="/planb-webinars" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-planb-webinars">
+            <span className="hidden md:inline">Plan B & Webinars</span>
+            <span className="md:hidden">Plan B</span>
+          </Link>
           <Link href="/swm" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-binaural">SWM</Link>
           <Link href="/wellness" className="text-slate-300 hover:text-slate-50 transition-colors hidden sm:inline" data-testid="link-wellness">Wellness</Link>
         </div>

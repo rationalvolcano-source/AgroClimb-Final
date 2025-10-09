@@ -29,7 +29,7 @@ export default function Plans() {
           <ul className="text-slate-300 mt-3 space-y-2">
             <li data-testid="text-plan-pro-feature-0">Interactive games (Flashcard Duel, Logic Orchard, Number Sprint)</li>
             <li data-testid="text-plan-pro-feature-1">AI study roadmap & dashboard</li>
-            <li data-testid="text-plan-pro-feature-2">Alumni webinars (₹9 access)</li>
+            <li data-testid="text-plan-pro-feature-2"><b>Free access to ₹9 alumni webinars</b></li>
             <li data-testid="text-plan-pro-feature-3">Recorded class previews</li>
             <li className="text-slate-400" data-testid="text-plan-pro-feature-4"><b>Pro = your starter toolkit</b> —not a full course.</li>
           </ul>
