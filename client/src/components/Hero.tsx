@@ -39,9 +39,17 @@ export default function Hero() {
           </Button>
         </div>
         <ul className="text-sm text-slate-400 grid grid-cols-1 sm:grid-cols-3 gap-2 max-w-xl mt-2">
-          <li data-testid="text-feature-1">Up-skilling for Plan B (Excel, PPT, AI)</li>
+          <li data-testid="text-feature-1">
+            <Link href="/planb" className="hover:text-emerald-400 transition-colors">
+              Up-skilling for Plan B (Excel, PPT, AI)
+            </Link>
+          </li>
           <li data-testid="text-feature-2">Alumni Connect – live workshops</li>
-          <li data-testid="text-feature-3">Flashcards • PYQs • Notes</li>
+          <li data-testid="text-feature-3">
+            <Link href="/books" className="hover:text-emerald-400 transition-colors">
+              Flashcards • PYQs • Notes
+            </Link>
+          </li>
         </ul>
       </motion.div>
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="relative">

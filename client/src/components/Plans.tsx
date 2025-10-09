@@ -1,3 +1,5 @@
+import { Link } from "wouter";
+
 export default function Plans() {
   return (
     <section id="plans" className="mt-12">
@@ -19,8 +21,11 @@ export default function Plans() {
 
         {/* Pro */}
         <div id="buy-pro" className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 ring-1 ring-emerald-400/30" data-testid="card-plan-pro">
-          <h3 className="text-2xl font-bold" data-testid="text-plan-pro-title">Pro</h3>
-          <div className="text-4xl font-extrabold mt-2" data-testid="text-plan-pro-price">₹2 000</div>
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-bold" data-testid="text-plan-pro-title">Pro</h3>
+            <span className="text-xs px-2 py-1 rounded-full bg-emerald-700/40 border border-emerald-700/60" data-testid="badge-plan-pro-popular">Most Popular</span>
+          </div>
+          <div className="text-4xl font-extrabold mt-2" data-testid="text-plan-pro-price">₹1 999</div>
           <ul className="text-slate-300 mt-3 space-y-2">
             <li data-testid="text-plan-pro-feature-0">Interactive games (Flashcard Duel, Logic Orchard, Number Sprint)</li>
             <li data-testid="text-plan-pro-feature-1">AI study roadmap & dashboard</li>
@@ -34,11 +39,8 @@ export default function Plans() {
 
         {/* Ultra */}
         <div id="ultra-waitlist" className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6" data-testid="card-plan-ultra">
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-bold" data-testid="text-plan-ultra-title">Ultra</h3>
-            <span className="text-xs px-2 py-1 rounded-full bg-emerald-700/40 border border-emerald-700/60" data-testid="badge-plan-ultra-popular">Popular</span>
-          </div>
-          <div className="text-4xl font-extrabold mt-2" data-testid="text-plan-ultra-price">₹5 000</div>
+          <h3 className="text-2xl font-bold" data-testid="text-plan-ultra-title">Ultra</h3>
+          <div className="text-4xl font-extrabold mt-2" data-testid="text-plan-ultra-price">₹4 999</div>
           <ul className="text-slate-300 mt-3 space-y-2">
             <li data-testid="text-plan-ultra-feature-0">Your AI-powered finishing school</li>
             <li data-testid="text-plan-ultra-feature-1">Deep subject courses rolling out for every pathway</li>
@@ -51,9 +53,9 @@ export default function Plans() {
       </div>
 
       <div className="text-center mt-6" id="plan-b">
-        <a href="#plan-b" className="inline-flex items-center gap-2 text-emerald-400 underline" data-testid="link-plan-b">
-          Plan B (Coming Soon): Practical upskilling for alternate income
-        </a>
+        <Link href="/planb" className="inline-flex items-center gap-2 text-emerald-400 underline hover:text-emerald-300 transition-colors" data-testid="link-plan-b">
+          Plan B (Preview): Practical upskilling for alternate income
+        </Link>
       </div>
     </section>
   );
