@@ -11,19 +11,21 @@ The application aims to solve career clarity challenges by providing instant fit
 2. **Books** (`/books`) - Study materials and books page with 7 books for ABM, Banking, and JRF Horticulture
 3. **Interactive Games** (`/games`) - Stream-based gaming hub with four pedagogically designed learning games: Flashcard Duel (functional), Logic Orchard, Number Sprint, and Word Sprint (under construction). Users select their academic stream first, then see only the games allocated to that stream
 4. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
-5. **Wellness Centre** (`/wellness`) - Calm corner with yoga videos, breathing exercises, mental sharpness tips, and daily check-ins
+5. **Wellness Centre** (`/wellness`) - Free videos and tools including yoga sessions, breathing exercises, mental sharpness tips, and daily check-ins. No paid webinar emphasis - focused on accessible wellness resources
+6. **Plan B & Webinars Hub** (`/planb-webinars`) - Navigation hub with two aesthetic card options: Plan B Skills (upskilling tracks) and Alumni Webinars (₹9 live sessions, free for Pro members)
 
 ### Navigation System
 - **Nav Component** (`client/src/components/Nav.tsx`) - Unified navigation bar used across all pages
 - Uses Wouter Link for SPA routing (no page reloads)
 - Responsive design for mobile and desktop:
-  - **Desktop**: Full text for all links (Home, Books, Games, SWM, Wellness)
-  - **Mobile**: Abbreviated text for space efficiency ("Well." for Wellness, icon-only for Home)
+  - **Desktop**: Full text for all links (Home, Books, Games, Plan B & Webinars, SWM, Wellness)
+  - **Mobile**: Abbreviated text for space efficiency ("Plan B" for Plan B & Webinars, Wellness hidden on smallest screens, icon-only for Home)
 - Logo always clickable and navigates to home
 - Conditional rendering based on current page:
   - Landing page: Shows Features, Plans anchor links
   - Other pages: Shows Home button to return to landing
 - All pages include the Nav component for consistent navigation experience
+- "Get My Career Plan" button in nav links to Career Quiz Coming Soon page
 
 ### Games Integration
 - **Games Page** (`client/src/pages/Games.tsx`) - Stream-based hub for pedagogically designed learning games
