@@ -9,7 +9,10 @@ The application aims to solve career clarity challenges by providing instant fit
 ### Current Pages
 1. **Landing Page** (`/`) - Main marketing page with hero, features, pricing, and testimonials sections
 2. **Books** (`/books`) - Study materials and books page with 7 books for ABM, Banking, and JRF Horticulture
-3. **Interactive Games** (`/games`) - Stream-based gaming hub with four pedagogically designed learning games: Flashcard Duel (functional), Logic Orchard, Number Sprint, and Word Sprint (under construction). Users select their academic stream first, then see only the games allocated to that stream
+3. **Interactive Games** (`/games`) - Stream-based gaming hub with four pedagogically designed learning games: 
+   - **Flashcard Duel** (`/flashcard-duel`) - Fully functional AI quiz game with PDF upload, 3 difficulty modes (Easy/Difficult/Legendary), scoring system, combos, and TheAgriVision teal theme. Built directly in Replit (no external dependencies)
+   - **Logic Orchard**, **Number Sprint**, **Word Sprint** - Under construction
+   - Users select their academic stream first, then see only the games allocated to that stream
 4. **Study With Me** (`/swm`) - Focus mode with binaural beats audio, timer, and session tracking
 5. **Wellness Centre** (`/wellness`) - Complete mind-body wellness toolkit with interactive tools:
    - **Yoga Sessions**: Morning (6-9 AM IST) and Evening (9-11 PM IST) yoga with Start/End controls and on-demand video playback

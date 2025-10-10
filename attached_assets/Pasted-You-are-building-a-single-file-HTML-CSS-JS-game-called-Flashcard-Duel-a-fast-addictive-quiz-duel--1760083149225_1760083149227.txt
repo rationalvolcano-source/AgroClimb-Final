@@ -1,0 +1,136 @@
+You are building a single-file HTML/CSS/JS game called Flashcard Duel — a fast, addictive quiz duel with AI opponent, 3 modes (Easy / Difficult / Legendary), and TheAgriVision teal theme.
+
+0️⃣ Output
+
+One self-contained file: index.html
+
+Inline CSS and JS only (no frameworks or CDN links).
+
+Must run directly on Replit (HTML template Repl).
+
+1️⃣ Theme — TheAgriVision Palette
+
+Use this teal-dark theme:
+
+:root {
+  --bg:#0b1420;
+  --card:#101a28;
+  --acc:#26A69A;
+  --acc2:#14B8A6;
+  --text:#eef4f8;
+  --muted:#9fb2c3;
+  --good:#22c55e;
+  --bad:#ef4444;
+  --warn:#f59e0b;
+}
+
+
+Background: radial gradient from navy to deep teal.
+
+Buttons: gradient from var(--acc) → var(--acc2).
+
+Fonts: Inter, system-ui; clean and modern.
+
+2️⃣ Gameplay Flow (with PDF upload requirement)
+Before any game starts:
+
+Player must upload a PDF file containing question data.
+
+The PDF should contain questions and four options per question, formatted like this:
+
+Q1. Which vitamin is abundant in carrots?
+A) Vitamin A (C)
+B) Vitamin C
+C) Vitamin D
+D) Vitamin K
+
+
+Exactly one option has “(C)” — that marks the correct answer.
+
+The app must parse this PDF, extract all questions, options, and correct answers.
+
+Use any PDF text extraction approach available in vanilla JS (e.g., pdf.js or browser FileReader + regex parsing of plain text).
+
+Store the parsed data into an internal JSON array with fields:
+
+{ question: "Which vitamin is abundant in carrots?",
+  options: ["Vitamin A","Vitamin C","Vitamin D","Vitamin K"],
+  correct_answer: "Vitamin A" }
+
+
+Show popup → “✅ Questions Loaded: X found”.
+
+3️⃣ Modes & Round Config
+Mode	Time per Q	Total Rounds	AI Base Accuracy
+Easy	14 sec	10	0.55
+Difficult	10 sec	12	0.70
+Legendary	7 sec	14	0.85
+4️⃣ Duel Mechanics
+
+Player and AI both answer each round.
+
+Player selects one option → color feedback:
+
+Correct: green glow & +12 points
+
+Wrong: red shake animation & streak reset
+
+AI answers mid-timer using probabilistic accuracy above.
+
+AI gets +10 for correct, +0 for wrong.
+
+Timeout = player auto-wrong, AI +3.
+
+Combo every 3 corrects → popup “🔥 Combo x3” with +25 XP & meter fill.
+
+5️⃣ UI Layout
+
+Header: Title ⚡ Flashcard Duel, File Upload button (“📥 Upload PDF”), Mode dropdown, “▶ Start Duel” button.
+
+Left Card:
+
+Question text
+
+Option buttons
+
+Timer bar & meta row (Round, Streak, Accuracy)
+
+Right Column:
+
+Your Score / AI Score
+
+Legendary Meter
+
+Mini Tips card
+
+Popups: For load success, combo, and game end (Win / Draw / Defeat).
+
+6️⃣ Addictive Touches
+
+Dopamine feedback (quick sound / glow on correct).
+
+Smooth animated progress bars.
+
+Confetti-like emoji popup for combos.
+
+Legendary meter fills by streak / 5.
+
+7️⃣ Acceptance Tests
+
+✅ PDF upload is mandatory before “Start Duel.”
+✅ App correctly parses (C) notation in PDF to identify right answers.
+✅ Displays “Questions Loaded (X found)” popup.
+✅ Quiz progresses across 10–14 rounds per mode.
+✅ AI competes with realistic timing and scoring.
+✅ Timer, streak, and accuracy update smoothly.
+✅ End popup shows results and stats.
+✅ Colors and UI match TheAgriVision’s teal-dark style.
+
+Deliverable:
+A self-contained index.html file that:
+
+Parses user-uploaded PDF questions (with (C) marking),
+
+Runs the Flashcard Duel game loop with AI and combos, and
+
+Matches TheAgriVision color theme

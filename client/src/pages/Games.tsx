@@ -1,11 +1,10 @@
 import { useState, useRef } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Brain, Zap, BookOpen, Gamepad2 } from "lucide-react";
 import Nav from "@/components/Nav";
-
-const duelBaseUrl = "https://duel-quiz-react.lovable.app/";
 
 const STREAMS = [
   "JRF Horticulture",
@@ -68,6 +67,7 @@ const GAME_INFO = {
 export default function Games() {
   const [stream, setStream] = useState<string>("");
   const streamSelectorRef = useRef<HTMLDivElement>(null);
+  const [, setLocation] = useLocation();
 
   const availableGames = stream ? STREAM_GAMES[stream] || [] : [];
 
@@ -79,9 +79,8 @@ export default function Games() {
     if (!stream) return;
     
     if (gameId === "flashcard") {
-      const url = new URL(duelBaseUrl);
-      url.searchParams.set("stream", stream);
-      window.open(url.toString(), "_blank", "noopener,noreferrer");
+      // Navigate to internal Flashcard Duel game
+      setLocation("/flashcard-duel");
     } else {
       // Other games - under construction
       alert(`${GAME_INFO[gameId].title} is coming soon!`);
