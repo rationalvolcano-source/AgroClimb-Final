@@ -46,10 +46,11 @@ export default function FlashcardDuel() {
   // Parse PDF text
   const parsePDF = (text: string): Question[] => {
     const parsed: Question[] = [];
-    const lines = text.split("\n").filter((l) => l.trim());
+    const lines = text.split("\n").map((l) => l.trim()).filter((l) => l);
     
     let currentQ: Partial<Question> | null = null;
-    const optionPattern = /^[A-D]\)\s*(.+?)(\s*\(C\))?$/i;
+    // Updated pattern to handle both "A) Option" and "(A) Option" formats
+    const optionPattern = /^\(?([A-D])\)\s*(.+?)(\s*\(C\))?$/i;
 
     for (const line of lines) {
       if (line.match(/^Q\d+\./i)) {
@@ -60,9 +61,9 @@ export default function FlashcardDuel() {
       } else if (currentQ && optionPattern.test(line)) {
         const match = line.match(optionPattern);
         if (match) {
-          const optionText = match[1].trim();
+          const optionText = match[2].trim();
           currentQ.options!.push(optionText);
-          if (match[2]) {
+          if (match[3]) {
             currentQ.correct_answer = optionText;
           }
         }
