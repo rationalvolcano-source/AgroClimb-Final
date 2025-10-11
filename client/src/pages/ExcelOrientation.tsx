@@ -6,6 +6,7 @@ import type { LucideIcon } from 'lucide-react';
 interface Step {
   id: string;
   Icon: LucideIcon;
+  hero: string;
   title: string;
   farmerLine?: string;
   body?: string;
@@ -19,6 +20,7 @@ const STEPS: Step[] = [
   {
     id: "welcome",
     Icon: Hand,
+    hero: "Welcome Aboard!",
     title: "welcome to excel, the smart way",
     farmerLine: "hey! i'm your guide. we'll keep this simple and useful.",
     body: "this course is hands-on, fast, and designed for real-life tasks."
@@ -26,6 +28,7 @@ const STEPS: Step[] = [
   {
     id: "skills",
     Icon: Target,
+    hero: "What You Will Learn",
     title: "7 sprints • real skills",
     bullets: [
       "clean messy data",
@@ -40,6 +43,7 @@ const STEPS: Step[] = [
   {
     id: "flow",
     Icon: FastForward,
+    hero: "Approach of Learning",
     title: "learn → try → reflect",
     steps: [
       "learn (10 min): fast examples you can skim as text",
@@ -50,6 +54,7 @@ const STEPS: Step[] = [
   {
     id: "quiz",
     Icon: FlaskConical,
+    hero: "Stay Calm and Learn On",
     title: "be honest, not perfect",
     farmerLine: "don't worry if you don't know an answer.",
     body: "your skill level just helps us recommend the right sprints to start with."
@@ -57,12 +62,14 @@ const STEPS: Step[] = [
   {
     id: "timing",
     Icon: Clock,
+    hero: "Flexible Learning Journey",
     title: "short & flexible",
     body: "each sprint ≈ 20 minutes. pause anytime. progress auto-saves; revisit any sprint you've completed."
   },
   {
     id: "coach",
     Icon: UserCheck,
+    hero: "Help is Always Available",
     title: "help when you need it",
     body: "your AI tutor can hint, explain formulas, and show shortcuts.",
     farmerLine: "need a nudge? just ask."
@@ -70,12 +77,14 @@ const STEPS: Step[] = [
   {
     id: "project",
     Icon: Package,
+    hero: "Prove Your Skills",
     title: "prove it in the real world",
     body: "clean, analyze, and visualize a dataset—then get instant feedback and a certificate."
   },
   {
     id: "cta",
     Icon: Rocket,
+    hero: "Ready for Takeoff?",
     title: "ready to level up?",
     ctaText: "Start Orientation ▶",
     next: "sprint-map"
@@ -177,12 +186,19 @@ export default function ExcelOrientation() {
 
                 {/* Step Content */}
                 <div className="flex-1 space-y-4">
+                  {/* Hero Section */}
+                  <div className="mb-6">
+                    <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#26A69A] to-[#14B8A6] bg-clip-text text-transparent mb-3" data-testid={`text-hero-${currentStep.id}`}>
+                      {currentStep.hero}
+                    </h2>
+                  </div>
+
                   {/* Icon and Title */}
                   <div className="flex items-center gap-3">
                     <currentStep.Icon className="w-10 h-10 text-[#26A69A]" data-testid={`icon-step-${currentStep.id}`} />
-                    <h2 className="text-2xl font-bold text-[#eef4f8]" data-testid={`text-title-${currentStep.id}`}>
+                    <h3 className="text-xl font-semibold text-[#eef4f8]" data-testid={`text-title-${currentStep.id}`}>
                       {currentStep.title}
-                    </h2>
+                    </h3>
                   </div>
 
                   {/* Farmer's Speech Bubble */}
