@@ -1,8 +1,11 @@
 import type { ReactNode, SVGProps } from "react";
+import { Link } from "wouter";
 import Nav from "@/components/Nav";
 
-const Card = ({ children }: { children: ReactNode }) => (
-  <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 hover:border-slate-700 transition">
+const Card = ({ children, clickable = false }: { children: ReactNode; clickable?: boolean }) => (
+  <div className={`rounded-3xl border border-slate-800 bg-slate-900/60 p-6 transition ${
+    clickable ? 'hover:border-emerald-500/50 cursor-pointer group' : 'hover:border-slate-700'
+  }`}>
     {children}
   </div>
 );
@@ -78,7 +81,7 @@ const IconIntern = (p: SVGProps<SVGSVGElement>) => (
 
 export default function PlanB() {
   const items = [
-    { Icon: IconExcel, label: "Excel Training" },
+    { Icon: IconExcel, label: "Excel Training", link: "/excel-quiz" },
     { Icon: IconPPT, label: "PowerPoint Training" },
     { Icon: IconViz, label: "Data Visualization" },
     { Icon: IconAIAcademia, label: "AI for Academics & Research" },
@@ -99,14 +102,24 @@ export default function PlanB() {
         </header>
 
         <section className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {items.map(({ Icon, label }, i) => (
-            <Card key={label}>
-              <div className="h-28 grid place-items-center" data-testid={`icon-planb-${i}`}>
-                <Icon className="w-20 h-20" />
-              </div>
-              <Title>{label}</Title>
-            </Card>
-          ))}
+          {items.map(({ Icon, label, link }, i) => {
+            const content = (
+              <>
+                <div className="h-28 grid place-items-center" data-testid={`icon-planb-${i}`}>
+                  <Icon className="w-20 h-20" />
+                </div>
+                <Title>{label}</Title>
+              </>
+            );
+
+            return link ? (
+              <Link key={label} href={link}>
+                <Card clickable>{content}</Card>
+              </Link>
+            ) : (
+              <Card key={label}>{content}</Card>
+            );
+          })}
         </section>
       </main>
     </div>

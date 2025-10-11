@@ -1,0 +1,190 @@
+🔧 Build Prompt — “Excel Plan B · Entry Quiz (Advanced · 10 Qs · Friendly Intro)”
+
+You are building the first screen of the Excel course: a fast-paced Entry Quiz with 10 questions.
+When the quiz starts, show a friendly message: “Don’t worry if you don’t know these—answer honestly so we can guide you better.”
+After the quiz, show a skill level (text only: Beginner / Intermediate / Advanced) with stats and a “Start Orientation ▶” button.
+
+0) Output
+
+Create one file: index.html (inline CSS + JS; no frameworks/CDNs beyond system fonts).
+
+Must run directly in a Replit HTML project.
+
+1) Theme (TheAgriVision dark-teal)
+:root{
+  --bg:#0b1420; --card:#101a28; --text:#eef4f8; --muted:#9fb2c3;
+  --acc:#26A69A; --acc2:#14B8A6; --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+}
+
+
+Background: radial gradient (navy → var(--bg)).
+
+Cards: rounded 18px, thin border #1e2b3f, soft shadow.
+
+Primary buttons: gradient var(--acc) → var(--acc2); bold & rounded.
+
+Animations: small, GPU-friendly (opacity/transform). No heavy effects.
+
+2) Screen layout
+
+Header:
+
+Title: “Excel Plan B — Entry Quiz”
+
+Pill: “⏱️ ~2–3 min • 10 questions”
+
+Friendly Intro (modal shown before Q1):
+
+Big friendly copy:
+
+Welcome! This quick check helps us guide you better.
+Don’t worry if you don’t know something—just answer honestly.
+You’ll see your skill level at the end.
+
+Button: Start Quiz ▶
+
+Main Quiz Card:
+
+Progress dots (10) that fill as you go.
+
+Large question text (1–2 lines).
+
+Four answer buttons (mobile: stacked; desktop: 2×2 grid).
+
+Timer bar per question (default 10s, configurable 8–12s).
+
+Status: “Question X/10 · Time left: Ns”.
+
+Results (end):
+
+Skill Level (text only): Beginner / Intermediate / Advanced (no icon/badge).
+
+Stats: score %, average time per question.
+
+Up to 2 “weak area” chips (see mapping below).
+
+CTA: “Start Orientation ▶” (link to # or orientation.html).
+
+3) Quiz content (advanced; 10 MCQs)
+
+Use this default set (randomize order if you wish). Mark the correct option in each line with (C) in code only, but render without (C) to the user—just use it for correctness logic.
+
+Which function best replaces VLOOKUP and can search left or right?
+A) INDEX · B) MATCH · C) XLOOKUP (C) · D) HLOOKUP
+
+Which combo returns a value when lookup column is left of the return column?
+A) INDEX + MATCH (C) · B) VLOOKUP · C) HLOOKUP · D) OFFSET
+
+What does the reference $A1 represent?
+A) Relative column & row · B) Absolute column, relative row (C) · C) Absolute row only · D) Absolute column & row
+
+Which dynamic array function returns unique values from a list?
+A) FILTER · B) UNIQUE (C) · C) SORT · D) SEQUENCE
+
+In a PivotTable, which action groups dates by month quickly?
+A) Create a slicer · B) Group Field (C) · C) Show Values As % · D) Refresh
+
+Which function safely handles possible errors in a formula?
+A) IFERROR (C) · B) ISERROR · C) ERROR.TYPE · D) IFNA only
+
+For counting rows matching two conditions (e.g., State & Crop), use:
+A) COUNTIF · B) SUMIF · C) COUNTIFS (C) · D) AVERAGEIFS
+
+Power Query is best used to:
+A) Create PivotCharts · B) Clean & reshape imported data (C) · C) Add conditional formats · D) Record macros
+
+Which function joins text across a range with a delimiter, ignoring blanks?
+A) TEXTJOIN (C) · B) CONCATENATE · C) LEFT · D) MID
+
+When charting categories across states, the best default choice is:
+A) Column/Bar (C) · B) Pie · C) Scatter · D) Surface
+
+4) Timing & scoring
+
+Timer per question: 10s (configurable). Auto-advance on answer or timeout (timeout = wrong).
+
+Score: +1 correct, 0 wrong/timeout.
+
+Skill level (text only):
+
+0–3 → Beginner (color hint var(--bad))
+
+4–7 → Intermediate (color hint var(--warn))
+
+8–10 → Advanced (color hint var(--good))
+
+Weak area tags (show up to 2):
+
+Q1/Q2 wrong → Lookup
+
+Q3 wrong → References
+
+Q4 wrong → Dynamic Arrays
+
+Q5 wrong → Pivot/Grouping
+
+Q6 wrong → Error Handling
+
+Q7 wrong → Multi-Criteria Counts
+
+Q8 wrong → Power Query
+
+Q9 wrong → Text Functions
+
+Q10 wrong → Charts
+
+5) Interactions & polish
+
+Option click: lock all, reveal correct as green; if wrong, chosen button shakes briefly + subtle red.
+
+Progress dots fill per question.
+
+Timer bar shrinks with CSS transform (scaleX).
+
+Optional soft sounds (muted by default with a tiny sound toggle).
+
+6) Persistence
+
+On results, save to localStorage:
+
+{
+  skillLevel: "Intermediate",
+  score: 7,
+  avgTimeSec: 6.4,
+  weaknesses: ["Lookup","Dynamic Arrays"],
+  completedAt: "<ISO string>"
+}
+
+7) Accessibility & responsive
+
+Keyboard access: Tab focus, Enter activates.
+
+Clear focus outlines.
+
+Mobile: single-column layout; Desktop ≥900px: option grid 2×2.
+
+8) Code structure (still single file)
+
+<style>: theme, layout, animations (shake, fade).
+
+<div id="app"> container with header, quiz card, modals.
+
+<script>:
+
+QUIZ array of 10 Qs ({ q, options:[], correctIndex, tags:[] }).
+
+State: index, score, times[], selected, timer.
+
+Functions: showIntro(), startQuiz(), renderQ(), selectOpt(i), tick(), finish(), weaknessTags(), saveResult().
+
+9) Acceptance tests
+
+✅ Shows a friendly intro modal before Q1 with “Don’t worry…” message and Start Quiz ▶.
+
+✅ 10 questions with timer & progress dots; options lock after selection; correct is highlighted.
+
+✅ After Q10, a results view displays Skill Level (text only), stats, weakness chips, and Start Orientation ▶.
+
+✅ Result saved to localStorage with skillLevel, score, avgTimeSec.
+
+✅ Responsive, dark-teal theme; single index.html, no frameworks
