@@ -165,7 +165,7 @@ export default function ExcelQuiz() {
     const avgTime = questionTimes.length > 0 
       ? questionTimes.reduce((a, b) => a + b, 0) / questionTimes.length 
       : 0;
-    const skillLevel = score === 10 ? "Expert" : score >= 7 ? "Intermediate" : "Beginner";
+    const skillLevel = score === 10 ? "Expert" : score >= 7 && score <= 9 ? "Intermediate" : "Beginner";
     
     // Count tag occurrences and get top 2 weaknesses
     const tagCounts: { [key: string]: number } = {};
@@ -195,13 +195,13 @@ export default function ExcelQuiz() {
 
   const getSkillColor = () => {
     if (score === 10) return "text-green-500";
-    if (score >= 7) return "text-amber-500";
+    if (score >= 7 && score <= 9) return "text-amber-500";
     return "text-red-500";
   };
 
   const getSkillLevel = () => {
     if (score === 10) return "Expert";
-    if (score >= 7) return "Intermediate";
+    if (score >= 7 && score <= 9) return "Intermediate";
     return "Beginner";
   };
 
