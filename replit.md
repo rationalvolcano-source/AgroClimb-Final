@@ -24,6 +24,14 @@ The application aims to solve career clarity challenges by providing instant fit
    - **Motivational Thought**: Daily mantra/quote placeholder
    - All tools feature Start/End buttons with no auto-play interference
 6. **Plan B & Webinars Hub** (`/planb-webinars`) - Navigation hub with two aesthetic card options: Plan B Skills (upskilling tracks) and Alumni Webinars (₹9 live sessions). Subheading includes clickable "Unlock with a Pro plan" link to pricing section
+7. **Excel Entry Quiz** (`/excel-quiz`) - Advanced Excel skills assessment accessible from Plan B → Excel Training card:
+   - **Friendly Intro Modal**: Welcome message with "Don't worry if you don't know something—just answer honestly" before quiz starts
+   - **10 Advanced MCQs**: Covers VLOOKUP/XLOOKUP, cell references, dynamic arrays, PivotTables, error handling, Power Query, text functions, and charts
+   - **Timer System**: 10 seconds per question with visual countdown bar and auto-advance on timeout or answer
+   - **Scoring & Skill Assessment**: Real-time scoring with skill level (Beginner 0-3, Intermediate 4-7, Advanced 8-10) displayed with color coding
+   - **Results Screen**: Shows skill level, score percentage, average time per question, and top 2 weakness areas to focus on
+   - **localStorage Persistence**: Saves quiz results with skillLevel, score, avgTimeSec, weaknesses array, and completedAt timestamp
+   - **TheAgriVision Theme**: Dark-teal gradient (#26A69A to #14B8A6) buttons, dark backgrounds (#0b1420, #101a28), consistent with platform design
 
 ### Navigation System
 - **Nav Component** (`client/src/components/Nav.tsx`) - Unified navigation bar used across all pages
