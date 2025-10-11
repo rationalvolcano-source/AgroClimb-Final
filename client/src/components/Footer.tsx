@@ -1,4 +1,4 @@
-import logoPath from "@assets/image_1759852944967.png";
+import logoPath from "@assets/image_1759852944967.webp";
 import { Link } from "wouter";
 
 export default function Footer() {

@@ -1,6 +1,6 @@
 import { ArrowRight, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoPath from "@assets/image_1759852944967.png";
+import logoPath from "@assets/image_1759852944967.webp";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 

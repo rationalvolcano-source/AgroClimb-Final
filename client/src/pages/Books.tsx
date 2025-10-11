@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import Nav from "@/components/Nav";
 
-import horticultureImg from "@assets/image_1759944361004.png";
-import agricultureImg from "@assets/image_1759877033749.png";
-import mathsImg from "@assets/image_1759877325302.png";
-import reasoningImg from "@assets/image_1759877494047.png";
-import financeImg from "@assets/image_1759877764773.png";
-import agriAffairsImg from "@assets/image_1759877951515.png";
-import englishImg from "@assets/ChatGPT Image Oct 8, 2025, 04_35_24 AM_1759878517370.png";
+import horticultureImg from "@assets/image_1759944361004.webp";
+import agricultureImg from "@assets/image_1759877033749.webp";
+import mathsImg from "@assets/image_1759877325302.webp";
+import reasoningImg from "@assets/image_1759877494047.webp";
+import financeImg from "@assets/image_1759877764773.webp";
+import agriAffairsImg from "@assets/image_1759877951515.webp";
+import englishImg from "@assets/ChatGPT Image Oct 8, 2025, 04_35_24 AM_1759878517370.webp";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
