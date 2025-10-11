@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Hand, Target, FastForward, FlaskConical, Clock, UserCheck, Package, Rocket } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface Step {
   id: string;
-  icon: string;
+  Icon: LucideIcon;
   title: string;
   farmerLine?: string;
   body?: string;
@@ -17,14 +18,14 @@ interface Step {
 const STEPS: Step[] = [
   {
     id: "welcome",
-    icon: "👋",
+    Icon: Hand,
     title: "welcome to excel, the smart way",
     farmerLine: "hey! i'm your guide. we'll keep this simple and useful.",
     body: "this course is hands-on, fast, and designed for real-life tasks."
   },
   {
     id: "skills",
-    icon: "🎯",
+    Icon: Target,
     title: "7 sprints • real skills",
     bullets: [
       "clean messy data",
@@ -38,7 +39,7 @@ const STEPS: Step[] = [
   },
   {
     id: "flow",
-    icon: "⏩",
+    Icon: FastForward,
     title: "learn → try → reflect",
     steps: [
       "learn (10 min): fast examples you can skim as text",
@@ -48,33 +49,33 @@ const STEPS: Step[] = [
   },
   {
     id: "quiz",
-    icon: "🧪",
+    Icon: FlaskConical,
     title: "be honest, not perfect",
     farmerLine: "don't worry if you don't know an answer.",
     body: "your skill level just helps us recommend the right sprints to start with."
   },
   {
     id: "timing",
-    icon: "⏱️",
+    Icon: Clock,
     title: "short & flexible",
     body: "each sprint ≈ 20 minutes. pause anytime. progress auto-saves; revisit any sprint you've completed."
   },
   {
     id: "coach",
-    icon: "🤝",
+    Icon: UserCheck,
     title: "help when you need it",
     body: "your AI tutor can hint, explain formulas, and show shortcuts.",
     farmerLine: "need a nudge? just ask."
   },
   {
     id: "project",
-    icon: "📦",
+    Icon: Package,
     title: "prove it in the real world",
     body: "clean, analyze, and visualize a dataset—then get instant feedback and a certificate."
   },
   {
     id: "cta",
-    icon: "🚀",
+    Icon: Rocket,
     title: "ready to level up?",
     ctaText: "Start Orientation ▶",
     next: "sprint-map"
@@ -178,7 +179,7 @@ export default function ExcelOrientation() {
                 <div className="flex-1 space-y-4">
                   {/* Icon and Title */}
                   <div className="flex items-center gap-3">
-                    <span className="text-4xl" data-testid={`icon-step-${currentStep.id}`}>{currentStep.icon}</span>
+                    <currentStep.Icon className="w-10 h-10 text-[#26A69A]" data-testid={`icon-step-${currentStep.id}`} />
                     <h2 className="text-2xl font-bold text-[#eef4f8]" data-testid={`text-title-${currentStep.id}`}>
                       {currentStep.title}
                     </h2>
@@ -229,22 +230,24 @@ export default function ExcelOrientation() {
             </div>
 
             {/* Progress Dots */}
-            <div className="flex items-center justify-center gap-2 mb-6" data-testid="progress-dots">
+            <div className="flex items-center justify-center gap-1 mb-6" data-testid="progress-dots">
               {STEPS.map((_, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => navigateToStep(idx)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
+                  className="p-2 hover:bg-slate-800/50 rounded-lg transition-colors"
+                  data-testid={`dot-${idx}`}
+                  aria-label={`Go to step ${idx + 1}`}
+                >
+                  <div className={`h-3 rounded-full transition-all duration-300 ${
                     idx === currentStepIndex 
                       ? 'w-8 bg-gradient-to-r from-[#26A69A] to-[#14B8A6]' 
                       : idx < currentStepIndex
-                      ? 'w-2 bg-[#26A69A]/50'
-                      : 'w-2 bg-slate-700'
-                  }`}
-                  data-testid={`dot-${idx}`}
-                  aria-label={`Go to step ${idx + 1}`}
-                />
+                      ? 'w-3 bg-[#26A69A]/50'
+                      : 'w-3 bg-slate-700'
+                  }`} />
+                </button>
               ))}
             </div>
 
@@ -294,10 +297,8 @@ export default function ExcelOrientation() {
 
         {/* Back to Hub Link */}
         <div className="mt-6 text-center">
-          <Link href="/planb-webinars">
-            <a className="text-[#9fb2c3] hover:text-[#26A69A] transition text-sm" data-testid="link-back-hub">
-              ← Back to Plan B Hub
-            </a>
+          <Link href="/planb-webinars" className="text-[#9fb2c3] hover:text-[#26A69A] transition text-sm" data-testid="link-back-hub">
+            ← Back to Plan B Hub
           </Link>
         </div>
       </div>
