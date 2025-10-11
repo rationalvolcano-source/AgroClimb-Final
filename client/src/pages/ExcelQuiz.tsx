@@ -408,7 +408,7 @@ export default function ExcelQuiz() {
 
               {/* CTA */}
               <div className="pt-6">
-                <Link href="/planb-webinars">
+                <Link href="/excel-orientation">
                   <button
                     type="button"
                     className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#26A69A] to-[#14B8A6] hover:opacity-90 transition font-bold text-lg inline-flex items-center gap-2"

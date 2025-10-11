@@ -16,6 +16,7 @@ import AlumniWebinarsComingSoon from "@/pages/AlumniWebinarsComingSoon";
 import PlanBWebinarsHub from "@/pages/PlanBWebinarsHub";
 import FlashcardDuel from "@/pages/FlashcardDuel";
 import ExcelQuiz from "@/pages/ExcelQuiz";
+import ExcelOrientation from "@/pages/ExcelOrientation";
 
 function Router() {
   return (
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/planb" component={PlanB}/>
       <Route path="/planb-webinars" component={PlanBWebinarsHub}/>
       <Route path="/excel-quiz" component={ExcelQuiz}/>
+      <Route path="/excel-orientation" component={ExcelOrientation}/>
       <Route path="/career-quiz" component={CareerQuizComingSoon}/>
       <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
       <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
