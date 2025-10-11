@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { Database, Brain, BarChart3, Printer, Zap, Download, Trophy, ArrowLeft } from 'lucide-react';
+import { Database, Brain, BarChart3, Printer, Zap, Download, Trophy, ArrowLeft, BookOpen } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface Sprint {
@@ -14,14 +14,22 @@ interface Sprint {
 const SPRINTS: Sprint[] = [
   {
     id: 1,
-    title: "Clean Messy Data",
-    description: "Master data cleaning techniques and remove duplicates",
-    Icon: Database,
-    color: "from-blue-500 to-cyan-500",
+    title: "Introduction to Excel",
+    description: "Learn Excel basics: interface, cells, sheets, and navigation",
+    Icon: BookOpen,
+    color: "from-emerald-500 to-teal-500",
     locked: false
   },
   {
     id: 2,
+    title: "Clean Messy Data",
+    description: "Master data cleaning techniques and remove duplicates",
+    Icon: Database,
+    color: "from-blue-500 to-cyan-500",
+    locked: true
+  },
+  {
+    id: 3,
     title: "Formulas That Think",
     description: "Learn IF, XLOOKUP, and dynamic formulas",
     Icon: Brain,
@@ -29,7 +37,7 @@ const SPRINTS: Sprint[] = [
     locked: true
   },
   {
-    id: 3,
+    id: 4,
     title: "Pivots & Charts",
     description: "Create data stories with PivotTables and visualizations",
     Icon: BarChart3,
@@ -37,7 +45,7 @@ const SPRINTS: Sprint[] = [
     locked: true
   },
   {
-    id: 4,
+    id: 5,
     title: "Print-Ready Reports",
     description: "Design professional reports for presentations",
     Icon: Printer,
@@ -45,7 +53,7 @@ const SPRINTS: Sprint[] = [
     locked: true
   },
   {
-    id: 5,
+    id: 6,
     title: "Quick Automation",
     description: "Use Flash Fill, Power Query, and shortcuts",
     Icon: Zap,
@@ -53,7 +61,7 @@ const SPRINTS: Sprint[] = [
     locked: true
   },
   {
-    id: 6,
+    id: 7,
     title: "Everyday Tricks",
     description: "Import PDFs, scrape web tables, and more",
     Icon: Download,
@@ -61,7 +69,7 @@ const SPRINTS: Sprint[] = [
     locked: true
   },
   {
-    id: 7,
+    id: 8,
     title: "Final Project",
     description: "Clean, analyze, and visualize real datasets",
     Icon: Trophy,
@@ -87,7 +95,7 @@ export default function ExcelSprints() {
                 <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#26A69A] to-[#14B8A6] bg-clip-text text-transparent" data-testid="text-sprints-title">
                   Excel Sprints
                 </h1>
-                <p className="text-sm text-[#9fb2c3] mt-1">Master Excel in 7 focused sprints</p>
+                <p className="text-sm text-[#9fb2c3] mt-1">Master Excel in 8 focused sprints</p>
               </div>
             </div>
           </div>
