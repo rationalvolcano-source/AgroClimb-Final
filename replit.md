@@ -32,6 +32,16 @@ The application aims to solve career clarity challenges by providing instant fit
    - **Results Screen**: Shows skill level, score percentage, average time per question, and top 2 weakness areas to focus on
    - **localStorage Persistence**: Saves quiz results with skillLevel, score, avgTimeSec, weaknesses array, and completedAt timestamp
    - **TheAgriVision Theme**: Dark-teal gradient (#26A69A to #14B8A6) buttons, dark backgrounds (#0b1420, #101a28), consistent with platform design
+8. **Excel Orientation** (`/excel-orientation`) - Duolingo-style step-by-step onboarding for Excel Plan B, accessible from Excel Quiz results:
+   - **8-Step Flow**: Welcome, Skills overview, Learning flow, Quiz mindset, Timing info, Coach support, Final project, CTA
+   - **Visual Design**: Farmer Kiran avatar guide, Lucide React icons for each step, speech bubbles for contextual tips
+   - **Content Types**: Text descriptions, bullet lists (7 skills), numbered steps (learning flow), personalized guidance
+   - **Navigation**: Back/Next buttons, clickable progress dots with accessible hit areas (40px), keyboard support (Arrow keys, Enter/Space)
+   - **Progress Tracking**: localStorage saves last step index, auto-resume on reload, completion flag
+   - **Fade Transitions**: Smooth 150ms opacity transitions between steps
+   - **Accessibility**: ARIA labels, large touch targets, keyboard navigation, high contrast text
+   - **Final Action**: "Start Orientation ▶" button navigates to Plan B hub, sets orientationCompleted flag
+   - **Theme**: Consistent dark-teal design (#0b1420 bg, #26A69A accents), responsive layout (max-width 640px)
 
 ### Navigation System
 - **Nav Component** (`client/src/components/Nav.tsx`) - Unified navigation bar used across all pages
