@@ -98,6 +98,7 @@ export default function ExcelOrientation() {
     return saved ? parseInt(saved, 10) : 0;
   });
   const [fadeClass, setFadeClass] = useState('opacity-100');
+  const [showRocketAnimation, setShowRocketAnimation] = useState(false);
 
   const currentStep = STEPS[currentStepIndex];
   const isFirstStep = currentStepIndex === 0;
@@ -132,8 +133,12 @@ export default function ExcelOrientation() {
 
   const handleComplete = () => {
     localStorage.setItem('orientationCompleted', 'true');
-    // Navigate to sprint-map or back to Plan B hub
-    setLocation('/planb-webinars');
+    setShowRocketAnimation(true);
+    
+    // Navigate after rocket animation completes (2 seconds)
+    setTimeout(() => {
+      setLocation('/excel-sprints');
+    }, 2000);
   };
 
   // Keyboard navigation
@@ -318,6 +323,47 @@ export default function ExcelOrientation() {
           </Link>
         </div>
       </div>
+
+      {/* Rocket Launch Animation Overlay */}
+      {showRocketAnimation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b1420]/95 backdrop-blur" data-testid="rocket-animation-overlay">
+          <div className="relative">
+            {/* Rocket */}
+            <div className="rocket-launch">
+              <Rocket className="w-24 h-24 text-[#26A69A]" />
+            </div>
+            {/* Text */}
+            <div className="text-center mt-8">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-[#26A69A] to-[#14B8A6] bg-clip-text text-transparent mb-2">
+                Let's Go! 🚀
+              </h2>
+              <p className="text-[#9fb2c3]">Taking you to the sprints...</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rocket Animation Styles */}
+      <style>{`
+        @keyframes rocketLaunch {
+          0% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: translateY(-100px) scale(1.1);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-400px) scale(0.5);
+            opacity: 0;
+          }
+        }
+        
+        .rocket-launch {
+          animation: rocketLaunch 2s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
