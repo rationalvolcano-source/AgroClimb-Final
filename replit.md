@@ -2,6 +2,15 @@
 
 The Agro Vision is an AI-powered career guidance platform for agricultural students in India, focusing on ABM, Banking, and JRF Horticulture. It offers AI-guided quizzes, interactive learning games, personalized study plans, and alumni mentorship. Inspired by Duolingo's engagement patterns and Linear/Notion's design, the platform aims to provide career clarity through instant fit scores, adaptive learning, and gamified experiences. Key features include a comprehensive wellness center, study tools, and a hub for upskilling and webinars.
 
+## Recent Updates (October 2025)
+
+### Excel Entry System (Plan B)
+-   **Excel Quiz Scoring**: Updated thresholds to 0-6 (Beginner/red), 7-9 (Intermediate/amber), 10 (Expert/green)
+-   **Excel Orientation**: Enhanced with hero section headings for all 8 steps (e.g., "Welcome Aboard!", "What You Will Learn", "Ready for Takeoff?") using gradient text styling
+-   **Rocket Launch Animation**: 2-second rocket animation on final orientation step, auto-navigates to Excel Sprints page
+-   **Excel Sprints Page**: New page at `/excel-sprints` featuring 7 sprint cards with unique Lucide icons (Database, Brain, BarChart3, Printer, Zap, Download, Trophy), Sprint 1 unlocked, Sprints 2-7 locked with progression system
+-   **User Flow**: Seamless navigation from Excel Quiz → Orientation → Rocket Animation → Sprints
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
