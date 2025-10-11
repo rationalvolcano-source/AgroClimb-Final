@@ -117,8 +117,9 @@ export default function ExcelQuiz() {
 
   const handleTimeout = () => {
     const elapsed = (Date.now() - questionStartTime.current) / 1000;
-    setQuestionTimes([...questionTimes, elapsed]);
-    setWrongTags([...wrongTags, currentQuestion.tag]);
+    setQuestionTimes(prev => [...prev, elapsed]);
+    setWrongTags(prev => [...prev, currentQuestion.tag]);
+    setSelectedAnswer(-1); // Lock buttons by setting to invalid index
     
     if (timerRef.current) clearInterval(timerRef.current);
     
@@ -127,7 +128,7 @@ export default function ExcelQuiz() {
         setCurrentIndex(currentIndex + 1);
         setSelectedAnswer(null);
       } else {
-        finishQuiz();
+        setShowResults(true);
       }
     }, 1500);
   };
@@ -136,13 +137,13 @@ export default function ExcelQuiz() {
     if (selectedAnswer !== null) return;
 
     const elapsed = (Date.now() - questionStartTime.current) / 1000;
-    setQuestionTimes([...questionTimes, elapsed]);
+    setQuestionTimes(prev => [...prev, elapsed]);
     setSelectedAnswer(index);
 
     if (index === currentQuestion.correctIndex) {
-      setScore(score + 1);
+      setScore(prev => prev + 1);
     } else {
-      setWrongTags([...wrongTags, currentQuestion.tag]);
+      setWrongTags(prev => [...prev, currentQuestion.tag]);
     }
 
     if (timerRef.current) clearInterval(timerRef.current);
@@ -152,15 +153,18 @@ export default function ExcelQuiz() {
         setCurrentIndex(currentIndex + 1);
         setSelectedAnswer(null);
       } else {
-        finishQuiz();
+        setShowResults(true);
       }
     }, 1500);
   };
 
-  const finishQuiz = () => {
-    setShowResults(true);
-    
-    const avgTime = questionTimes.reduce((a, b) => a + b, 0) / questionTimes.length;
+  // Save results when quiz finishes
+  useEffect(() => {
+    if (!showResults) return;
+
+    const avgTime = questionTimes.length > 0 
+      ? questionTimes.reduce((a, b) => a + b, 0) / questionTimes.length 
+      : 0;
     const skillLevel = score >= 8 ? "Advanced" : score >= 4 ? "Intermediate" : "Beginner";
     
     // Count tag occurrences and get top 2 weaknesses
@@ -182,7 +186,7 @@ export default function ExcelQuiz() {
     };
 
     localStorage.setItem("excel_quiz_result", JSON.stringify(result));
-  };
+  }, [showResults, score, questionTimes, wrongTags]);
 
   const startQuiz = () => {
     setShowIntro(false);
