@@ -21,7 +21,7 @@ export default function Nav() {
   return (
     <div className="sticky top-0 z-40 backdrop-blur-md bg-slate-950/70 border-b border-slate-800 transition-all duration-300">
       <div className={`mx-auto max-w-7xl px-4 flex items-center justify-between gap-4 transition-all duration-300 ${scrolled ? 'py-2' : 'py-3'}`}>
-        <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
+        <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5 hover:opacity-80 transition-opacity">
           <img src={logoPath} alt="AgroClimb" className="h-7 w-7 sm:h-8 sm:w-8" data-testid="img-logo" />
           <span className="font-semibold tracking-tight text-sm sm:text-base" data-testid="text-brand">AgroClimb</span>
         </Link>
