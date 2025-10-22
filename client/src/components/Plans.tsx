@@ -2,7 +2,7 @@ import { Link } from "wouter";
 
 export default function Plans() {
   return (
-    <section id="plans" className="mt-12">
+    <section id="pricing" className="mt-12">
       <h2 className="text-3xl md:text-4xl font-extrabold text-center" data-testid="text-plans-title">Plans</h2>
       <p className="text-slate-400 text-center mt-1" data-testid="text-plans-subtitle">Start with Pro today • Ultra courses rolling out for every pathway</p>
 
