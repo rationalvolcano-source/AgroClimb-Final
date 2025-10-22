@@ -1,4 +1,4 @@
-import logoPath from "@assets/image_1759852944967.webp";
+import logoPath from "@assets/image_1761115104637.webp";
 import { Link } from "wouter";
 
 export default function Footer() {
@@ -14,8 +14,8 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <img src={logoPath} alt="The Agro Vision" className="h-5 w-5" />
-              <span className="font-semibold" data-testid="footer-brand">The Agro Vision</span>
+              <img src={logoPath} alt="AgroClimb" className="h-5 w-5" />
+              <span className="font-semibold" data-testid="footer-brand">AgroClimb</span>
             </div>
             <p className="text-sm text-slate-400" data-testid="footer-tagline">
               AI-guided career pathways for Agri students
@@ -51,7 +51,7 @@ export default function Footer() {
         </div>
         
         <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
-          <p data-testid="footer-copyright">© The Agro Vision — AI-guided career clarity for Agri students.</p>
+          <p data-testid="footer-copyright">© AgroClimb — AI-guided career clarity for Agri students.</p>
         </div>
       </div>
     </footer>

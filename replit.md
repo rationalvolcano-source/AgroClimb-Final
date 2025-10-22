@@ -1,8 +1,15 @@
 ## Overview
 
-The Agro Vision is an AI-powered career guidance platform for agricultural students in India, focusing on ABM, Banking, and JRF Horticulture. It offers AI-guided quizzes, interactive learning games, personalized study plans, and alumni mentorship. Inspired by Duolingo's engagement patterns and Linear/Notion's design, the platform aims to provide career clarity through instant fit scores, adaptive learning, and gamified experiences. Key features include a comprehensive wellness center, study tools, and a hub for upskilling and webinars.
+AgroClimb is an AI-powered career guidance platform for agricultural students in India, focusing on ABM, Banking, and JRF Horticulture. It offers AI-guided quizzes, interactive learning games, personalized study plans, and alumni mentorship. Inspired by Duolingo's engagement patterns and Linear/Notion's design, the platform aims to provide career clarity through instant fit scores, adaptive learning, and gamified experiences. Key features include a comprehensive wellness center, study tools, and a hub for upskilling and webinars.
 
 ## Recent Updates (October 2025)
+
+### Platform Rebrand (October 22, 2025)
+-   **Platform Name**: Changed from "The Agro Vision" to "AgroClimb"
+-   **New Logo**: Mountain with upward arrow design (emerald-cyan gradient)
+-   **Logo Optimization**: 1.16 MB PNG → 33 KB WebP (97.2% reduction)
+-   **All Visual Elements Preserved**: Gradients, animations, styling 100% intact
+-   **Updated Files**: Nav, Footer, HTML meta tags, testimonials, value props
 
 ### Excel Entry System (Plan B)
 -   **Excel Quiz Scoring**: Updated thresholds to 0-6 (Beginner/red), 7-9 (Intermediate/amber), 10 (Expert/green)

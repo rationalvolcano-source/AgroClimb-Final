@@ -1,6 +1,6 @@
 import { ArrowRight, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoPath from "@assets/image_1759852944967.webp";
+import logoPath from "@assets/image_1761115104637.webp";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
@@ -22,8 +22,8 @@ export default function Nav() {
     <div className="sticky top-0 z-40 backdrop-blur-md bg-slate-950/70 border-b border-slate-800 transition-all duration-300">
       <div className={`mx-auto max-w-7xl px-4 flex items-center justify-between gap-4 transition-all duration-300 ${scrolled ? 'py-2' : 'py-3'}`}>
         <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-          <img src={logoPath} alt="The Agro Vision" className="h-7 w-7 sm:h-8 sm:w-8" data-testid="img-logo" />
-          <span className="font-semibold tracking-tight text-sm sm:text-base" data-testid="text-brand">The Agro Vision</span>
+          <img src={logoPath} alt="AgroClimb" className="h-7 w-7 sm:h-8 sm:w-8" data-testid="img-logo" />
+          <span className="font-semibold tracking-tight text-sm sm:text-base" data-testid="text-brand">AgroClimb</span>
         </Link>
         <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm">
           {isLandingPage ? (
