@@ -25,7 +25,7 @@ export default function Nav() {
           <img src={logoPath} alt="AgroClimb" className="h-7 w-7 sm:h-8 sm:w-8" data-testid="img-logo" />
           <span className="font-semibold tracking-tight text-sm sm:text-base" data-testid="text-brand">AgroClimb</span>
         </Link>
-        <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm">
+        <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm ml-4">
           {isLandingPage ? (
             <>
               <a href="#features" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-features">Features</a>
