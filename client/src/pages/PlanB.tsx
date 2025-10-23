@@ -50,12 +50,24 @@ const IconNews = (p: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+const IconInterview = (p: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 48 48" fill="none" {...p}>
+    <circle cx="24" cy="14" r="6" stroke="#22d3ee" strokeWidth="2"/>
+    <path d="M14 38c0-6 4-10 10-10s10 4 10 10" stroke="#10b981" strokeWidth="2"/>
+    <rect x="10" y="32" width="28" height="12" rx="3" stroke="#10b981" strokeWidth="2"/>
+    <path d="M18 36h12M18 40h8" stroke="#22d3ee" strokeWidth="2"/>
+    <circle cx="38" cy="12" r="3" fill="#10b981"/>
+    <circle cx="10" cy="12" r="3" fill="#22d3ee"/>
+  </svg>
+);
+
 export default function PlanB() {
   const items = [
     { Icon: IconExcel, label: "Excel Training", link: "/excel-quiz" },
     { Icon: IconPPT, label: "PowerPoint Training" },
     { Icon: IconViz, label: "Data Visualization" },
     { Icon: IconNews, label: "Daily News Update" },
+    { Icon: IconInterview, label: "Interview Prep" },
   ];
 
   return (
