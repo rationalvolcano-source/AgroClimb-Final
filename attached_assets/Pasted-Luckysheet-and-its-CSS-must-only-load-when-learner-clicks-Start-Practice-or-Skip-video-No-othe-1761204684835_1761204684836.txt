@@ -1,0 +1,165 @@
+Luckysheet and its CSS must only load when learner clicks “Start Practice” or “Skip video”.
+
+No other external JS.
+
+Luckysheet integration
+
+On “Start Practice”, dynamically inject the following assets (or latest stable from jsDelivr):
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/css/plugins.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/plugins.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/css/luckysheet.css">
+<script src="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/js/plugin.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/luckysheet.umd.js" defer></script>
+
+
+After both scripts are loaded, initialize:
+
+luckysheet.create({
+  container: 'sheet',
+  lang: 'en',
+  showinfobar: false,
+  showtoolbar: true,
+  showtoolbarConfig: {
+    undoRedo: true, paintFormat: false, currencyFormat: false, percentageFormat: false,
+    moreFormats: false, font: false, fontSize: false, bold: true, italic: false, strikethrough: false,
+    textWrapMode: true, textRotateMode: false, mergeCell: true, border: true, align: true,
+    textColor: true, fillColor: true, horizontalAlignMode: true, verticalAlignMode: true,
+    freeze: true, sortAndFilter: false, function: true
+  },
+  allowEdit: true,
+  data: [{
+    name: 'Sprint1',
+    row: 50, column: 12,
+    celldata: [
+      {r:0,c:0,v:{v:'Name',bg:'#0f1d2e',bl:1,tc:'#cfe7f2'}},
+      {r:0,c:1,v:{v:'Crop',bg:'#0f1d2e',bl:1,tc:'#cfe7f2'}},
+      {r:0,c:2,v:{v:'Qty (kg)',bg:'#0f1d2e',bl:1,tc:'#cfe7f2'}},
+      {r:0,c:3,v:{v:'Price (₹/kg)',bg:'#0f1d2e',bl:1,tc:'#cfe7f2'}},
+      {r:0,c:4,v:{v:'Date',bg:'#0f1d2e',bl:1,tc:'#cfe7f2'}},
+      {r:0,c:5,v:{v:'Total ₹',bg:'#0f1d2e',bl:1,tc:'#cfe7f2'}},
+      {r:1,c:0,v:{v:'Aarav'}},{r:1,c:1,v:{v:'Tomato'}},{r:1,c:2,v:{v:'1200'}},{r:1,c:3,v:{v:'12'}},{r:1,c:4,v:{v:''}},
+      {r:2,c:0,v:{v:'Meera'}},{r:2,c:1,v:{v:'Potato'}},{r:2,c:2,v:{v:'850'}},{r:2,c:3,v:{v:'16'}},{r:2,c:4,v:{v:'2025-01-03'}},
+      {r:3,c:0,v:{v:'Ishita'}},{r:3,c:1,v:{v:'Onion'}},{r:3,c:2,v:{v:'1,000'}},{r:3,c:3,v:{v:'18'}},{r:3,c:4,v:{v:''}},
+      {r:4,c:0,v:{v:'Vikram'}},{r:4,c:1,v:{v:'Chilli'}},{r:4,c:2,v:{v:'500'}},{r:4,c:3,v:{v:'22'}},{r:4,c:4,v:{v:''}}
+    ],
+    config: { /* optional column widths */ }
+  }]
+});
+// Freeze header row
+luckysheet.setFreezen({type:'row', range:[1]});
+
+
+Provide a container div:
+
+<div id="sheet" style="height:360px;border:1px solid #1e2b3f;border-radius:12px;"></div>
+
+
+Practice tasks UI
+
+Show a checklist above the sheet:
+
+“Enter ≥5 complete rows (Name..Date) — no blanks”
+
+“Make Qty (kg) numeric (no commas/text)”
+
+“Add Total ₹ = Qty × Price as a formula and fill down”
+
+Buttons: Check My Work, Reset, + Add Row (adds one empty row under current data).
+
+Timer: 8:00 with a shrinking progress bar.
+
+Validation (JS)
+
+Implement helpers that loop rows 2..N (index 1..N-1 in zero-based), reading with luckysheet.getCellValue(r,c):
+
+function getVal(r,c){ return (luckysheet.getCellValue(r,c) ?? '').toString().trim(); }
+function isNum(s){ return /^[0-9]+(\.[0-9]+)?$/.test(s); }
+function checkRows(){
+  const out = {rows:0, blanks:false, badQty:[], badTotal:[]};
+  for(let r=1;r<50;r++){
+    const name=getVal(r,0), crop=getVal(r,1), qty=getVal(r,2), price=getVal(r,3), date=getVal(r,4), total=getVal(r,5);
+    if(!name && !crop && !qty && !price && !date) break; // stop at first empty row
+    out.rows++;
+    if(!name||!crop||!qty||!price||!date) out.blanks=true;
+    if(!isNum(qty)) out.badQty.push(r);
+    if(isNum(qty) && isNum(price)){
+      const expect=(parseFloat(qty)*parseFloat(price)).toFixed(2);
+      if(total !== expect){ out.badTotal.push(r); }
+    }
+  }
+  return out;
+}
+
+
+Task rules:
+
+T1 pass if out.rows >= 5 and !out.blanks.
+
+T2 pass if out.badQty.length === 0.
+
+T3 pass if out.badTotal.length === 0.
+
+On Check My Work:
+
+If T3 fails but Qty & Price are numeric, auto-write a formula in first total cell and ask user to fill down:
+
+luckysheet.setCellValue(1,5,{f:'=C2*D2'}); // BODMAS; learner double-clicks fill handle
+
+
+For any failures, show Farmer Kiran bubble with a targeted tip and highlight problem rows:
+
+function highlightRows(rows, col){
+  rows.forEach(r=>{
+    luckysheet.setRangeStyle({
+      range:[{row:[r,r], column:[col,col]}],
+      style:{border:{type:'border-all', style:1, color:'#f59e0b'}}
+    });
+  });
+}
+
+
+If all pass: stop timer, show Reflect card, and store:
+
+localStorage.setItem('sprint1', JSON.stringify({passed:true,time:elapsedSec,completedAt:new Date().toISOString()}));
+
+
+Farmer Kiran nudges (messages)
+
+Qty not numeric → “Remove commas: type 1200 instead of 1,200. Then try again.”
+
+Total mismatch → “Enter =C2*D2 in F2 and double-click the fill handle to copy down.”
+
+Missing rows → “Add rows until you have five complete records (Name..Date).”
+
+Reflect
+
+Summary line: “✅ Completed 3/3 tasks in mm:ss.”
+
+Tip chips: “Ctrl+S often”, “Double-click Fill Handle”, “Wrap Text for labels”, “Avoid commas in numbers”.
+
+Buttons: Continue to Sprint 2 ▶ (sprint2.html) and Review Practice (scroll up, keep sheet).
+
+Accessibility
+
+High-contrast styles; focus outlines on buttons.
+
+Keyboard: Enter activates focused button; tab order logical.
+
+Acceptance
+
+No Luckysheet network activity until Start Practice/Skip video is clicked.
+
+Users can type formulas and select ranges like Excel.
+
+Checklist reflects validations correctly; failing tasks show nudges + highlight.
+
+On pass, Reflect screen appears and progress is saved.
+
+Notes & gotchas
+
+Host assets locally later (behind Cloudflare) for lower latency than public CDN. Keep lazy-load logic identical.
+
+If learners accidentally overwrite headers, call luckysheet.setCellValue(0, col, 'Header') to restore.
+
+For ultra-low RAM devices, cap the visible grid height (already in prompt) and keep rows ≤ 200.

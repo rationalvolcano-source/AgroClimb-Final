@@ -280,58 +280,13 @@
       color: var(--text);
     }
 
-    /* Table Grid */
-    .table-container {
-      overflow-x: auto;
-      margin-bottom: 1.5rem;
-      border-radius: 12px;
+    /* Luckysheet Container */
+    #sheet {
+      height: 400px;
       border: 1px solid var(--border);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 600px;
-    }
-
-    thead {
-      position: sticky;
-      top: 0;
-      background: rgba(38, 166, 154, 0.1);
-      z-index: 1;
-    }
-
-    th {
-      padding: 0.75rem;
-      text-align: left;
-      font-weight: 600;
-      color: var(--accent);
-      border-bottom: 2px solid var(--border);
-    }
-
-    td {
-      padding: 0.5rem 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    td[contenteditable="true"] {
-      cursor: text;
-      min-width: 80px;
-    }
-
-    td[contenteditable="true"]:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: -2px;
-      background: rgba(38, 166, 154, 0.05);
-    }
-
-    .highlight-error {
-      animation: highlight-pulse 2s ease-out;
-    }
-
-    @keyframes highlight-pulse {
-      0%, 100% { outline: none; }
-      50% { outline: 2px solid var(--warning); outline-offset: -2px; }
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      background: white;
     }
 
     /* Farmer Kiran Bubble */
@@ -420,7 +375,6 @@
       display: none;
     }
 
-    /* Utility */
     .text-center {
       text-align: center;
     }
@@ -431,6 +385,13 @@
 
     .mt-2 {
       margin-top: 2rem;
+    }
+
+    /* Loading indicator */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
     }
   </style>
 </head>
@@ -474,15 +435,15 @@
         <ul class="tasks-list" id="tasksList">
           <li class="task-item" data-task="1" data-testid="task-item-1">
             <div class="task-checkbox"></div>
-            <div class="task-text">Enter at least 5 rows of data (Name, Crop, Qty, Price, Date) — no blanks</div>
+            <div class="task-text">Enter ≥5 complete rows (Name..Date) — no blanks</div>
           </li>
           <li class="task-item" data-task="2" data-testid="task-item-2">
             <div class="task-checkbox"></div>
-            <div class="task-text">Format Qty as Number (no commas or text)</div>
+            <div class="task-text">Make Qty (kg) numeric (no commas/text)</div>
           </li>
           <li class="task-item" data-task="3" data-testid="task-item-3">
             <div class="task-checkbox"></div>
-            <div class="task-text">Add "Total ₹" = Qty × Price for all rows</div>
+            <div class="task-text">Add Total ₹ = Qty × Price as a formula and fill down</div>
           </li>
         </ul>
 
@@ -490,22 +451,8 @@
           <span id="kiranText" data-testid="text-kiran-hint"></span>
         </div>
 
-        <div class="table-container">
-          <table id="dataTable" data-testid="table-practice">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Crop</th>
-                <th>Qty (kg)</th>
-                <th>Price (₹/kg)</th>
-                <th>Date</th>
-                <th>Total ₹</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-          </table>
-        </div>
+        <div id="sheetLoading" class="loading hidden">Loading Excel...</div>
+        <div id="sheet" class="hidden" data-testid="excel-sheet"></div>
 
         <div class="btn-group">
           <button class="btn btn-primary" id="checkWork" data-testid="button-check-work">
@@ -514,7 +461,7 @@
           <button class="btn btn-secondary" id="addRow" data-testid="button-add-row">
             + Add Row
           </button>
-          <button class="btn btn-secondary" id="resetTable" data-testid="button-reset">
+          <button class="btn btn-secondary" id="resetSheet" data-testid="button-reset">
             Reset
           </button>
         </div>
@@ -532,9 +479,9 @@
 
       <h3 class="mb-1">Quick Tips for Excel Mastery</h3>
       <div class="tips-grid">
-        <div class="tip-chip">Ctrl+S often</div>
-        <div class="tip-chip">Double-click Fill Handle</div>
-        <div class="tip-chip">Use Wrap Text</div>
+        <div class="tip-chip">Ctrl+S to save often</div>
+        <div class="tip-chip">Double-click Fill Handle to copy formulas</div>
+        <div class="tip-chip">Use Wrap Text for long labels</div>
         <div class="tip-chip">Avoid commas in numbers</div>
       </div>
 
@@ -565,13 +512,7 @@
     });
 
     // ===== State =====
-    const seed = [
-      ["Aarav", "Tomato", "1200", "12", "", ""],
-      ["Meera", "Potato", "850", "16", "2025-01-03", ""],
-      ["Ishita", "Onion", "1000", "18", "", ""],
-      ["Vikram", "Chilli", "500", "22", "", ""]
-    ];
-
+    let sheetLoaded = false;
     let timerInterval = null;
     let startTime = null;
     let elapsedSeconds = 0;
@@ -581,53 +522,172 @@
     // ===== DOM Elements =====
     const timerDisplay = document.getElementById('timerDisplay');
     const timerBar = document.getElementById('timerBar');
-    const tableBody = document.getElementById('tableBody');
+    const sheetContainer = document.getElementById('sheet');
+    const sheetLoading = document.getElementById('sheetLoading');
     const kiran = document.getElementById('kiran');
     const kiranText = document.getElementById('kiranText');
     const reflect = document.getElementById('reflect');
     const completionStats = document.getElementById('completionStats');
 
-    // ===== Grid Helpers =====
-    function render(rows) {
-      tableBody.innerHTML = rows.map((row, idx) => `
-        <tr>
-          ${row.map((cell, colIdx) => {
-            if (colIdx === 5) {
-              // Total column (computed, but allow editing for manual check)
-              return `<td contenteditable="true">${cell}</td>`;
-            }
-            return `<td contenteditable="true">${cell}</td>`;
-          }).join('')}
-        </tr>
-      `).join('');
-    }
+    // ===== Luckysheet Lazy Loading =====
+    function loadLuckysheet() {
+      if (sheetLoaded) return Promise.resolve();
+      
+      sheetLoading.classList.remove('hidden');
+      
+      return new Promise((resolve) => {
+        // Inject CSS
+        const cssLinks = [
+          'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/css/pluginsCss.css',
+          'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/plugins.css',
+          'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/css/luckysheet.css'
+        ];
+        
+        cssLinks.forEach(href => {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          document.head.appendChild(link);
+        });
 
-    function read() {
-      const rows = [];
-      const trs = tableBody.querySelectorAll('tr');
-      trs.forEach(tr => {
-        const cells = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim());
-        rows.push(cells);
+        // Inject JS
+        const pluginScript = document.createElement('script');
+        pluginScript.src = 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/js/plugin.js';
+        document.head.appendChild(pluginScript);
+
+        const luckysheetScript = document.createElement('script');
+        luckysheetScript.src = 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/luckysheet.umd.js';
+        
+        luckysheetScript.onload = () => {
+          setTimeout(() => {
+            initializeLuckysheet();
+            sheetLoaded = true;
+            sheetLoading.classList.add('hidden');
+            sheetContainer.classList.remove('hidden');
+            resolve();
+          }, 100);
+        };
+        
+        document.head.appendChild(luckysheetScript);
       });
-      return rows;
     }
 
-    function addRow() {
-      const newRow = ["", "", "", "", "", ""];
-      const tr = document.createElement('tr');
-      tr.innerHTML = newRow.map(() => `<td contenteditable="true"></td>`).join('');
-      tableBody.appendChild(tr);
+    function initializeLuckysheet() {
+      luckysheet.create({
+        container: 'sheet',
+        lang: 'en',
+        showinfobar: false,
+        showtoolbar: true,
+        showtoolbarConfig: {
+          undoRedo: true, paintFormat: false, currencyFormat: false, percentageFormat: false,
+          moreFormats: false, font: false, fontSize: false, bold: true, italic: false, strikethrough: false,
+          textWrapMode: true, textRotateMode: false, mergeCell: true, border: true, align: true,
+          textColor: true, fillColor: true, horizontalAlignMode: true, verticalAlignMode: true,
+          freeze: true, sortAndFilter: false, function: true
+        },
+        allowEdit: true,
+        data: [{
+          name: 'Sprint1',
+          row: 50,
+          column: 12,
+          celldata: [
+            {r:0,c:0,v:{v:'Name',bg:'#0f1d2e',bl:1,fc:'#26A69A'}},
+            {r:0,c:1,v:{v:'Crop',bg:'#0f1d2e',bl:1,fc:'#26A69A'}},
+            {r:0,c:2,v:{v:'Qty (kg)',bg:'#0f1d2e',bl:1,fc:'#26A69A'}},
+            {r:0,c:3,v:{v:'Price (₹/kg)',bg:'#0f1d2e',bl:1,fc:'#26A69A'}},
+            {r:0,c:4,v:{v:'Date',bg:'#0f1d2e',bl:1,fc:'#26A69A'}},
+            {r:0,c:5,v:{v:'Total ₹',bg:'#0f1d2e',bl:1,fc:'#26A69A'}},
+            {r:1,c:0,v:{v:'Aarav'}},
+            {r:1,c:1,v:{v:'Tomato'}},
+            {r:1,c:2,v:{v:1200,m:'1200'}},
+            {r:1,c:3,v:{v:12,m:'12'}},
+            {r:1,c:4,v:{v:''}},
+            {r:2,c:0,v:{v:'Meera'}},
+            {r:2,c:1,v:{v:'Potato'}},
+            {r:2,c:2,v:{v:850,m:'850'}},
+            {r:2,c:3,v:{v:16,m:'16'}},
+            {r:2,c:4,v:{v:'2025-01-03'}},
+            {r:3,c:0,v:{v:'Ishita'}},
+            {r:3,c:1,v:{v:'Onion'}},
+            {r:3,c:2,v:{v:'1,000'}},
+            {r:3,c:3,v:{v:18,m:'18'}},
+            {r:3,c:4,v:{v:''}},
+            {r:4,c:0,v:{v:'Vikram'}},
+            {r:4,c:1,v:{v:'Chilli'}},
+            {r:4,c:2,v:{v:500,m:'500'}},
+            {r:4,c:3,v:{v:22,m:'22'}},
+            {r:4,c:4,v:{v:''}}
+          ],
+          config: {
+            columnlen: {0:120, 1:100, 2:100, 3:120, 4:100, 5:100}
+          }
+        }]
+      });
+      
+      // Freeze header row
+      setTimeout(() => {
+        luckysheet.setFreezen({type:'row', range:[1]});
+      }, 200);
     }
 
-    function reset() {
-      render(seed);
-      hideKiran();
-      clearTaskChecks();
+    // ===== Helper Functions =====
+    function getVal(r, c) {
+      const cellValue = luckysheet.getCellValue(r, c);
+      if (cellValue === null || cellValue === undefined) return '';
+      return cellValue.toString().trim();
+    }
+
+    function isNum(s) {
+      return /^[0-9]+(\.[0-9]+)?$/.test(s);
+    }
+
+    function checkRows() {
+      const out = { rows: 0, blanks: false, badQty: [], badTotal: [] };
+      
+      for (let r = 1; r < 50; r++) {
+        const name = getVal(r, 0);
+        const crop = getVal(r, 1);
+        const qty = getVal(r, 2);
+        const price = getVal(r, 3);
+        const date = getVal(r, 4);
+        const total = getVal(r, 5);
+        
+        // Stop at first completely empty row
+        if (!name && !crop && !qty && !price && !date) break;
+        
+        out.rows++;
+        
+        // Check for blanks in required columns
+        if (!name || !crop || !qty || !price || !date) {
+          out.blanks = true;
+        }
+        
+        // Check if Qty is numeric
+        if (qty && !isNum(qty)) {
+          out.badQty.push(r);
+        }
+        
+        // Check if Total is correct formula/value
+        if (isNum(qty) && isNum(price)) {
+          const expected = (parseFloat(qty) * parseFloat(price)).toFixed(2);
+          const actualNum = parseFloat(total);
+          
+          // Check if it's a formula or correct value
+          const cellData = luckysheet.getRange();
+          if (total && Math.abs(actualNum - parseFloat(expected)) > 0.01) {
+            out.badTotal.push(r);
+          } else if (!total) {
+            out.badTotal.push(r);
+          }
+        }
+      }
+      
+      return out;
     }
 
     // ===== Timer =====
     function startTimer() {
-      if (timerInterval) return; // Already running
+      if (timerInterval) return;
       
       startTime = Date.now();
       timerInterval = setInterval(() => {
@@ -658,108 +718,63 @@
       return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     }
 
-    // ===== Validation Functions =====
-    function t1_noBlanks(rows) {
-      if (rows.length < 5) return false;
-      
-      for (let i = 0; i < 5; i++) {
-        for (let col = 0; col < 5; col++) { // Check columns 0-4 (Name, Crop, Qty, Price, Date)
-          if (!rows[i][col] || rows[i][col].trim() === '') {
-            return false;
-          }
-        }
-      }
-      return true;
-    }
-
-    function t2_qtyNumeric(rows) {
-      const numericPattern = /^[0-9]+(\.[0-9]+)?$/;
-      
-      for (let row of rows) {
-        const qty = row[2]; // Qty column
-        if (qty && qty.trim() !== '') {
-          if (!numericPattern.test(qty.trim())) {
-            return false;
-          }
-        }
-      }
-      return true;
-    }
-
-    function t3_totalComputed(rows) {
-      for (let row of rows) {
-        const qty = row[2];
-        const price = row[3];
-        const total = row[5];
-
-        if (qty && price) {
-          const qtyNum = parseFloat(qty);
-          const priceNum = parseFloat(price);
-          
-          if (!isNaN(qtyNum) && !isNaN(priceNum)) {
-            const expected = qtyNum * priceNum;
-            const actual = parseFloat(total);
-            
-            if (isNaN(actual) || Math.abs(expected - actual) > 0.01) {
-              return false;
-            }
-          }
-        }
-      }
-      return true;
-    }
-
-    // ===== Evaluation =====
+    // ===== Validation =====
     function evaluate() {
       attemptCount++;
-      const rows = read();
-
-      // Recompute totals first
-      rows.forEach((row, idx) => {
-        const qty = parseFloat(row[2]);
-        const price = parseFloat(row[3]);
-        
-        if (!isNaN(qty) && !isNaN(price)) {
-          row[5] = (qty * price).toFixed(2);
-        }
-      });
-
-      // Update table with computed totals
-      const trs = tableBody.querySelectorAll('tr');
-      trs.forEach((tr, idx) => {
-        if (idx < rows.length) {
-          tr.cells[5].textContent = rows[idx][5];
-        }
-      });
-
-      // Validate tasks
-      const task1 = t1_noBlanks(rows);
-      const task2 = t2_qtyNumeric(rows);
-      const task3 = t3_totalComputed(rows);
-
+      const data = checkRows();
+      
+      // Task 1: At least 5 rows with no blanks
+      const task1 = data.rows >= 5 && !data.blanks;
+      
+      // Task 2: All Qty values are numeric
+      const task2 = data.badQty.length === 0;
+      
+      // Task 3: All Total values are correct
+      const task3 = data.badTotal.length === 0;
+      
       updateTaskCheck(1, task1);
       updateTaskCheck(2, task2);
       updateTaskCheck(3, task3);
-
-      // Check if all passed
+      
       if (task1 && task2 && task3) {
+        // All tasks passed
         stopTimer();
         hideKiran();
         showReflect();
         saveProgress();
       } else {
-        // Show Farmer Kiran hint
+        // Show hints
         if (!task1) {
-          showKiran("Add rows until you have 5 complete records (Name..Date). Make sure no cell is blank in the first 5 rows!");
-          highlightCells('all', 5);
+          if (data.rows < 5) {
+            showKiran("Add rows until you have 5 complete records (Name..Date).");
+          } else {
+            showKiran("Fill in all blank cells in the first 5 rows. Every field (Name, Crop, Qty, Price, Date) must have a value.");
+          }
         } else if (!task2) {
-          showKiran("Remove commas from Qty; try typing 1200 instead of 1,200. Only numbers allowed!");
-          highlightColumn(2);
+          showKiran("Remove commas from Qty: type 1200 instead of 1,000. Numbers should be pure digits.");
+          highlightRows(data.badQty, 2);
         } else if (!task3) {
-          showKiran("Select the first Total cell, then double-click the fill handle to copy down. Or let me compute it for you!");
-          highlightColumn(5);
+          // Auto-write formula in first total cell if empty
+          if (!getVal(1, 5)) {
+            luckysheet.setCellValue(1, 5, { f: '=C2*D2' });
+          }
+          showKiran("Enter =C2*D2 in cell F2, then double-click the fill handle (small square at bottom-right of cell) to copy the formula down to all rows.");
+          highlightRows(data.badTotal, 5);
         }
       }
+    }
+
+    function highlightRows(rows, col) {
+      rows.forEach(r => {
+        try {
+          luckysheet.setRangeStyle({
+            range: [{ row: [r, r], column: [col, col] }],
+            style: { bd: { borderType: 'border-all', style: 1, color: '#f59e0b' } }
+          });
+        } catch (e) {
+          console.warn('Could not highlight row', r, col);
+        }
+      });
     }
 
     // ===== UI Updates =====
@@ -787,32 +802,11 @@
       kiran.classList.remove('show');
     }
 
-    function highlightColumn(colIdx) {
-      const cells = tableBody.querySelectorAll(`tr td:nth-child(${colIdx + 1})`);
-      cells.forEach(cell => {
-        cell.classList.add('highlight-error');
-        setTimeout(() => cell.classList.remove('highlight-error'), 2000);
-      });
-    }
-
-    function highlightCells(type, rowCount) {
-      if (type === 'all') {
-        const trs = Array.from(tableBody.querySelectorAll('tr')).slice(0, rowCount);
-        trs.forEach(tr => {
-          tr.querySelectorAll('td').forEach(td => {
-            td.classList.add('highlight-error');
-            setTimeout(() => td.classList.remove('highlight-error'), 2000);
-          });
-        });
-      }
-    }
-
     function showReflect() {
       const timeStr = fmt(elapsedSeconds);
       completionStats.textContent = `You completed 3/3 tasks in ${timeStr}.`;
       reflect.classList.add('show');
       
-      // Scroll to reflect section
       setTimeout(() => {
         reflect.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 300);
@@ -828,35 +822,48 @@
       localStorage.setItem('sprint1', JSON.stringify(data));
     }
 
+    function addRow() {
+      const data = checkRows();
+      const nextRow = data.rows + 1;
+      
+      // Luckysheet handles row addition internally
+      // User can just start typing in the next empty row
+      showKiran(`Start typing in row ${nextRow + 1} to add data.`);
+    }
+
+    function resetSheet() {
+      if (confirm('Reset the spreadsheet to initial state? All your changes will be lost.')) {
+        location.reload();
+      }
+    }
+
     // ===== Event Listeners =====
-    document.getElementById('startPractice').addEventListener('click', () => {
+    document.getElementById('startPractice').addEventListener('click', async () => {
+      await loadLuckysheet();
       startTimer();
       document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    document.getElementById('skipVideo').addEventListener('click', () => {
+    document.getElementById('skipVideo').addEventListener('click', async () => {
+      await loadLuckysheet();
       startTimer();
       document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     document.getElementById('checkWork').addEventListener('click', evaluate);
     document.getElementById('addRow').addEventListener('click', addRow);
-    document.getElementById('resetTable').addEventListener('click', reset);
+    document.getElementById('resetSheet').addEventListener('click', resetSheet);
 
     document.getElementById('reviewPractice').addEventListener('click', () => {
       reflect.classList.remove('show');
       document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    // ===== Initialize =====
-    render(seed);
-
     // Check if already completed
     const saved = localStorage.getItem('sprint1');
     if (saved) {
       const data = JSON.parse(saved);
       if (data.passed) {
-        // Show completion message but allow re-practice
         console.log('Sprint 1 already completed on', data.completedAt);
       }
     }
