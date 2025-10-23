@@ -32,8 +32,7 @@ export default function PlanBWebinarsHub() {
                 
                 <h2 className="text-3xl font-bold mb-3" data-testid="text-planb-title">Plan B Skills</h2>
                 <p className="text-slate-300 mb-6" data-testid="text-planb-description">
-                  Practical upskilling in Excel, PowerPoint, AI tools, Data Visualization, and more. 
-                  Build alternate income streams and industry readiness.
+                  Be Industry ready with News, Skills, Interview Prep and more
                 </p>
                 
                 <div className="inline-flex items-center text-emerald-400 font-medium group-hover:translate-x-2 transition-transform">
