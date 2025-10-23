@@ -1,0 +1,524 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-dark: #0b1420;
+  --bg-card: #101a28;
+  --bg-elevated: #1a2332;
+  --border: #1e2b3f;
+  --border-light: #2a3847;
+  --accent: #26A69A;
+  --mint: #14B8A6;
+  --text: #eef4f8;
+  --text-muted: #9fb2c3;
+  --text-dim: #6b7b8f;
+  --success: #10b981;
+  --warning: #fbbf24;
+  --danger: #ef4444;
+  --selection: rgba(38, 166, 154, 0.3);
+  --cell-bg: #ffffff;
+  --cell-border: #d1d5db;
+  --cell-header: #f3f4f6;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Toolbar */
+.toolbar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toolbar-right {
+  margin-left: auto;
+}
+
+.app-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), var(--mint));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.tool-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--text);
+  border-color: var(--border-light);
+}
+
+.tool-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tool-btn svg {
+  flex-shrink: 0;
+}
+
+/* Formula Bar */
+.formula-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cell-address {
+  min-width: 60px;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.formula-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+}
+
+.fx-label {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  padding: 0 0.25rem;
+}
+
+.formula-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-family: 'Consolas', 'Monaco', monospace;
+  padding: 0.5rem 0.25rem;
+  outline: none;
+}
+
+.formula-apply {
+  padding: 0.375rem 0.75rem;
+  background: var(--accent);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.formula-apply:hover {
+  background: var(--mint);
+}
+
+/* Grid */
+.grid-wrapper {
+  flex: 1;
+  overflow: auto;
+  background: var(--bg-dark);
+  padding: 1rem;
+}
+
+#grid {
+  display: inline-block;
+  min-width: 100%;
+}
+
+.excel-table {
+  border-collapse: collapse;
+  background: var(--cell-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.excel-table th {
+  background: var(--bg-card);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  min-width: 40px;
+}
+
+.excel-table th.col-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.excel-table th.col-header:hover {
+  background: var(--bg-elevated);
+}
+
+.excel-table td {
+  border: 1px solid var(--cell-border);
+  padding: 0;
+  min-width: 100px;
+  height: 28px;
+  position: relative;
+}
+
+.excel-table td.row-header {
+  background: var(--cell-header);
+  color: #374151;
+  font-weight: 600;
+  text-align: center;
+  min-width: 40px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.excel-table td.row-header:hover {
+  background: #e5e7eb;
+}
+
+.cell-content {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  color: #1f2937;
+  font-family: inherit;
+  outline: none;
+}
+
+.cell-content:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  background: #fef3c7;
+  z-index: 5;
+}
+
+.excel-table td.selected {
+  background: var(--selection) !important;
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 3;
+}
+
+.excel-table td.in-range {
+  background: rgba(38, 166, 154, 0.15) !important;
+  z-index: 2;
+}
+
+.excel-table td.formula-cell .cell-content {
+  color: #059669;
+  font-weight: 500;
+}
+
+.excel-table td.error-cell {
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.excel-table td.error-cell .cell-content {
+  color: var(--danger);
+}
+
+/* Conditional Formatting Styles */
+.excel-table td.cf-highlight {
+  background: rgba(251, 191, 36, 0.2) !important;
+}
+
+.excel-table td.cf-success {
+  background: rgba(16, 185, 129, 0.2) !important;
+}
+
+.excel-table td.cf-danger {
+  background: rgba(239, 68, 68, 0.2) !important;
+}
+
+.excel-table td.cf-info {
+  background: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Toast Notifications */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  color: var(--text);
+  font-size: 0.875rem;
+  transform: translateY(150%);
+  opacity: 0;
+  transition: all 0.3s ease-out;
+  z-index: 1000;
+  max-width: 400px;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast.success {
+  border-left: 4px solid var(--success);
+}
+
+.toast.error {
+  border-left: 4px solid var(--danger);
+}
+
+.toast.info {
+  border-left: 4px solid var(--accent);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 20, 32, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-overlay.hidden {
+  display: none;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Modal Base */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 20, 32, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: auto;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: var(--text);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--mint));
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(38, 166, 154, 0.4);
+}
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* Form Elements */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  padding: 0.625rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.form-input:focus, .form-select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}

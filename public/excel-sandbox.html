@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excel Sandbox — Sprint 1 | AgroClimb</title>
+  <meta name="description" content="Advanced Excel practice with formulas, filters, charts, and pivot tables.">
+  <link rel="stylesheet" href="/excel-sandbox.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-section">
+        <span class="app-title">Excel Sandbox</span>
+      </div>
+      <div class="toolbar-section">
+        <button class="tool-btn" id="btn-new" data-testid="button-new" title="New Sheet">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          New
+        </button>
+        <button class="tool-btn" id="btn-import" data-testid="button-import" title="Import CSV">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Import CSV
+        </button>
+        <button class="tool-btn" id="btn-export" data-testid="button-export" title="Export CSV">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          Export CSV
+        </button>
+      </div>
+      <div class="toolbar-section">
+        <button class="tool-btn" id="btn-undo" data-testid="button-undo" title="Undo (Ctrl+Z)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 7v6h6"/>
+            <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+          </svg>
+        </button>
+        <button class="tool-btn" id="btn-redo" data-testid="button-redo" title="Redo (Ctrl+Y)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 7v6h-6"/>
+            <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/>
+          </svg>
+        </button>
+      </div>
+      <div class="toolbar-section">
+        <button class="tool-btn" id="btn-filter" data-testid="button-filter" title="Filter Data">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filter
+        </button>
+        <button class="tool-btn" id="btn-pivot" data-testid="button-pivot" title="Pivot Table">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          Pivot
+        </button>
+        <button class="tool-btn" id="btn-chart" data-testid="button-chart" title="Create Chart">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          Chart
+        </button>
+        <button class="tool-btn" id="btn-condfmt" data-testid="button-conditional-format" title="Conditional Format">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+          Format
+        </button>
+      </div>
+      <div class="toolbar-section toolbar-right">
+        <a href="/excel-sprints" class="tool-btn" data-testid="button-back-sprints">
+          ← Back to Sprints
+        </a>
+      </div>
+    </div>
+
+    <!-- Formula Bar -->
+    <div class="formula-bar">
+      <div class="cell-address" id="cellAddress" data-testid="text-cell-address">A1</div>
+      <div class="formula-input-wrapper">
+        <span class="fx-label">fx</span>
+        <input 
+          type="text" 
+          id="formulaInput" 
+          class="formula-input" 
+          placeholder="Enter value or formula (e.g., =A1+B1)" 
+          data-testid="input-formula"
+        />
+        <button class="formula-apply" id="formulaApply" data-testid="button-formula-apply" title="Apply (Enter)">✓</button>
+      </div>
+    </div>
+
+    <!-- Grid Container -->
+    <div class="grid-wrapper">
+      <div id="grid" data-testid="excel-grid"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast" data-testid="toast-notification"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay hidden">
+      <div class="loading-spinner"></div>
+      <p class="loading-text" id="loadingText">Loading...</p>
+    </div>
+
+    <!-- Modals will be inserted dynamically -->
+    <div id="modal-container"></div>
+  </div>
+
+  <script type="module" src="/excel-core.js"></script>
+</body>
+</html>
