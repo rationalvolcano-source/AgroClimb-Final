@@ -19,6 +19,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.join(__dirname, '../public/sprint1.html'));
   });
 
+  // Serve Excel sandbox
+  app.get('/excel-sandbox', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/excel-sandbox.html'));
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
