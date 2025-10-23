@@ -27,24 +27,30 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
     - Sprints 2-8 locked with progression system
 -   **User Flow**: Seamless navigation from Excel Quiz → Orientation → Rocket Animation → Sprints
 
-### Sprint 1 with Excel-Like Interface (October 23, 2025)
--   **Lightweight Custom Excel**: Built custom Excel-like interface with pure HTML/CSS/JavaScript (< 50KB total)
--   **Instant Loading**: No external libraries or CDN - loads instantly even on 2G/3G networks
--   **Excel Features**: 
-    - Editable table cells with input fields
-    - Formula support: users type `=1200*12` or `=qty*price` in Total column
-    - Excel toolbar: Add Row, Fill Down, Clear Selected buttons
-    - Cell selection with focus states
-    - Auto-calculated formula results with visual feedback (green text)
--   **Seed Data**: 4 pre-filled rows (Aarav/Tomato, Meera/Potato, Ishita/Onion, Vikram/Chilli) with deliberate errors for learning
--   **Validation System**: Reads table data from DOM, checks for:
-    - Task 1: ≥5 complete rows with no blanks in any field
-    - Task 2: Numeric Qty values (no commas like "1,000")
-    - Task 3: Total cells must contain formulas starting with "="
--   **Farmer Kiran AI Hints**: Excel-specific guidance based on validation errors
--   **Error Highlighting**: Orange borders on problem cells when validation fails
--   **All Preserved**: Timer (8 min), 3 tasks, Reflect section, localStorage progress tracking
--   **Performance**: Optimized for low-bandwidth Indian networks - loads <1 second on 2G
+### Sprint 1 - File Upload + AI Evaluation System (October 23, 2025)
+-   **Approach Change**: Scrapped in-browser Excel sandbox in favor of simpler file upload + AI evaluation
+-   **User Flow**: Students watch video → practice in their own Excel → upload file → receive AI feedback
+-   **File Support**: Full support for Excel (.xlsx, .xls) and CSV (.csv) files
+-   **Backend Architecture**:
+    - SheetJS (xlsx library) for universal spreadsheet parsing
+    - Multer for file upload handling (5MB limit)
+    - Column name normalization to handle special character encoding (₹ symbol)
+    - Defensive validation: file type, empty data, parse errors
+-   **AI Evaluation Logic** (Rule-based):
+    - Task 1: Check for ≥5 complete rows (all fields filled)
+    - Task 2: Verify Qty values are numeric (no commas)
+    - Task 3: Validate Total = Qty × Price (correct formula calculations)
+    - Score: 3/3 required to pass and unlock Sprint 2
+-   **Frontend Features**:
+    - Standalone HTML file (sprint1-v2.html) optimized for 2G/3G networks
+    - Drag-drop file upload with file info display
+    - Loading states during evaluation
+    - Detailed feedback with checkmarks/error messages
+    - Retry functionality
+    - localStorage progress tracking
+-   **Error Handling**: Comprehensive validation with user-friendly error messages
+-   **Performance**: Lightweight implementation (<50KB), fast parsing, minimal network usage
+-   **Benefits**: Students use real Excel (builds actual skills), works on all devices, simpler architecture
 
 ## User Preferences
 
@@ -106,6 +112,12 @@ Preferred communication style: Simple, everyday language.
 -   **Class Variance Authority:** Type-safe component variant handling.
 -   **CLSX & Tailwind Merge:** Conditional className utilities.
 -   **PostCSS & Autoprefixer:** CSS processing.
+
+### File Processing
+
+-   **Multer:** File upload middleware for Express.
+-   **SheetJS (xlsx):** Excel and CSV file parsing library.
+-   **PapaParse:** CSV parsing (deprecated in favor of SheetJS).
 
 ### Development Tools
 
