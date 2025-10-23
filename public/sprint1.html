@@ -632,17 +632,51 @@
 
     // ===== Helper Functions =====
     function getVal(r, c) {
-      const cellValue = luckysheet.getCellValue(r, c);
-      if (cellValue === null || cellValue === undefined) return '';
-      return cellValue.toString().trim();
+      try {
+        // Get the sheet data directly
+        const sheetData = luckysheet.getSheetData();
+        if (!sheetData || !sheetData[r] || !sheetData[r][c]) {
+          return '';
+        }
+        
+        const cell = sheetData[r][c];
+        
+        // If cell is null/undefined, return empty
+        if (!cell) return '';
+        
+        // Handle cell object with 'v' property (value)
+        if (typeof cell === 'object' && cell.v !== undefined && cell.v !== null) {
+          // Handle formula cells - use calculated value (ct.v) or formula result (v)
+          if (cell.f) {
+            // It's a formula, return the calculated value
+            return cell.v.toString().trim();
+          }
+          return cell.v.toString().trim();
+        }
+        
+        // Handle direct values
+        if (typeof cell === 'string' || typeof cell === 'number') {
+          return cell.toString().trim();
+        }
+        
+        return '';
+      } catch (e) {
+        console.warn('Error getting cell value at', r, c, ':', e);
+        return '';
+      }
     }
 
     function isNum(s) {
+      if (!s) return false;
+      // Remove any whitespace
+      s = s.toString().trim();
       return /^[0-9]+(\.[0-9]+)?$/.test(s);
     }
 
     function checkRows() {
       const out = { rows: 0, blanks: false, badQty: [], badTotal: [] };
+      
+      console.log('=== Starting validation ===');
       
       for (let r = 1; r < 50; r++) {
         const name = getVal(r, 0);
@@ -653,18 +687,24 @@
         const total = getVal(r, 5);
         
         // Stop at first completely empty row
-        if (!name && !crop && !qty && !price && !date) break;
+        if (!name && !crop && !qty && !price && !date) {
+          console.log(`Row ${r}: Empty row, stopping validation`);
+          break;
+        }
         
         out.rows++;
+        console.log(`Row ${r}: Name=${name}, Crop=${crop}, Qty=${qty}, Price=${price}, Date=${date}, Total=${total}`);
         
         // Check for blanks in required columns
         if (!name || !crop || !qty || !price || !date) {
           out.blanks = true;
+          console.log(`Row ${r}: Has blanks`);
         }
         
         // Check if Qty is numeric
         if (qty && !isNum(qty)) {
           out.badQty.push(r);
+          console.log(`Row ${r}: Qty "${qty}" is not numeric`);
         }
         
         // Check if Total is correct formula/value
@@ -672,16 +712,19 @@
           const expected = (parseFloat(qty) * parseFloat(price)).toFixed(2);
           const actualNum = parseFloat(total);
           
-          // Check if it's a formula or correct value
-          const cellData = luckysheet.getRange();
-          if (total && Math.abs(actualNum - parseFloat(expected)) > 0.01) {
+          console.log(`Row ${r}: Expected total = ${expected}, Actual = ${total} (${actualNum})`);
+          
+          if (!total || isNaN(actualNum)) {
             out.badTotal.push(r);
-          } else if (!total) {
+            console.log(`Row ${r}: Total is missing or not a number`);
+          } else if (Math.abs(actualNum - parseFloat(expected)) > 0.01) {
             out.badTotal.push(r);
+            console.log(`Row ${r}: Total mismatch`);
           }
         }
       }
       
+      console.log('Validation results:', out);
       return out;
     }
 
