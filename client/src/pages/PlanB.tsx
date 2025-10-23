@@ -65,7 +65,7 @@ export default function PlanB() {
         <header className="mb-6" data-testid="section-planb-header">
           <h1 className="text-3xl md:text-5xl font-semibold" data-testid="text-planb-title">Plan B (Preview)</h1>
           <p className="text-slate-300 mt-2" data-testid="text-planb-description">
-            Practical upskilling tracks to build alternate income and industry readiness.
+            Stay Industry ready with in-demand skills, News, Interview Preparation and more
           </p>
         </header>
 
