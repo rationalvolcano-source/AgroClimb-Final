@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excel Sprint 1 — Introduction to Excel | AgroClimb</title>
+  <meta name="description" content="Learn Excel basics through hands-on practice. Master the interface, cells, sheets, and navigation in 20 minutes.">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-dark: #0b1420;
+      --bg-card: #101a28;
+      --border: #1e2b3f;
+      --accent: #26A69A;
+      --mint: #14B8A6;
+      --text: #eef4f8;
+      --text-muted: #9fb2c3;
+      --success: #10b981;
+      --warning: #fbbf24;
+      --danger: #ef4444;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, #0f1530 50%, var(--bg-dark) 100%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-card {
+      text-align: center;
+    }
+
+    .header-card h1 {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--mint));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(38, 166, 154, 0.1);
+      border: 1px solid rgba(38, 166, 154, 0.3);
+      border-radius: 999px;
+      font-size: 0.875rem;
+      color: var(--accent);
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .grid-layout {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    /* YouTube Lite Embed */
+    lite-yt {
+      display: block;
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    lite-yt::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, rgba(38, 166, 154, 0.1), rgba(20, 184, 166, 0.1));
+      z-index: 1;
+    }
+
+    lite-yt button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 68px;
+      height: 48px;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      z-index: 2;
+      transition: all 0.2s;
+    }
+
+    lite-yt button:hover {
+      background: var(--mint);
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    lite-yt button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 52%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      border-left: 16px solid white;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+
+    lite-yt iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--mint));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(38, 166, 154, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(159, 178, 195, 0.1);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(159, 178, 195, 0.2);
+      color: var(--text);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* Timer */
+    .timer-display {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .timer-progress {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .timer-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--mint));
+      transition: transform 0.3s linear;
+      transform-origin: left;
+    }
+
+    /* Tasks Checklist */
+    .tasks-list {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: rgba(159, 178, 195, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid var(--border);
+    }
+
+    .task-item.done {
+      border-left-color: var(--success);
+    }
+
+    .task-checkbox {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+    }
+
+    .task-item.done .task-checkbox {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .task-item.done .task-checkbox::after {
+      content: '✓';
+      color: white;
+      font-weight: 700;
+    }
+
+    .task-text {
+      flex: 1;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .task-item.done .task-text {
+      color: var(--text);
+    }
+
+    /* Table Grid */
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      background: rgba(38, 166, 154, 0.1);
+      z-index: 1;
+    }
+
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td[contenteditable="true"] {
+      cursor: text;
+      min-width: 80px;
+    }
+
+    td[contenteditable="true"]:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+      background: rgba(38, 166, 154, 0.05);
+    }
+
+    .highlight-error {
+      animation: highlight-pulse 2s ease-out;
+    }
+
+    @keyframes highlight-pulse {
+      0%, 100% { outline: none; }
+      50% { outline: 2px solid var(--warning); outline-offset: -2px; }
+    }
+
+    /* Farmer Kiran Bubble */
+    #kiran {
+      display: none;
+      position: relative;
+      padding: 1rem 1.25rem;
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    #kiran.show {
+      display: block;
+    }
+
+    #kiran::before {
+      content: '💡';
+      font-size: 1.25rem;
+      margin-right: 0.5rem;
+    }
+
+    #kiranText {
+      color: var(--warning);
+      font-size: 0.95rem;
+      display: inline;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Reflect Section */
+    #reflect {
+      display: none;
+    }
+
+    #reflect.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .success-summary {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .success-summary h2 {
+      font-size: 2rem;
+      color: var(--success);
+      margin-bottom: 0.5rem;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .tip-chip {
+      padding: 0.75rem 1rem;
+      background: rgba(38, 166, 154, 0.1);
+      border: 1px solid rgba(38, 166, 154, 0.2);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Utility */
+    .text-center {
+      text-align: center;
+    }
+
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+
+    .mt-2 {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="card header-card">
+      <h1>Excel S1 — Introduction to Excel</h1>
+      <span class="pill">~20 min · Learn → Practice → Reflect</span>
+    </div>
+
+    <!-- Learn & Practice Grid -->
+    <div class="grid-layout">
+      <!-- Learn Section -->
+      <div class="card" id="learnCard">
+        <h2 class="section-title">📚 Learn</h2>
+        
+        <lite-yt data-id="rwbho0CaSGo">
+          <button aria-label="Play Excel Introduction Video"></button>
+        </lite-yt>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" id="startPractice" data-testid="button-start-practice">
+            Start Practice ▶
+          </button>
+          <button class="btn btn-secondary" id="skipVideo" data-testid="button-skip-video">
+            Skip video
+          </button>
+        </div>
+      </div>
+
+      <!-- Practice Section -->
+      <div class="card" id="practiceCard">
+        <h2 class="section-title">⚡ Practice</h2>
+        
+        <div class="timer-display" id="timerDisplay" data-testid="text-timer">08:00</div>
+        <div class="timer-progress">
+          <div class="timer-progress-bar" id="timerBar"></div>
+        </div>
+
+        <ul class="tasks-list" id="tasksList">
+          <li class="task-item" data-task="1" data-testid="task-item-1">
+            <div class="task-checkbox"></div>
+            <div class="task-text">Enter at least 5 rows of data (Name, Crop, Qty, Price, Date) — no blanks</div>
+          </li>
+          <li class="task-item" data-task="2" data-testid="task-item-2">
+            <div class="task-checkbox"></div>
+            <div class="task-text">Format Qty as Number (no commas or text)</div>
+          </li>
+          <li class="task-item" data-task="3" data-testid="task-item-3">
+            <div class="task-checkbox"></div>
+            <div class="task-text">Add "Total ₹" = Qty × Price for all rows</div>
+          </li>
+        </ul>
+
+        <div id="kiran">
+          <span id="kiranText" data-testid="text-kiran-hint"></span>
+        </div>
+
+        <div class="table-container">
+          <table id="dataTable" data-testid="table-practice">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Crop</th>
+                <th>Qty (kg)</th>
+                <th>Price (₹/kg)</th>
+                <th>Date</th>
+                <th>Total ₹</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-primary" id="checkWork" data-testid="button-check-work">
+            Check My Work
+          </button>
+          <button class="btn btn-secondary" id="addRow" data-testid="button-add-row">
+            + Add Row
+          </button>
+          <button class="btn btn-secondary" id="resetTable" data-testid="button-reset">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reflect Section (hidden initially) -->
+    <div class="card" id="reflect">
+      <h2 class="section-title text-center">🎉 Congratulations!</h2>
+      
+      <div class="success-summary" data-testid="section-success-summary">
+        <h2>Sprint 1 Complete!</h2>
+        <p id="completionStats" data-testid="text-completion-stats">You completed 3/3 tasks in 00:00.</p>
+      </div>
+
+      <h3 class="mb-1">💡 Quick Tips for Excel Mastery</h3>
+      <div class="tips-grid">
+        <div class="tip-chip">Ctrl+S often</div>
+        <div class="tip-chip">Double-click Fill Handle</div>
+        <div class="tip-chip">Use Wrap Text</div>
+        <div class="tip-chip">Avoid commas in numbers</div>
+      </div>
+
+      <div class="btn-group">
+        <a href="/sprint2.html" class="btn btn-primary" data-testid="button-continue-sprint2">
+          Continue to Sprint 2 ▶
+        </a>
+        <button class="btn btn-secondary" id="reviewPractice" data-testid="button-review-practice">
+          Review Practice
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== YouTube Lite Embed Component =====
+    customElements.define('lite-yt', class extends HTMLElement {
+      connectedCallback() {
+        this.querySelector('button')?.addEventListener('click', () => {
+          const id = this.dataset.id || '';
+          this.innerHTML = `<iframe loading="lazy" width="560" height="315"
+            src="https://www.youtube.com/embed/${id}?autoplay=1"
+            title="YouTube video" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>`;
+        }, { once: true });
+      }
+    });
+
+    // ===== State =====
+    const seed = [
+      ["Aarav", "Tomato", "1200", "12", ""],
+      ["Meera", "Potato", "850", "16", "2025-01-03"],
+      ["Ishita", "Onion", "1000", "18", ""],
+      ["Vikram", "Chilli", "500", "22", ""]
+    ];
+
+    let timerInterval = null;
+    let startTime = null;
+    let elapsedSeconds = 0;
+    let attemptCount = 0;
+    const TIMER_DURATION = 8 * 60; // 8 minutes
+
+    // ===== DOM Elements =====
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerBar = document.getElementById('timerBar');
+    const tableBody = document.getElementById('tableBody');
+    const kiran = document.getElementById('kiran');
+    const kiranText = document.getElementById('kiranText');
+    const reflect = document.getElementById('reflect');
+    const completionStats = document.getElementById('completionStats');
+
+    // ===== Grid Helpers =====
+    function render(rows) {
+      tableBody.innerHTML = rows.map((row, idx) => `
+        <tr>
+          ${row.map((cell, colIdx) => {
+            if (colIdx === 5) {
+              // Total column (computed, but allow editing for manual check)
+              return `<td contenteditable="true">${cell}</td>`;
+            }
+            return `<td contenteditable="true">${cell}</td>`;
+          }).join('')}
+        </tr>
+      `).join('');
+    }
+
+    function read() {
+      const rows = [];
+      const trs = tableBody.querySelectorAll('tr');
+      trs.forEach(tr => {
+        const cells = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim());
+        rows.push(cells);
+      });
+      return rows;
+    }
+
+    function addRow() {
+      const newRow = ["", "", "", "", "", ""];
+      const tr = document.createElement('tr');
+      tr.innerHTML = newRow.map(() => `<td contenteditable="true"></td>`).join('');
+      tableBody.appendChild(tr);
+    }
+
+    function reset() {
+      render(seed);
+      hideKiran();
+      clearTaskChecks();
+    }
+
+    // ===== Timer =====
+    function startTimer() {
+      if (timerInterval) return; // Already running
+      
+      startTime = Date.now();
+      timerInterval = setInterval(() => {
+        elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const remaining = Math.max(0, TIMER_DURATION - elapsedSeconds);
+        
+        timerDisplay.textContent = fmt(remaining);
+        const progress = remaining / TIMER_DURATION;
+        timerBar.style.transform = `scaleX(${progress})`;
+
+        if (remaining === 0) {
+          stopTimer();
+          showKiran("Time is up — let's fix the quickest task first!");
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function fmt(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    // ===== Validation Functions =====
+    function t1_noBlanks(rows) {
+      if (rows.length < 5) return false;
+      
+      for (let i = 0; i < 5; i++) {
+        for (let col = 0; col < 5; col++) { // Check columns 0-4 (Name, Crop, Qty, Price, Date)
+          if (!rows[i][col] || rows[i][col].trim() === '') {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function t2_qtyNumeric(rows) {
+      const numericPattern = /^[0-9]+(\.[0-9]+)?$/;
+      
+      for (let row of rows) {
+        const qty = row[2]; // Qty column
+        if (qty && qty.trim() !== '') {
+          if (!numericPattern.test(qty.trim())) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function t3_totalComputed(rows) {
+      for (let row of rows) {
+        const qty = row[2];
+        const price = row[3];
+        const total = row[5];
+
+        if (qty && price) {
+          const qtyNum = parseFloat(qty);
+          const priceNum = parseFloat(price);
+          
+          if (!isNaN(qtyNum) && !isNaN(priceNum)) {
+            const expected = qtyNum * priceNum;
+            const actual = parseFloat(total);
+            
+            if (isNaN(actual) || Math.abs(expected - actual) > 0.01) {
+              return false;
+            }
+          }
+        }
+      }
+      return true;
+    }
+
+    // ===== Evaluation =====
+    function evaluate() {
+      attemptCount++;
+      const rows = read();
+
+      // Recompute totals first
+      rows.forEach((row, idx) => {
+        const qty = parseFloat(row[2]);
+        const price = parseFloat(row[3]);
+        
+        if (!isNaN(qty) && !isNaN(price)) {
+          row[5] = (qty * price).toFixed(2);
+        }
+      });
+
+      // Update table with computed totals
+      const trs = tableBody.querySelectorAll('tr');
+      trs.forEach((tr, idx) => {
+        if (idx < rows.length) {
+          tr.cells[5].textContent = rows[idx][5];
+        }
+      });
+
+      // Validate tasks
+      const task1 = t1_noBlanks(rows);
+      const task2 = t2_qtyNumeric(rows);
+      const task3 = t3_totalComputed(rows);
+
+      updateTaskCheck(1, task1);
+      updateTaskCheck(2, task2);
+      updateTaskCheck(3, task3);
+
+      // Check if all passed
+      if (task1 && task2 && task3) {
+        stopTimer();
+        hideKiran();
+        showReflect();
+        saveProgress();
+      } else {
+        // Show Farmer Kiran hint
+        if (!task1) {
+          showKiran("Add rows until you have 5 complete records (Name..Date). Make sure no cell is blank in the first 5 rows!");
+          highlightCells('all', 5);
+        } else if (!task2) {
+          showKiran("Remove commas from Qty; try typing 1200 instead of 1,200. Only numbers allowed!");
+          highlightColumn(2);
+        } else if (!task3) {
+          showKiran("Select the first Total cell, then double-click the fill handle to copy down. Or let me compute it for you!");
+          highlightColumn(5);
+        }
+      }
+    }
+
+    // ===== UI Updates =====
+    function updateTaskCheck(taskNum, passed) {
+      const taskItem = document.querySelector(`[data-task="${taskNum}"]`);
+      if (passed) {
+        taskItem.classList.add('done');
+      } else {
+        taskItem.classList.remove('done');
+      }
+    }
+
+    function clearTaskChecks() {
+      document.querySelectorAll('.task-item').forEach(item => {
+        item.classList.remove('done');
+      });
+    }
+
+    function showKiran(message) {
+      kiranText.textContent = message;
+      kiran.classList.add('show');
+    }
+
+    function hideKiran() {
+      kiran.classList.remove('show');
+    }
+
+    function highlightColumn(colIdx) {
+      const cells = tableBody.querySelectorAll(`tr td:nth-child(${colIdx + 1})`);
+      cells.forEach(cell => {
+        cell.classList.add('highlight-error');
+        setTimeout(() => cell.classList.remove('highlight-error'), 2000);
+      });
+    }
+
+    function highlightCells(type, rowCount) {
+      if (type === 'all') {
+        const trs = Array.from(tableBody.querySelectorAll('tr')).slice(0, rowCount);
+        trs.forEach(tr => {
+          tr.querySelectorAll('td').forEach(td => {
+            td.classList.add('highlight-error');
+            setTimeout(() => td.classList.remove('highlight-error'), 2000);
+          });
+        });
+      }
+    }
+
+    function showReflect() {
+      const timeStr = fmt(elapsedSeconds);
+      completionStats.textContent = `You completed 3/3 tasks in ${timeStr}.`;
+      reflect.classList.add('show');
+      
+      // Scroll to reflect section
+      setTimeout(() => {
+        reflect.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+
+    function saveProgress() {
+      const data = {
+        passed: true,
+        time: elapsedSeconds,
+        attempts: attemptCount,
+        completedAt: new Date().toISOString()
+      };
+      localStorage.setItem('sprint1', JSON.stringify(data));
+    }
+
+    // ===== Event Listeners =====
+    document.getElementById('startPractice').addEventListener('click', () => {
+      startTimer();
+      document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('skipVideo').addEventListener('click', () => {
+      startTimer();
+      document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('checkWork').addEventListener('click', evaluate);
+    document.getElementById('addRow').addEventListener('click', addRow);
+    document.getElementById('resetTable').addEventListener('click', reset);
+
+    document.getElementById('reviewPractice').addEventListener('click', () => {
+      reflect.classList.remove('show');
+      document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // ===== Initialize =====
+    render(seed);
+
+    // Check if already completed
+    const saved = localStorage.getItem('sprint1');
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.passed) {
+        // Show completion message but allow re-practice
+        console.log('Sprint 1 already completed on', data.completedAt);
+      }
+    }
+  </script>
+</body>
+</html>

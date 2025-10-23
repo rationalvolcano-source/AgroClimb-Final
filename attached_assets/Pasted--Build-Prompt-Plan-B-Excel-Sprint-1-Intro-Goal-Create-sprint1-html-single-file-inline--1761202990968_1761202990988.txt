@@ -1,0 +1,210 @@
+🔧 Build Prompt — Plan B · Excel · Sprint 1 (Intro)
+
+Goal: Create sprint1.html (single file; inline CSS + JS; no frameworks) that implements:
+
+Learn section with one YouTube lite embed placeholder (click-to-play)
+
+Practice section: sandbox grid (editable table) + 3 tasks + 8-minute timer + Farmer Kiran AI-style hints when a task fails
+
+Reflect section: success summary + quick tips + navigation to Sprint 2
+
+Store progress in localStorage.sprint1
+
+0) Constraints & Targets
+
+Theme: dark-teal (bg #0b1420, accent #26A69A, mint #14B8A6, border #1e2b3f, text near-white).
+
+No external JS libraries. You may embed one custom element for the lite YouTube.
+
+Performance: initial HTML+CSS+JS ≤ ~50 KB; LCP < 2s on 4G; only load iframe when user clicks play; no network calls for sandbox.
+
+Accessibility: keyboard usable, focus outlines, sufficient contrast, semantic landmarks.
+
+Mobile-first responsive layout; max content width ~1100px.
+
+1) File output
+
+Create a single file:
+
+sprint1.html (contains all HTML, CSS, and JS inline).
+
+2) Page structure
+
+Use this three-section layout:
+
+Header card with title (“Excel S1 — Introduction to Excel”) and small pill “~20 min · Learn → Practice → Reflect”.
+
+Grid with two cards side-by-side on desktop, stacked on mobile:
+
+Left card: Learn (the video placeholder + “Start Practice” button).
+
+Right card: Practice (timer, tasks, editable grid, Farmer Kiran bubble, action buttons).
+
+Reflect card (hidden until success or after pressing Check), with summary + chip tips + buttons (“Continue to Sprint 2”, “Review Practice”).
+
+3) Learn section (YouTube lite embed)
+
+Implement a custom Web Component <lite-yt data-id="VIDEO_ID_PLACEHOLDER">:
+
+Renders a poster (SVG or AVIF placeholder) and a Play button.
+
+On click, replaces itself with a real <iframe src="https://www.youtube.com/embed/VIDEO_ID_PLACEHOLDER?autoplay=1">.
+
+Use loading="lazy" on the <iframe>.
+
+Below the player, add two buttons: Start Practice ▶ (starts timer) and Skip video (also starts timer).
+
+Acceptance: No YouTube network requests until the user clicks Play.
+
+4) Practice section (sandbox grid + tasks)
+
+Use a plain HTML <table> as the grid; no libraries.
+
+Make cells contenteditable except the Total ₹ column (computed).
+
+Provide seed data (≤ 1 KB) to render on load:
+
+const seed = [
+  ["Aarav","Tomato","1200","12",""],
+  ["Meera","Potato","850","16","2025-01-03"],
+  ["Ishita","Onion","1,000","18",""],
+  ["Vikram","Chilli","500","22",""]
+];
+
+
+Show an 8-minute countdown with a progress bar (scaleX transform).
+
+Show a checklist of 3 tasks (each becomes ✓ when validated):
+
+Enter at least 5 rows of data (Name, Crop, Qty, Price, Date) — no blanks in the first 5 rows across those columns.
+
+Format Qty as Number → (validation rule: the Qty column must be purely numeric without commas or text).
+
+Add “Total ₹” = Qty × Price for all rows (rounded to 2 decimals); Total column is computed automatically during validation but users may also type; validator will overwrite with computed value.
+
+Buttons: Check My Work, + Add Row, Reset.
+
+Add a Farmer Kiran bubble (text only) that appears on failure with a contextual nudge and a visual highlight of the problem cells (e.g., outline Qty column in yellow for 1–2 seconds).
+
+Validation logic (JS functions required):
+
+t1_noBlanks(rows) — ensure at least 5 rows; first 5 rows have non-blank cells in columns 0..4.
+
+t2_qtyNumeric(rows) — Qty values must match /^[0-9]+(\.[0-9]+)?$/; commas or letters fail.
+
+t3_totalComputed(rows) — for each row with numeric Qty & Price, Total equals Qty*Price within 0.01.
+
+evaluate() should:
+
+Recompute Total for rows with valid numbers, write values into the table (two decimals).
+
+Run all three task checks; mark checklist items done/undone.
+
+If all pass → stop timer, save to localStorage.sprint1, and reveal Reflect card with success summary.
+
+If any fail → show Farmer Kiran bubble with a short tip and highlight offending cells/column.
+
+Timer behavior:
+
+Start when user clicks Start Practice or Skip video.
+
+On expiry, show nudge: “Time is up — let’s fix the quickest task first,” keep the table intact for retry.
+
+Persistence:
+
+On pass, save:
+
+localStorage.setItem('sprint1', JSON.stringify({
+  passed: true,
+  time: elapsedSeconds,
+  attempts: attemptCount,
+  completedAt: new Date().toISOString()
+}));
+
+5) Reflect section (summary + tips)
+
+When evaluate() passes all tasks:
+
+Show a summary: “You completed 3/3 tasks in mm:ss.”
+
+Show chip tips (static): “Ctrl+S often”, “Double-click Fill Handle”, “Use Wrap Text”, “Avoid commas in numbers”.
+
+Buttons: Continue to Sprint 2 ▶ (link sprint2.html) and Review Practice (scroll back up and hide Reflect).
+
+6) Styling & UX
+
+Cards: rounded 18px, border #1e2b3f, soft shadow; background #101a28.
+
+Primary buttons: gradient teal (#26A69A → #14B8A6), bold text, 12px radius.
+
+Table: sticky header row, row separators, focus background on active cell.
+
+Farmer Kiran bubble: small muted message with a pointer triangle; appears only on failure, disappears on reset or success.
+
+Animations: small fade/translate only (fast, GPU-friendly).
+
+Keyboard accessibility: Enter to trigger focused button; tab order logical.
+
+7) JavaScript outline (must implement)
+
+Lite YouTube component:
+
+customElements.define('lite-yt', class extends HTMLElement{
+  connectedCallback(){
+    this.querySelector('button')?.addEventListener('click', ()=>{
+      const id=this.dataset.id||'';
+      this.innerHTML = `<iframe loading="lazy" width="560" height="315"
+        src="https://www.youtube.com/embed/${id}?autoplay=1"
+        title="YouTube video" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>`;
+    }, {once:true});
+  }
+});
+
+
+Grid helpers: render(rows), read(), addRow(), reset(); compute totals on the fly in evaluate().
+
+Timer: startTimer(), fmt(seconds), progress bar scaleX from 1 → 0.
+
+Validation functions named exactly: t1_noBlanks, t2_qtyNumeric, t3_totalComputed; evaluate() orchestrates them.
+
+Farmer Kiran:
+
+DOM id: kiran (container) and kiranText (message).
+
+Example nudges to use:
+
+Qty issue: “Remove commas from Qty; try typing 1200 instead of 1,200.”
+
+Total issue: “Select the first Total cell, then double-click the fill handle to copy down.”
+
+Missing rows: “Add rows until you have 5 complete records (Name..Date).”
+
+8) Acceptance criteria (Replit should verify all)
+
+✅ Single file sprint1.html with inline CSS+JS, no external JS frameworks.
+
+✅ YouTube area shows poster + Play button, only loads iframe on click.
+
+✅ Editable table renders from seed data; + Add Row works.
+
+✅ 8-minute timer starts on “Start Practice” or “Skip video”; displays mm:ss and progress bar.
+
+✅ Check My Work validates three tasks; checklist reflects pass/fail; failure shows Farmer Kiran hint and highlights.
+
+✅ On pass, Reflect card appears with completion time and tips; Continue to Sprint 2 navigates to sprint2.html.
+
+✅ Progress stored under localStorage.sprint1.
+
+✅ Fully responsive, accessible focus states, contrasts, and small GPU-friendly animations.
+
+✅ Initial load remains fast (no iframe/network for video until clicked; no CDN dependencies).
+
+9) Optional improvements (comment in code, don’t implement heavy libs)
+
+Add prefers-reduced-motion CSS to reduce animations.
+
+Provide a “Reset & Try Again” that also clears kiran bubble.
+
+Preload first 10 rows as placeholders for smoother typing
