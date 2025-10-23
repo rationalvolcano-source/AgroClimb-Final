@@ -840,5 +840,9 @@ function init() {
   console.log('Excel Sandbox initialized');
 }
 
-// Start the app
-init();
+// Start the app when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
