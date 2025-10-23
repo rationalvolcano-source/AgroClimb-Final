@@ -63,7 +63,7 @@ export default function PlanB() {
       <Nav />
       <main className="max-w-6xl mx-auto px-4 py-8">
         <header className="mb-6" data-testid="section-planb-header">
-          <h1 className="text-3xl md:text-5xl font-semibold" data-testid="text-planb-title">Plan B (Preview)</h1>
+          <h1 className="text-3xl md:text-5xl font-semibold" data-testid="text-planb-title">Plan B</h1>
           <p className="text-slate-300 mt-2" data-testid="text-planb-description">
             Stay Industry ready with in-demand skills, News, Interview Preparation and more
           </p>

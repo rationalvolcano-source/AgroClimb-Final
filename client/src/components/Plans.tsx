@@ -53,7 +53,7 @@ export default function Plans() {
 
       <div className="text-center mt-6" id="plan-b">
         <Link href="/planb" className="inline-flex items-center gap-2 text-emerald-400 underline hover:text-emerald-300 transition-colors" data-testid="link-plan-b">
-          Plan B (Preview): Practical upskilling for alternate income
+          Plan B: Stay Industry ready with in-demand skills, News, Interview Preparation and more
         </Link>
       </div>
     </section>
