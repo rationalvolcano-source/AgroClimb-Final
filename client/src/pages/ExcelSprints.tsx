@@ -117,16 +117,16 @@ export default function ExcelSprints() {
 
         {/* Sprints Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="sprints-grid">
-          {SPRINTS.map((sprint) => (
-            <div
-              key={sprint.id}
-              className={`relative group bg-[#101a28] rounded-2xl border border-[#1e2b3f] p-6 transition-all duration-300 ${
-                sprint.locked 
-                  ? 'opacity-60 cursor-not-allowed' 
-                  : 'hover:border-[#26A69A] hover:shadow-lg hover:shadow-[#26A69A]/20 cursor-pointer'
-              }`}
-              data-testid={`sprint-card-${sprint.id}`}
-            >
+          {SPRINTS.map((sprint) => {
+            const cardContent = (
+              <div
+                className={`relative group bg-[#101a28] rounded-2xl border border-[#1e2b3f] p-6 transition-all duration-300 ${
+                  sprint.locked 
+                    ? 'opacity-60 cursor-not-allowed' 
+                    : 'hover:border-[#26A69A] hover:shadow-lg hover:shadow-[#26A69A]/20 cursor-pointer'
+                }`}
+                data-testid={`sprint-card-${sprint.id}`}
+              >
               {/* Lock Badge */}
               {sprint.locked && (
                 <div className="absolute top-4 right-4 bg-slate-700 text-slate-300 px-3 py-1 rounded-full text-xs font-medium" data-testid={`lock-badge-${sprint.id}`}>
@@ -164,7 +164,19 @@ export default function ExcelSprints() {
                 </div>
               )}
             </div>
-          ))}
+            );
+
+            // Sprint 1 is clickable and links to sprint1.html
+            if (sprint.id === 1) {
+              return (
+                <a key={sprint.id} href="/sprint1.html" data-testid={`link-sprint-${sprint.id}`}>
+                  {cardContent}
+                </a>
+              );
+            }
+
+            return <div key={sprint.id}>{cardContent}</div>;
+          })}
         </div>
 
         {/* Coming Soon Notice */}
