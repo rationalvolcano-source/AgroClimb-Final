@@ -87,8 +87,9 @@ export default function ExcelSprints() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/excel-orientation">
-                <button type="button" className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" data-testid="button-back-orientation">
+                <button type="button" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" data-testid="button-back-orientation">
                   <ArrowLeft className="w-5 h-5" />
+                  <span className="text-sm font-medium hidden sm:inline">Back to Orientation</span>
                 </button>
               </Link>
               <div>
