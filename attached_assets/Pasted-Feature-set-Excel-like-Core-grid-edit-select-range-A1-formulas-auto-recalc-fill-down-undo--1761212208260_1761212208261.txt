@@ -1,0 +1,193 @@
+Feature set (Excel-like)
+
+Core grid (edit, select, range, A1 formulas, auto-recalc, fill-down, undo/redo)
+
+Filters: per-column (text contains, equals, number ranges, date ranges)
+
+Pivot: group-by one/multi columns, aggregations (SUM, COUNT, AVG, MIN, MAX)
+
+Conditional formatting: cell rules (>, <, between), text contains, top/bottom N
+
+Charts: line, bar/column, pie, scatter (from a selected range)
+
+CSV import/export
+
+Budget (gzipped, realistic)
+
+Core (your current grid + parser + recalc + selection + undo): ~80–100 KB
+
+Filters module (pure JS + minimal UI): ~8–12 KB
+
+Pivot module (pure JS group-by + aggregates): ~18–22 KB
+
+Conditional formatting (rules + styling): ~10–15 KB
+
+Charts: uPlot (~24 KB gz) + thin adapter (~2–4 KB) → ~28 KB
+
+CSV (SheetJS lite or our own): tiny custom CSV (3–5 KB) + optional xlsx later
+
+Total after user touches everything: ~150–180 KB (low end) to ~220–240 KB (with generous safety).
+Initial route load: ~80–100 KB (just the core). ✅
+
+Architecture (to actually hit the budget)
+
+No framework. Vanilla JS + Web Components for feature islands.
+
+Code-split by task using dynamic import():
+
+core.js (grid, formula, recalc, selection, undo)
+
+filters.js (UI + predicates)
+
+pivot.js (groupBy reduce; web worker optional)
+
+charts.js (uPlot via dynamic CDN import, only when chart button clicked)
+
+condfmt.js (rules parser + apply styles)
+
+csv.js (parse/stringify)
+
+Tree-shakable tiny lib: uPlot for charts (smallest serious chart lib).
+
+Virtual DOM avoidance: direct DOM updates; batch writes via DocumentFragment.
+
+Recalc graph: maintain dependency map depMap: A1 -> Set<A1Dependents>.
+
+Persistence: store sheet JSON in localStorage; CSV export on demand.
+
+Perf: debounce inputs (100 ms), requestAnimationFrame for paint.
+
+Key implementation choices
+Formulas (subset, small)
+
+Operators: + - * / ^ ( )
+
+Functions: SUM, AVG, MIN, MAX, COUNT
+
+A1 references, relative only (no $A$1 in v1)
+
+Ranges A1:C10, comma-separated args
+
+Dependency tracking: when a cell with f changes, enqueue dependents for recompute.
+
+Pivot (lightweight)
+
+groupBy(keys[], rows) → dictionary of groups
+
+Aggregators: SUM/AVG/MIN/MAX/COUNT via reducers
+
+Output into a simple table (optionally chart from pivot result)
+
+Optionally run groupBy in a Web Worker for >3k rows (defer until Sprint 6+)
+
+Filters
+
+Column predicates: contains/equals; number/date comparisons; multi-filter AND
+
+Keep a visible[] bitset; render only visible rows (cheap)
+
+Conditional formatting
+
+Rules list: {range:'C2:C100', type:'gt', value:1000, style:'bg-warn'}
+
+Apply by toggling CSS classes in render pass; do not compute per-frame
+
+Charts (uPlot)
+
+One adapter: build series from selected range; default styles; no fancy plugins
+
+Lazy-load uPlot on first use (import('https://cdn.jsdelivr.net/npm/uplot@1.6.30/dist/uPlot.iife.min.js') or host locally later)
+
+Replit scaffold prompt (copy-paste)
+
+Goal: Create a minimal Excel-like app with Level 3 features under 250 KB gz total used, ≤100 KB initial. Multi-file project, no frameworks.
+
+Create these files:
+
+1) index.html
+- Dark-teal theme.
+- Top toolbar: [File] [Edit] [Insert] [Data] [Format] [Analyze]
+- Buttons (wire later): New, Import CSV, Export CSV, Filter, Pivot, Conditional Format, Chart.
+- Formula bar (fx input + Apply).
+- Grid container #grid (table).
+- Toast area #toast.
+- Load core.js as type="module".
+
+2) core.js  (initial bundle target ≤ 100 KB gz)
+- Implements:
+  • Data model: cells {v, f, style}, COL_KEYS and rows.
+  • A1 helpers and dependency map (depMap).
+  • Tiny tokenizer+parser for formulas (+,-,*,/,^,(), SUM/AVG/MIN/MAX/COUNT, A1 refs, ranges).
+  • Evaluator with auto-recalc and breadth-first over dependents.
+  • Render grid to <table> with virtualized ~60 visible rows; selection (click/drag/shift), keyboard nav, fill-down with reference shift.
+  • Formula bar sync (show f on focus, result in cell).
+  • Undo/redo stacks (JSON snapshots, cap 50).
+  • Persistence: save/load from localStorage ('sheet_v1').
+  • Expose async feature loaders:
+      - loadFilters = () => import('./filters.js')
+      - loadPivot   = () => import('./pivot.js')
+      - loadCharts  = () => import('./charts.js')
+      - loadCondFmt = () => import('./condfmt.js')
+      - loadCsv     = () => import('./csv.js')
+- Wire toolbar buttons to dynamic imports (lazy).
+
+3) filters.js  (≤ 12 KB gz)
+- UI: modal with per-column predicates.
+- Predicates: contains, equals (string); >, >=, <, <=, between (number/date).
+- Apply filters: build visible[] bitset; re-render.
+
+4) pivot.js  (≤ 22 KB gz)
+- UI: pick rows/columns fields, values + aggregator.
+- groupBy reducer returning array of {keys..., value}.
+- Render pivot table into a card.
+- Export pivot result to CSV (re-use csv.js if loaded).
+
+5) condfmt.js  (≤ 15 KB gz)
+- Rule types: greaterThan, lessThan, between, textContains.
+- Range parsing (A1:A100); apply via CSS classes.
+- Maintain rules[]; re-apply on data change.
+
+6) charts.js  (≈ 28 KB gz with uPlot)
+- Lazy-load uPlot from CDN on first call; cache module.
+- Build data series from selected range; render in #chart area.
+- Defaults only (line/bar/pie/scatter).
+
+7) csv.js  (≤ 5 KB gz)
+- parseCSV(text) and toCSV(rows).
+- Import = replace grid; Export = download Blob.
+
+8) style.css  (small)
+- Table styles, selection highlights, modal basics, toast.
+
+
+Acceptance:
+
+Initial route loads index.html + core.js + style.css only; no other network.
+
+Typing formulas like =C2*D2 or =SUM(C2:C10) works; changing inputs auto-recalcs dependents.
+
+Filter/Pivot/Conditional formatting/Chart each load on first click (dynamic import).
+
+Total JS fetched after using every feature ≤ 250 KB gz (use uPlot, keep modules tiny).
+
+CSV import/export works; undo/redo works; grid persists in localStorage.
+
+Performance checks:
+
+Throttle 4G → LCP < 2s; input typing stays responsive (no long tasks > 50ms).
+
+Virtualize rows to keep DOM nodes ≤ ~200.
+
+
+---
+
+## Risks & how we’ll stay under 250 KB
+
+- **Charts**: use **uPlot** (≈24 KB gz) instead of Chart.js (≈60–70 KB gz).
+- **Formulas**: our own subset parser (no Excel-complete engine).
+- **Pivot**: custom reducer rather than big libs.
+- **No UI frameworks**; pure CSS.
+- **Dynamic imports** for every heavy feature.
+
+If you want, I can now generate **core.js** and **filters.js** skeletons (with the parser, recalc graph, and the dynamic import wiring) so you can paste into Replit and start measuring size immediately.
+::contentReference[oaicite:0]{index=0}
