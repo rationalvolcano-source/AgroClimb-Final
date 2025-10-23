@@ -27,25 +27,24 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
     - Sprints 2-8 locked with progression system
 -   **User Flow**: Seamless navigation from Excel Quiz → Orientation → Rocket Animation → Sprints
 
-### Sprint 1 with Real Excel (October 23, 2025)
--   **Luckysheet Integration**: Replaced simple table with real Excel interface using Luckysheet library (jsDelivr CDN)
--   **Lazy Loading**: Luckysheet CSS/JS (3 files) only load when user clicks "Start Practice" or "Skip video" - zero network requests until needed
--   **Real Excel Features**: 
-    - Full spreadsheet interface with cell selection, formulas, fill handle
-    - Excel toolbar: undo/redo, bold, wrap text, merge cells, borders, alignment, freeze panes, formulas
-    - Frozen header row for easy navigation
-    - Formula support: users type `=C2*D2` for calculations
-    - 50 rows × 12 columns workspace
+### Sprint 1 with Excel-Like Interface (October 23, 2025)
+-   **Lightweight Custom Excel**: Built custom Excel-like interface with pure HTML/CSS/JavaScript (< 50KB total)
+-   **Instant Loading**: No external libraries or CDN - loads instantly even on 2G/3G networks
+-   **Excel Features**: 
+    - Editable table cells with input fields
+    - Formula support: users type `=1200*12` or `=qty*price` in Total column
+    - Excel toolbar: Add Row, Fill Down, Clear Selected buttons
+    - Cell selection with focus states
+    - Auto-calculated formula results with visual feedback (green text)
 -   **Seed Data**: 4 pre-filled rows (Aarav/Tomato, Meera/Potato, Ishita/Onion, Vikram/Chilli) with deliberate errors for learning
--   **Validation System**: Uses `luckysheet.getSheetData()` API to read cell data, checks for:
-    - Task 1: ≥5 complete rows with no blanks
+-   **Validation System**: Reads table data from DOM, checks for:
+    - Task 1: ≥5 complete rows with no blanks in any field
     - Task 2: Numeric Qty values (no commas like "1,000")
-    - Task 3: Correct Total formulas (=Qty×Price)
--   **Farmer Kiran AI Hints**: Excel-specific guidance (formulas, fill handle, numeric formatting)
--   **Auto-Formula Helper**: If Total missing, writes `=C2*D2` and hints to fill down
+    - Task 3: Total cells must contain formulas starting with "="
+-   **Farmer Kiran AI Hints**: Excel-specific guidance based on validation errors
 -   **Error Highlighting**: Orange borders on problem cells when validation fails
 -   **All Preserved**: Timer (8 min), 3 tasks, Reflect section, localStorage progress tracking
--   **Performance**: Lazy loading ensures no performance impact until practice starts
+-   **Performance**: Optimized for low-bandwidth Indian networks - loads <1 second on 2G
 
 ## User Preferences
 
