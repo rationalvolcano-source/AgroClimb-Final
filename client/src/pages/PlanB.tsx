@@ -41,41 +41,12 @@ const IconViz = (p: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const IconAIAcademia = (p: SVGProps<SVGSVGElement>) => (
+const IconNews = (p: SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 48 48" fill="none" {...p}>
-    <path d="M24 10l18 8-18 8L6 18l18-8z" stroke="#10b981" strokeWidth="2"/>
-    <path d="M12 23v5c0 3 6 6 12 6s12-3 12-6v-5" stroke="#22d3ee" strokeWidth="2"/>
-    <rect x="20" y="6" width="8" height="8" rx="2" stroke="#22d3ee" strokeWidth="2"/>
-    <path d="M24 6v-3M28 8h3M20 8h-3M24 14v3" stroke="#10b981" strokeWidth="2"/>
-  </svg>
-);
-
-const IconAIManagers = (p: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 48 48" fill="none" {...p}>
-    <rect x="10" y="14" width="28" height="20" rx="4" stroke="#10b981" strokeWidth="2"/>
-    <path d="M18 14v-4h12v4" stroke="#22d3ee" strokeWidth="2"/>
-    <path d="M16 26h16" stroke="#22d3ee" strokeWidth="2"/>
-    <rect x="22" y="22" width="4" height="8" rx="1" fill="#10b981"/>
-    <rect x="32" y="6" width="8" height="8" rx="2" stroke="#22d3ee" strokeWidth="2"/>
-    <path d="M36 6V3M40 10h3M32 10h-3M36 14v3" stroke="#10b981" strokeWidth="2"/>
-  </svg>
-);
-
-const IconDSAI = (p: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 48 48" fill="none" {...p}>
-    <circle cx="12" cy="24" r="4" stroke="#10b981" strokeWidth="2"/>
-    <circle cx="36" cy="16" r="4" stroke="#22d3ee" strokeWidth="2"/>
-    <circle cx="36" cy="32" r="4" stroke="#22d3ee" strokeWidth="2"/>
-    <circle cx="24" cy="24" r="4" stroke="#10b981" strokeWidth="2"/>
-    <path d="M16 24h4M28 24h4M24 20V8M24 28v12" stroke="#22d3ee" strokeWidth="2"/>
-  </svg>
-);
-
-const IconIntern = (p: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 48 48" fill="none" {...p}>
-    <path d="M10 30l6 6 16-16" stroke="#10b981" strokeWidth="2"/>
-    <rect x="6" y="10" width="36" height="28" rx="6" stroke="#22d3ee" strokeWidth="2"/>
-    <path d="M18 16h12v8H18z" stroke="#10b981" strokeWidth="2"/>
+    <rect x="8" y="10" width="32" height="28" rx="4" stroke="#10b981" strokeWidth="2"/>
+    <path d="M14 16h20M14 22h20M14 28h12" stroke="#22d3ee" strokeWidth="2"/>
+    <rect x="28" y="26" width="6" height="6" rx="1" stroke="#10b981" strokeWidth="2"/>
+    <circle cx="24" cy="6" r="3" fill="#22d3ee"/>
   </svg>
 );
 
@@ -84,10 +55,7 @@ export default function PlanB() {
     { Icon: IconExcel, label: "Excel Training", link: "/excel-quiz" },
     { Icon: IconPPT, label: "PowerPoint Training" },
     { Icon: IconViz, label: "Data Visualization" },
-    { Icon: IconAIAcademia, label: "AI for Academics & Research" },
-    { Icon: IconAIManagers, label: "AI for Managers" },
-    { Icon: IconDSAI, label: "Data Science using AI" },
-    { Icon: IconIntern, label: "Internship Opportunities" },
+    { Icon: IconNews, label: "Daily News Update" },
   ];
 
   return (
