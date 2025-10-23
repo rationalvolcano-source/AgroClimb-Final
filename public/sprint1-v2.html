@@ -338,16 +338,16 @@
       </ul>
 
       <p style="color: var(--warning); margin-bottom: 1.5rem; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px;">
-        💡 <strong>Tip:</strong> Save your file as Excel (.xlsx) or CSV (.csv) when done.
+        💡 <strong>Tip:</strong> Save your file when done. Supports Excel (.xlsx) or CSV (.csv) formats.
       </p>
 
       <h3 style="margin: 1.5rem 0 1rem; color: var(--text);">📤 Step 3: Upload Your Work</h3>
 
       <div class="upload-area" id="uploadArea">
         <div class="upload-icon">📊</div>
-        <h3 style="margin-bottom: 0.5rem;">Upload Your Excel File</h3>
+        <h3 style="margin-bottom: 0.5rem;">Upload Your Excel or CSV File</h3>
         <p style="color: var(--text-muted); margin-bottom: 1rem;">
-          Drag and drop or click to select your .xlsx or .csv file
+          Drag and drop or click to select your .xlsx, .xls, or .csv file
         </p>
         <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls,.csv" data-testid="input-file-upload" />
         <button class="btn btn-secondary" id="selectFileBtn" data-testid="button-select-file">Select File</button>
@@ -493,6 +493,14 @@
           method: 'POST',
           body: formData
         });
+
+        if (!response.ok) {
+          const error = await response.json();
+          alert(error.error || 'Error evaluating file. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Submit for AI Evaluation';
+          return;
+        }
 
         const result = await response.json();
         displayResults(result);
