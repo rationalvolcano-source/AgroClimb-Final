@@ -84,6 +84,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.join(__dirname, '../public/sprint1.html'));
   });
 
+  // Redirect old sprint1-v2.html to sprint1.html for backward compatibility
+  app.get('/sprint1-v2.html', (req, res) => {
+    res.redirect(301, '/sprint1.html');
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
