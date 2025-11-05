@@ -11,7 +11,8 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 -   **All Visual Elements Preserved**: Gradients, animations, styling 100% intact
 -   **Updated Files**: Nav, Footer, HTML meta tags, testimonials, value props
 
-### Excel Entry System (Plan B)
+### Plan B Coaching Flow (Excel Entry System)
+-   **Overall Architecture**: Welcome Page → Quiz → Orientation → Video Lesson → Assignment → Excel File Upload → Farmer Kiran AI Evaluation
 -   **Excel Quiz Scoring**: Updated thresholds to 0-6 (Beginner/red), 7-9 (Intermediate/amber), 10 (Expert/green)
 -   **Excel Orientation**: Enhanced with hero section headings for all 8 steps (e.g., "Welcome Aboard!", "What You Will Learn", "Ready for Takeoff?") using gradient text styling
 -   **Rocket Launch Animation**: 2-second rocket animation on final orientation step, auto-navigates to Excel Sprints page
@@ -25,7 +26,8 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
     - Sprint 7: Everyday Tricks (Download icon)
     - Sprint 8: Final Project (Trophy icon)
     - Sprints 2-8 locked with progression system
--   **User Flow**: Seamless navigation from Excel Quiz → Orientation → Rocket Animation → Sprints
+-   **Learning Flow**: Each sprint follows consistent pattern: Video Tutorial → Practice Assignment → File Upload → AI Evaluation → Unlock Next Sprint
+-   **No In-Browser Sandbox**: Students practice in their own Excel application (Microsoft Excel, Google Sheets, LibreOffice) for real-world skill building
 
 ### Sprint 1 - File Upload + AI Evaluation System (October 23, 2025)
 -   **Approach Change**: Scrapped in-browser Excel sandbox in favor of simpler file upload + AI evaluation
