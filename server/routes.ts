@@ -84,11 +84,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.join(__dirname, '../public/sprint1.html'));
   });
 
-  // Serve new sprint1-v2.html
-  app.get('/sprint1-v2.html', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/sprint1-v2.html'));
-  });
-
   const httpServer = createServer(app);
 
   return httpServer;

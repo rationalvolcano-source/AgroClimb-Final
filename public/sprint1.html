@@ -6,11 +6,7 @@
   <title>Excel S1 — Introduction to Excel | AgroClimb</title>
   <meta name="description" content="Learn Excel basics through hands-on practice. Master the interface, cells, sheets, and navigation in 20 minutes.">
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg-dark: #0b1420;
@@ -34,18 +30,7 @@
       padding: 1rem;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+    .container { max-width: 900px; margin: 0 auto; }
 
     .card {
       background: var(--bg-card);
@@ -56,9 +41,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .header-card {
-      text-align: center;
-    }
+    .header-card { text-align: center; }
 
     .header-card h1 {
       font-size: clamp(1.75rem, 5vw, 2.5rem);
@@ -80,19 +63,6 @@
       color: var(--accent);
     }
 
-    .grid-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    @media (min-width: 768px) {
-      .grid-layout {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
     .section-title {
       font-size: 1.5rem;
       font-weight: 600;
@@ -100,7 +70,7 @@
       color: var(--text);
     }
 
-    /* YouTube Lite Embed */
+    /* YouTube Lite */
     lite-yt {
       display: block;
       position: relative;
@@ -110,15 +80,7 @@
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
-      margin-bottom: 1rem;
-    }
-
-    lite-yt::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(45deg, rgba(38, 166, 154, 0.1), rgba(20, 184, 166, 0.1));
-      z-index: 1;
+      margin-bottom: 1.5rem;
     }
 
     lite-yt button {
@@ -133,12 +95,6 @@
       border-radius: 12px;
       cursor: pointer;
       z-index: 2;
-      transition: all 0.2s;
-    }
-
-    lite-yt button:hover {
-      background: var(--mint);
-      transform: translate(-50%, -50%) scale(1.1);
     }
 
     lite-yt button::after {
@@ -172,7 +128,6 @@
       cursor: pointer;
       transition: all 0.2s;
       font-size: 1rem;
-      text-decoration: none;
     }
 
     .btn-primary {
@@ -202,32 +157,8 @@
       flex-wrap: wrap;
     }
 
-    /* Timer */
-    .timer-display {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .timer-progress {
-      width: 100%;
-      height: 8px;
-      background: var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-    }
-
-    .timer-progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--mint));
-      transition: width 0.3s linear;
-    }
-
-    /* Tasks Checklist */
-    .tasks-list {
+    /* Tasks */
+    .task-list {
       list-style: none;
       margin-bottom: 1.5rem;
     }
@@ -240,224 +171,115 @@
       margin-bottom: 0.5rem;
       background: rgba(159, 178, 195, 0.05);
       border-radius: 8px;
-      border-left: 3px solid var(--border);
+      border-left: 3px solid var(--accent);
     }
 
-    .task-item.done {
-      border-left-color: var(--success);
-    }
-
-    .task-checkbox {
+    .task-icon {
       flex-shrink: 0;
-      width: 24px;
-      height: 24px;
-      border: 2px solid var(--border);
-      border-radius: 6px;
-      display: grid;
-      place-items: center;
-      background: transparent;
-    }
-
-    .task-item.done .task-checkbox {
-      background: var(--success);
-      border-color: var(--success);
-    }
-
-    .task-item.done .task-checkbox::after {
-      content: '✓';
-      color: white;
-      font-weight: 700;
-    }
-
-    .task-text {
-      flex: 1;
-      font-size: 0.95rem;
-      color: var(--text-muted);
-    }
-
-    .task-item.done .task-text {
-      color: var(--text);
-    }
-
-    /* Excel Spreadsheet */
-    .excel-container {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: white;
-      margin-bottom: 1.5rem;
-    }
-
-    .excel-toolbar {
-      background: #f3f4f6;
-      border-bottom: 1px solid #d1d5db;
-      padding: 0.5rem;
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .tool-btn {
-      padding: 0.375rem 0.75rem;
-      background: white;
-      border: 1px solid #d1d5db;
-      border-radius: 4px;
-      font-size: 0.875rem;
-      cursor: pointer;
-      color: #374151;
-    }
-
-    .tool-btn:hover {
-      background: #f9fafb;
-    }
-
-    .excel-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-    }
-
-    .excel-table th,
-    .excel-table td {
-      border: 1px solid #e5e7eb;
-      padding: 0.5rem;
-      text-align: left;
-      font-size: 0.875rem;
-    }
-
-    .excel-table th {
-      background: #0f1d2e;
       color: var(--accent);
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      font-size: 1.25rem;
     }
 
-    .excel-table td {
-      color: #1f2937;
+    /* File Upload */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin: 1.5rem 0;
+      transition: all 0.3s;
     }
 
-    .excel-table input {
-      width: 100%;
-      border: none;
-      background: transparent;
-      padding: 0.25rem;
-      font-size: 0.875rem;
-      color: #1f2937;
+    .upload-area:hover {
+      border-color: var(--accent);
+      background: rgba(38, 166, 154, 0.05);
     }
 
-    .excel-table input:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: -2px;
-      background: #fef3c7;
+    .upload-area.dragover {
+      border-color: var(--accent);
+      background: rgba(38, 166, 154, 0.1);
     }
 
-    .excel-table tr:hover td {
-      background: #f9fafb;
-    }
-
-    .excel-table td.error {
-      border: 2px solid var(--warning);
-      background: rgba(251, 191, 36, 0.1);
-    }
-
-    .excel-table td.formula {
-      background: #e0f2fe;
-    }
-
-    /* Farmer Kiran Bubble */
-    #kiran {
+    .file-input {
       display: none;
-      position: relative;
-      padding: 1rem 1.25rem;
-      background: rgba(251, 191, 36, 0.1);
-      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .file-info {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(38, 166, 154, 0.1);
+      border-radius: 8px;
+      display: none;
+    }
+
+    .file-info.show {
+      display: block;
+    }
+
+    /* Results */
+    .result-card {
+      padding: 1.5rem;
       border-radius: 12px;
       margin-bottom: 1rem;
-      animation: fadeIn 0.3s ease-out;
     }
 
-    #kiran.show {
-      display: block;
-    }
-
-    #kiran::before {
-      content: 'Farmer Kiran says:';
-      font-weight: 600;
-      margin-right: 0.5rem;
-      color: var(--warning);
-    }
-
-    #kiranText {
-      color: var(--warning);
-      font-size: 0.95rem;
-      display: inline;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Reflect Section */
-    #reflect {
-      display: none;
-    }
-
-    #reflect.show {
-      display: block;
-      animation: fadeIn 0.5s ease-out;
-    }
-
-    .success-summary {
-      text-align: center;
-      padding: 2rem;
+    .result-success {
       background: rgba(16, 185, 129, 0.1);
       border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: 12px;
-      margin-bottom: 2rem;
     }
 
-    .success-summary h2 {
-      font-size: 2rem;
-      color: var(--success);
+    .result-warning {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .result-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .result-title {
+      font-size: 1.25rem;
+      font-weight: 600;
       margin-bottom: 0.5rem;
     }
 
-    .tips-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 2rem;
+    .result-success .result-title { color: var(--success); }
+    .result-warning .result-title { color: var(--warning); }
+    .result-error .result-title { color: var(--danger); }
+
+    .feedback-list {
+      list-style: none;
+      margin-top: 1rem;
     }
 
-    .tip-chip {
-      padding: 0.75rem 1rem;
-      background: rgba(38, 166, 154, 0.1);
-      border: 1px solid rgba(38, 166, 154, 0.2);
-      border-radius: 8px;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      text-align: center;
+    .feedback-item {
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .hidden {
-      display: none;
+    .hidden { display: none; }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(38, 166, 154, 0.3);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
 
-    .text-center {
-      text-align: center;
-    }
-
-    .mb-1 {
-      margin-bottom: 1rem;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -466,124 +288,106 @@
     <!-- Header -->
     <div class="card header-card">
       <h1>Excel S1 — Introduction to Excel</h1>
-      <span class="pill">~20 min · Learn → Practice → Reflect</span>
+      <span class="pill">~20 min · Learn → Practice → Upload → Get Feedback</span>
     </div>
 
-    <!-- Learn & Practice Grid -->
-    <div class="grid-layout">
-      <!-- Learn Section -->
-      <div class="card" id="learnCard">
-        <h2 class="section-title">Learn</h2>
-        
-        <lite-yt data-id="rwbho0CaSGo">
-          <button aria-label="Play Excel Introduction Video"></button>
-        </lite-yt>
-
-        <div class="btn-group">
-          <button class="btn btn-primary" id="startPractice" data-testid="button-start-practice">
-            Start Practice ▶
-          </button>
-          <button class="btn btn-secondary" id="skipVideo" data-testid="button-skip-video">
-            Skip video
-          </button>
-        </div>
-      </div>
-
-      <!-- Practice Section -->
-      <div class="card" id="practiceCard">
-        <h2 class="section-title">Practice</h2>
-        
-        <div class="timer-display" id="timerDisplay" data-testid="text-timer">08:00</div>
-        <div class="timer-progress">
-          <div class="timer-progress-bar" id="timerBar" style="width: 100%"></div>
-        </div>
-
-        <ul class="tasks-list" id="tasksList">
-          <li class="task-item" data-task="1" data-testid="task-item-1">
-            <div class="task-checkbox"></div>
-            <div class="task-text">Enter ≥5 complete rows (Name..Total) — no blanks</div>
-          </li>
-          <li class="task-item" data-task="2" data-testid="task-item-2">
-            <div class="task-checkbox"></div>
-            <div class="task-text">Make Qty (kg) numeric (no commas/text)</div>
-          </li>
-          <li class="task-item" data-task="3" data-testid="task-item-3">
-            <div class="task-checkbox"></div>
-            <div class="task-text">Add Total ₹ as Qty × Price (enter formula then fill down)</div>
-          </li>
-        </ul>
-
-        <div id="kiran">
-          <span id="kiranText" data-testid="text-kiran-hint"></span>
-        </div>
-
-        <div class="excel-container hidden" id="excelContainer" data-testid="excel-container">
-          <div class="excel-toolbar">
-            <button class="tool-btn" id="addRowBtn" data-testid="button-add-row-toolbar">+ Add Row</button>
-            <button class="tool-btn" id="fillDownBtn" data-testid="button-fill-down">Fill Down</button>
-            <button class="tool-btn" id="clearBtn" data-testid="button-clear">Clear Selected</button>
-          </div>
-          <div style="max-height: 400px; overflow-y: auto;">
-            <table class="excel-table" id="excelTable">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Crop</th>
-                  <th>Qty (kg)</th>
-                  <th>Price (₹/kg)</th>
-                  <th>Date</th>
-                  <th>Total ₹</th>
-                </tr>
-              </thead>
-              <tbody id="tableBody">
-                <!-- Rows will be added here -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="btn-group">
-          <button class="btn btn-primary" id="checkWork" data-testid="button-check-work">
-            Check My Work
-          </button>
-          <button class="btn btn-secondary" id="resetSheet" data-testid="button-reset">
-            Reset Sheet
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Reflect Section (hidden initially) -->
-    <div class="card" id="reflect">
-      <h2 class="section-title text-center">Congratulations!</h2>
+    <!-- Learn Section -->
+    <div class="card" id="learnCard">
+      <h2 class="section-title">📺 Step 1: Learn</h2>
       
-      <div class="success-summary" data-testid="section-success-summary">
-        <h2>Sprint 1 Complete!</h2>
-        <p id="completionStats" data-testid="text-completion-stats">You completed 3/3 tasks in 00:00.</p>
+      <lite-yt data-id="rwbho0CaSGo">
+        <button aria-label="Play Excel Introduction Video"></button>
+      </lite-yt>
+
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Watch the video to learn Excel basics. You'll learn about cells, formulas, and data entry.
+      </p>
+
+      <button class="btn btn-primary" id="startPractice" data-testid="button-start-practice">
+        Start Practice ▶
+      </button>
+    </div>
+
+    <!-- Practice Section -->
+    <div class="card hidden" id="practiceCard">
+      <h2 class="section-title">✏️ Step 2: Practice in Your Excel</h2>
+      
+      <p style="color: var(--text); margin-bottom: 1rem;">
+        Open Excel (Microsoft Excel, Google Sheets, or LibreOffice Calc) and complete these tasks:
+      </p>
+
+      <ul class="task-list">
+        <li class="task-item">
+          <span class="task-icon">1️⃣</span>
+          <div>
+            <strong>Enter ≥5 complete rows</strong> with columns: Name, Crop, Qty (kg), Price (₹/kg), Date, Total ₹. No blank cells.
+          </div>
+        </li>
+        <li class="task-item">
+          <span class="task-icon">2️⃣</span>
+          <div>
+            <strong>Make Qty numeric</strong> - No commas (use "1000" not "1,000") or text.
+          </div>
+        </li>
+        <li class="task-item">
+          <span class="task-icon">3️⃣</span>
+          <div>
+            <strong>Add formula in Total column</strong> - Type =Qty×Price (e.g., =C2*D2) and fill down to all rows.
+          </div>
+        </li>
+      </ul>
+
+      <p style="color: var(--warning); margin-bottom: 1.5rem; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px;">
+        💡 <strong>Tip:</strong> Save your file as .xlsx when done (Excel format works best!)
+      </p>
+
+      <h3 style="margin: 1.5rem 0 1rem; color: var(--text);">📤 Step 3: Upload Your Work</h3>
+
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📊</div>
+        <h3 style="margin-bottom: 0.5rem;">Upload Your Excel File</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">
+          Drag and drop or click to select your Excel file (.xlsx or .xls)
+        </p>
+        <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls,.csv" data-testid="input-file-upload" />
+        <button class="btn btn-secondary" id="selectFileBtn" data-testid="button-select-file">Select File</button>
       </div>
 
-      <h3 class="mb-1">Quick Tips for Excel Mastery</h3>
-      <div class="tips-grid">
-        <div class="tip-chip">Ctrl+S to save often</div>
-        <div class="tip-chip">Use Fill Down for formulas</div>
-        <div class="tip-chip">Avoid commas in numbers</div>
-        <div class="tip-chip">Double-click to edit cells</div>
+      <div class="file-info" id="fileInfo">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong id="fileName"></strong>
+            <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">
+              <span id="fileSize"></span>
+            </div>
+          </div>
+          <button class="btn btn-secondary" id="removeFileBtn">Remove</button>
+        </div>
       </div>
 
-      <div class="btn-group">
-        <a href="/excel-sprints" class="btn btn-primary" data-testid="button-continue-sprint2">
+      <button class="btn btn-primary hidden" id="submitBtn" data-testid="button-submit-work" style="margin-top: 1rem;">
+        Submit for AI Evaluation
+      </button>
+    </div>
+
+    <!-- Results Section -->
+    <div class="card hidden" id="resultsCard">
+      <h2 class="section-title">🎯 AI Evaluation Results</h2>
+      <div id="resultsContainer"></div>
+      
+      <div class="btn-group" style="margin-top: 1.5rem;">
+        <a href="/excel-sprints" class="btn btn-primary" data-testid="button-continue">
           Continue to Sprint 2 ▶
         </a>
-        <button class="btn btn-secondary" id="reviewPractice" data-testid="button-review-practice">
-          Review Practice
+        <button class="btn btn-secondary" id="retryBtn" data-testid="button-retry">
+          Try Again
         </button>
       </div>
     </div>
   </div>
 
   <script>
-    // ===== YouTube Lite Embed Component =====
+    // YouTube Lite
     customElements.define('lite-yt', class extends HTMLElement {
       connectedCallback() {
         this.querySelector('button')?.addEventListener('click', () => {
@@ -597,400 +401,160 @@
       }
     });
 
-    // ===== State =====
-    let timerInterval = null;
-    let startTime = null;
-    let elapsedSeconds = 0;
-    let attemptCount = 0;
-    let selectedCell = null;
-    const TIMER_DURATION = 8 * 60; // 8 minutes
+    // State
+    let uploadedFile = null;
 
-    // ===== DOM Elements =====
-    const timerDisplay = document.getElementById('timerDisplay');
-    const timerBar = document.getElementById('timerBar');
-    const excelContainer = document.getElementById('excelContainer');
-    const tableBody = document.getElementById('tableBody');
-    const kiran = document.getElementById('kiran');
-    const kiranText = document.getElementById('kiranText');
-    const reflect = document.getElementById('reflect');
-    const completionStats = document.getElementById('completionStats');
+    // Elements
+    const learnCard = document.getElementById('learnCard');
+    const practiceCard = document.getElementById('practiceCard');
+    const resultsCard = document.getElementById('resultsCard');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const submitBtn = document.getElementById('submitBtn');
 
-    // ===== Excel Table Setup =====
-    const seedData = [
-      { name: 'Aarav', crop: 'Tomato', qty: '1200', price: '12', date: '', total: '' },
-      { name: 'Meera', crop: 'Potato', qty: '850', price: '16', date: '2025-01-03', total: '' },
-      { name: 'Ishita', crop: 'Onion', qty: '1,000', price: '18', date: '', total: '' },
-      { name: 'Vikram', crop: 'Chilli', qty: '500', price: '22', date: '', total: '' }
-    ];
-
-    function createRow(index, data = {}) {
-      const row = document.createElement('tr');
-      row.dataset.index = index;
-      
-      const fields = [
-        { type: 'index', value: index + 1 },
-        { type: 'text', key: 'name', value: data.name || '' },
-        { type: 'text', key: 'crop', value: data.crop || '' },
-        { type: 'number', key: 'qty', value: data.qty || '' },
-        { type: 'number', key: 'price', value: data.price || '' },
-        { type: 'date', key: 'date', value: data.date || '' },
-        { type: 'formula', key: 'total', value: data.total || '' }
-      ];
-
-      fields.forEach(field => {
-        const td = document.createElement('td');
-        
-        if (field.type === 'index') {
-          td.textContent = field.value;
-          td.style.background = '#f3f4f6';
-          td.style.fontWeight = '600';
-        } else {
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.value = field.value;
-          input.dataset.key = field.key;
-          input.dataset.row = index;
-          
-          if (field.type === 'formula') {
-            td.classList.add('formula');
-            input.placeholder = '=Qty×Price';
-          }
-          
-          input.addEventListener('focus', () => {
-            selectedCell = { row: index, key: field.key, input };
-            // If it's a formula cell and empty, show hint
-            if (field.key === 'total' && !input.value) {
-              const qtyInput = row.querySelector('[data-key="qty"]');
-              const priceInput = row.querySelector('[data-key="price"]');
-              if (qtyInput && priceInput) {
-                input.placeholder = `=${qtyInput.value}*${priceInput.value}`;
-              }
-            }
-          });
-
-          input.addEventListener('input', () => {
-            // Auto-calculate if it's a formula
-            if (field.key === 'total' && input.value.startsWith('=')) {
-              calculateFormula(row, input);
-            }
-          });
-          
-          td.appendChild(input);
-        }
-        
-        row.appendChild(td);
-      });
-      
-      return row;
-    }
-
-    function calculateFormula(row, input) {
-      const formula = input.value.toLowerCase();
-      const qtyInput = row.querySelector('[data-key="qty"]');
-      const priceInput = row.querySelector('[data-key="price"]');
-      
-      if (!qtyInput || !priceInput) return;
-      
-      const qty = parseFloat(qtyInput.value.replace(/,/g, ''));
-      const price = parseFloat(priceInput.value.replace(/,/g, ''));
-      
-      if (isNaN(qty) || isNaN(price)) return;
-      
-      // Parse simple formulas like =qty*price, =c*d, etc.
-      if (formula.includes('*') || formula.includes('×')) {
-        const result = qty * price;
-        input.setAttribute('data-calculated', result.toFixed(2));
-        input.style.color = '#059669';
-      }
-    }
-
-    function initializeTable() {
-      tableBody.innerHTML = '';
-      seedData.forEach((data, index) => {
-        tableBody.appendChild(createRow(index, data));
-      });
-      // Add one empty row
-      tableBody.appendChild(createRow(seedData.length));
-    }
-
-    // ===== Toolbar Functions =====
-    document.getElementById('addRowBtn').addEventListener('click', () => {
-      const rowCount = tableBody.children.length;
-      tableBody.appendChild(createRow(rowCount));
-      showKiran('New row added! Start typing in the cells.');
-    });
-
-    document.getElementById('fillDownBtn').addEventListener('click', () => {
-      if (!selectedCell) {
-        showKiran('Select a cell first, then click Fill Down to copy to cells below.');
-        return;
-      }
-      
-      const { row, key } = selectedCell;
-      const sourceInput = tableBody.querySelector(`[data-row="${row}"][data-key="${key}"]`);
-      
-      if (!sourceInput || !sourceInput.value) {
-        showKiran('Selected cell is empty. Enter a value or formula first.');
-        return;
-      }
-      
-      // Fill down to all rows below
-      let filled = 0;
-      for (let i = row + 1; i < tableBody.children.length; i++) {
-        const targetInput = tableBody.querySelector(`[data-row="${i}"][data-key="${key}"]`);
-        if (targetInput) {
-          if (sourceInput.value.startsWith('=')) {
-            // It's a formula - copy the formula pattern
-            targetInput.value = sourceInput.value;
-            const targetRow = tableBody.children[i];
-            calculateFormula(targetRow, targetInput);
-          } else {
-            // It's a value - just copy
-            targetInput.value = sourceInput.value;
-          }
-          filled++;
-        }
-      }
-      
-      if (filled > 0) {
-        showKiran(`Filled ${filled} cells below! Great job using Fill Down.`);
-      }
-    });
-
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      if (selectedCell && selectedCell.input) {
-        selectedCell.input.value = '';
-        selectedCell.input.removeAttribute('data-calculated');
-        selectedCell.input.style.color = '';
-      }
-    });
-
-    // ===== Validation Functions =====
-    function getTableData() {
-      const rows = [];
-      
-      Array.from(tableBody.children).forEach(tr => {
-        const inputs = tr.querySelectorAll('input');
-        if (inputs.length === 0) return;
-        
-        const rowData = {};
-        inputs.forEach(input => {
-          rowData[input.dataset.key] = input.value.trim();
-        });
-        
-        // Only include rows that have at least one field filled
-        if (Object.values(rowData).some(v => v !== '')) {
-          rows.push({ tr, data: rowData });
-        }
-      });
-      
-      return rows;
-    }
-
-    function validateData() {
-      const rows = getTableData();
-      const results = { task1: false, task2: true, task3: true, issues: [] };
-      
-      // Clear previous errors
-      document.querySelectorAll('.excel-table td.error').forEach(td => {
-        td.classList.remove('error');
-      });
-      
-      // Task 1: At least 5 complete rows
-      let completeRows = 0;
-      rows.forEach(({ tr, data }) => {
-        const { name, crop, qty, price, date, total } = data;
-        if (name && crop && qty && price && date && total) {
-          completeRows++;
-        } else {
-          // Mark blank cells
-          Object.keys(data).forEach(key => {
-            if (!data[key]) {
-              const input = tr.querySelector(`[data-key="${key}"]`);
-              if (input) input.parentElement.classList.add('error');
-            }
-          });
-        }
-      });
-      
-      results.task1 = completeRows >= 5;
-      if (!results.task1) {
-        if (rows.length < 5) {
-          results.issues.push(`You have ${rows.length} rows with data. Add ${5 - rows.length} more rows.`);
-        } else {
-          results.issues.push('Some rows have blank cells. Fill all fields in at least 5 rows.');
-        }
-      }
-      
-      // Task 2: Qty must be numeric (no commas)
-      rows.forEach(({ tr, data }) => {
-        if (data.qty && !/^[0-9]+(\.[0-9]+)?$/.test(data.qty)) {
-          results.task2 = false;
-          const input = tr.querySelector('[data-key="qty"]');
-          if (input) input.parentElement.classList.add('error');
-        }
-      });
-      
-      if (!results.task2) {
-        results.issues.push('Qty must be numeric. Remove commas: type "1000" not "1,000".');
-      }
-      
-      // Task 3: Total must equal Qty × Price
-      rows.forEach(({ tr, data }) => {
-        const qty = parseFloat(data.qty?.replace(/,/g, ''));
-        const price = parseFloat(data.price?.replace(/,/g, ''));
-        const total = parseFloat(data.total?.replace(/,/g, ''));
-        
-        if (!isNaN(qty) && !isNaN(price)) {
-          const expected = qty * price;
-          
-          // Check if total is a formula or calculated value
-          const totalInput = tr.querySelector('[data-key="total"]');
-          const calculated = totalInput?.getAttribute('data-calculated');
-          
-          if (!data.total || (!data.total.startsWith('=') && !calculated)) {
-            results.task3 = false;
-            if (totalInput) totalInput.parentElement.classList.add('error');
-          } else if (calculated && Math.abs(parseFloat(calculated) - expected) > 0.01) {
-            results.task3 = false;
-            if (totalInput) totalInput.parentElement.classList.add('error');
-          }
-        }
-      });
-      
-      if (!results.task3) {
-        results.issues.push('Total must be a formula: type "=qty*price" then use Fill Down.');
-      }
-      
-      return results;
-    }
-
-    // ===== Timer Functions =====
-    function startTimer() {
-      if (timerInterval) return;
-      
-      startTime = Date.now();
-      timerInterval = setInterval(() => {
-        elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-        const remaining = Math.max(0, TIMER_DURATION - elapsedSeconds);
-        
-        timerDisplay.textContent = formatTime(remaining);
-        const progress = (remaining / TIMER_DURATION) * 100;
-        timerBar.style.width = `${progress}%`;
-
-        if (remaining === 0) {
-          stopTimer();
-          showKiran("Time is up! Don't worry, take your time to complete the tasks.");
-        }
-      }, 1000);
-    }
-
-    function stopTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-    }
-
-    function formatTime(seconds) {
-      const m = Math.floor(seconds / 60);
-      const s = seconds % 60;
-      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    }
-
-    // ===== UI Functions =====
-    function showKiran(message) {
-      kiranText.textContent = message;
-      kiran.classList.add('show');
-    }
-
-    function hideKiran() {
-      kiran.classList.remove('show');
-    }
-
-    function updateTaskCheck(taskNum, passed) {
-      const taskItem = document.querySelector(`[data-task="${taskNum}"]`);
-      if (passed) {
-        taskItem.classList.add('done');
-      } else {
-        taskItem.classList.remove('done');
-      }
-    }
-
-    function showReflect() {
-      const timeStr = formatTime(elapsedSeconds);
-      completionStats.textContent = `You completed 3/3 tasks in ${timeStr}.`;
-      reflect.classList.add('show');
-      
-      setTimeout(() => {
-        reflect.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    }
-
-    function saveProgress() {
-      const data = {
-        passed: true,
-        time: elapsedSeconds,
-        attempts: attemptCount,
-        completedAt: new Date().toISOString()
-      };
-      localStorage.setItem('sprint1', JSON.stringify(data));
-    }
-
-    // ===== Event Handlers =====
+    // Start Practice
     document.getElementById('startPractice').addEventListener('click', () => {
-      excelContainer.classList.remove('hidden');
-      initializeTable();
-      startTimer();
-      document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      practiceCard.classList.remove('hidden');
+      practiceCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    document.getElementById('skipVideo').addEventListener('click', () => {
-      excelContainer.classList.remove('hidden');
-      initializeTable();
-      startTimer();
-      document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // File Upload
+    document.getElementById('selectFileBtn').addEventListener('click', () => {
+      fileInput.click();
     });
 
-    document.getElementById('checkWork').addEventListener('click', () => {
-      attemptCount++;
-      const results = validateData();
-      
-      updateTaskCheck(1, results.task1);
-      updateTaskCheck(2, results.task2);
-      updateTaskCheck(3, results.task3);
-      
-      if (results.task1 && results.task2 && results.task3) {
-        stopTimer();
-        hideKiran();
-        showReflect();
-        saveProgress();
-      } else {
-        if (results.issues.length > 0) {
-          showKiran(results.issues[0]);
-        }
+    fileInput.addEventListener('change', handleFileSelect);
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFile(files[0]);
       }
     });
 
-    document.getElementById('resetSheet').addEventListener('click', () => {
-      if (confirm('Reset the spreadsheet? All your changes will be lost.')) {
-        initializeTable();
-        document.querySelectorAll('.task-item').forEach(item => item.classList.remove('done'));
-        hideKiran();
+    function handleFileSelect(e) {
+      const files = e.target.files;
+      if (files.length > 0) {
+        handleFile(files[0]);
       }
-    });
-
-    document.getElementById('reviewPractice').addEventListener('click', () => {
-      reflect.classList.remove('show');
-      document.getElementById('practiceCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-
-    // Check if already completed
-    const saved = localStorage.getItem('sprint1');
-    if (saved) {
-      const data = JSON.parse(saved);
-      console.log('Sprint 1 previously completed on', data.completedAt);
     }
+
+    function handleFile(file) {
+      if (!file.name.match(/\.(xlsx|xls|csv)$/i)) {
+        alert('Please upload an Excel (.xlsx, .xls) or CSV (.csv) file');
+        return;
+      }
+
+      uploadedFile = file;
+      
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileSize').textContent = formatFileSize(file.size);
+      fileInfo.classList.add('show');
+      submitBtn.classList.remove('hidden');
+    }
+
+    document.getElementById('removeFileBtn').addEventListener('click', () => {
+      uploadedFile = null;
+      fileInput.value = '';
+      fileInfo.classList.remove('show');
+      submitBtn.classList.add('hidden');
+    });
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' bytes';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    // Submit
+    document.getElementById('submitBtn').addEventListener('click', async () => {
+      if (!uploadedFile) return;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="loading"></span> Evaluating...';
+
+      const formData = new FormData();
+      formData.append('file', uploadedFile);
+
+      try {
+        const response = await fetch('/api/evaluate-excel', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          alert(error.error || 'Error evaluating file. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Submit for AI Evaluation';
+          return;
+        }
+
+        const result = await response.json();
+        displayResults(result);
+        
+        resultsCard.classList.remove('hidden');
+        resultsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Save to localStorage
+        localStorage.setItem('sprint1', JSON.stringify({
+          passed: result.passed,
+          completedAt: new Date().toISOString(),
+          score: result.score
+        }));
+      } catch (error) {
+        alert('Error submitting file. Please try again.');
+        console.error(error);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit for AI Evaluation';
+      }
+    });
+
+    function displayResults(result) {
+      const container = document.getElementById('resultsContainer');
+      const resultClass = result.passed ? 'result-success' : 'result-warning';
+      const title = result.passed ? '🎉 Excellent Work!' : '📝 Almost There!';
+
+      let feedbackHTML = '<ul class="feedback-list">';
+      result.feedback.forEach(item => {
+        const icon = item.passed ? '✅' : '❌';
+        feedbackHTML += `<li class="feedback-item">${icon} ${item.message}</li>`;
+      });
+      feedbackHTML += '</ul>';
+
+      container.innerHTML = `
+        <div class="result-card ${resultClass}">
+          <div class="result-title">${title}</div>
+          <p style="color: var(--text-muted); margin: 0.5rem 0;">
+            Score: ${result.score}/3 tasks completed correctly
+          </p>
+          ${feedbackHTML}
+          ${result.passed ? '<p style="margin-top: 1rem; color: var(--success);">🏆 You\'re ready for Sprint 2!</p>' : '<p style="margin-top: 1rem; color: var(--warning);">Please fix the issues and try again.</p>'}
+        </div>
+      `;
+    }
+
+    document.getElementById('retryBtn').addEventListener('click', () => {
+      resultsCard.classList.add('hidden');
+      uploadedFile = null;
+      fileInput.value = '';
+      fileInfo.classList.remove('show');
+      submitBtn.classList.add('hidden');
+      practiceCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   </script>
 </body>
 </html>

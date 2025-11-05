@@ -42,7 +42,7 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
     - Task 3: Validate Total = Qty × Price (correct formula calculations)
     - Score: 3/3 required to pass and unlock Sprint 2
 -   **Frontend Features**:
-    - Standalone HTML file (sprint1-v2.html) optimized for 2G/3G networks
+    - Standalone HTML file (sprint1.html) optimized for 2G/3G networks
     - Drag-drop file upload with file info display
     - Loading states during evaluation
     - Detailed feedback with checkmarks/error messages
