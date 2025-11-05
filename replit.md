@@ -33,6 +33,7 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 -   **Approach Change**: Scrapped in-browser Excel sandbox in favor of simpler file upload + AI evaluation
 -   **User Flow**: Students watch video → practice in their own Excel → upload file → receive AI feedback
 -   **File Support**: Primary support for Excel files (.xlsx, .xls) with CSV fallback for compatibility
+-   **URL Structure**: Accessible at `/sprint1.html` (legacy `/sprint1-v2.html` redirects for backward compatibility)
 -   **Backend Architecture**:
     - SheetJS (xlsx library) for universal spreadsheet parsing
     - Multer for file upload handling (5MB limit)
