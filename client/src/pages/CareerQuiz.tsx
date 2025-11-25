@@ -81,10 +81,9 @@ const REASONS = [
 const WORK_TYPES = [
   { value: 1, label: "Researching in Lab", icon: FlaskConical, description: "Scientific research, ICAR institutes, biotech labs" },
   { value: 2, label: "Teaching Students", icon: BookOpen, description: "College/university faculty, academics" },
-  { value: 3, label: "Corporate Job", icon: Briefcase, description: "Agri-business, consulting, analytics" },
-  { value: 4, label: "Banking", icon: Landmark, description: "IBPS SO, NABARD, agri credit" },
-  { value: 5, label: "Govt Nodal Agencies (Central)", icon: Building2, description: "PSUs, boards, central missions" },
-  { value: 6, label: "State Agri Administrative Work", icon: Users, description: "ADO/AO, state departments, KVK" },
+  { value: 3, label: "Agribusiness Management", icon: Briefcase, description: "Agri-business, consulting, analytics, private sector" },
+  { value: 4, label: "Govt Banking & Finance", icon: Landmark, description: "IBPS SO, NABARD, RRB, agri credit" },
+  { value: 5, label: "Other Govt Jobs", icon: Building2, description: "SSC posts, Autonomous Bodies (NHB, APEDA, Boards), State Admin" },
 ];
 
 const PRIORITIES = [
@@ -114,11 +113,6 @@ const SUBJECTS = [
 ];
 
 const PRIORITY_PROFILES: Record<string, Record<string, number>> = {
-  "Corporate": {
-    "Career Growth": 3, "Salary": 3, "Work Life Balance": 1, "Flexibility of location": 3,
-    "Job Security": 1, "Innovative and Impactful work": 3, "Rural Development/Social Impact": 1,
-    "Prestige of Govt Job": 1, "Ease and pace of success": 3, "Foreign placement opportunities": 3
-  },
   "Research": {
     "Career Growth": 1, "Salary": 3, "Work Life Balance": 2, "Flexibility of location": 1,
     "Job Security": 3, "Innovative and Impactful work": 3, "Rural Development/Social Impact": 1,
@@ -129,36 +123,29 @@ const PRIORITY_PROFILES: Record<string, Record<string, number>> = {
     "Job Security": 3, "Innovative and Impactful work": 2, "Rural Development/Social Impact": 1,
     "Prestige of Govt Job": 3, "Ease and pace of success": 1, "Foreign placement opportunities": 1
   },
-  "Banking": {
+  "Agribusiness Management": {
+    "Career Growth": 3, "Salary": 3, "Work Life Balance": 1, "Flexibility of location": 3,
+    "Job Security": 1, "Innovative and Impactful work": 3, "Rural Development/Social Impact": 1,
+    "Prestige of Govt Job": 1, "Ease and pace of success": 3, "Foreign placement opportunities": 3
+  },
+  "Govt Banking and Finance": {
     "Career Growth": 2, "Salary": 2, "Work Life Balance": 2, "Flexibility of location": 0,
     "Job Security": 3, "Innovative and Impactful work": 1, "Rural Development/Social Impact": 3,
     "Prestige of Govt Job": 3, "Ease and pace of success": 2, "Foreign placement opportunities": 1
   },
-  "Govt Autonomous Bodies": {
+  "Other Govt Jobs": {
     "Career Growth": 2, "Salary": 3, "Work Life Balance": 2, "Flexibility of location": 1,
     "Job Security": 3, "Innovative and Impactful work": 2, "Rural Development/Social Impact": 3,
-    "Prestige of Govt Job": 3, "Ease and pace of success": 1, "Foreign placement opportunities": 1
-  },
-  "SSC Selection Posts": {
-    "Career Growth": 2, "Salary": 2, "Work Life Balance": 2, "Flexibility of location": 1,
-    "Job Security": 3, "Innovative and Impactful work": 1, "Rural Development/Social Impact": 2,
     "Prestige of Govt Job": 3, "Ease and pace of success": 2, "Foreign placement opportunities": 1
-  },
-  "State Agri Administrative Jobs": {
-    "Career Growth": 2, "Salary": 3, "Work Life Balance": 2, "Flexibility of location": 1,
-    "Job Security": 3, "Innovative and Impactful work": 2, "Rural Development/Social Impact": 3,
-    "Prestige of Govt Job": 3, "Ease and pace of success": 1, "Foreign placement opportunities": 1
   }
 };
 
 const PATH_INFO: Record<string, { icon: typeof FlaskConical; color: string; description: string }> = {
   "Research": { icon: FlaskConical, color: "emerald", description: "Scientific research at ICAR institutes, biotech labs, R&D centers" },
   "Academics": { icon: BookOpen, color: "cyan", description: "College/university teaching, professor roles" },
-  "Corporate": { icon: Briefcase, color: "violet", description: "Agri-business, consulting, analytics, private sector" },
-  "Banking": { icon: Landmark, color: "amber", description: "IBPS SO, NABARD, agri credit, rural banking" },
-  "Govt Autonomous Bodies": { icon: Building2, color: "blue", description: "Central nodal agencies, PSUs, boards, missions" },
-  "SSC Selection Posts": { icon: Shield, color: "rose", description: "SSC, central service support roles" },
-  "State Agri Administrative Jobs": { icon: Users, color: "teal", description: "ADO/AO, state line departments, KVK-type roles" },
+  "Agribusiness Management": { icon: Briefcase, color: "violet", description: "Agri-business, consulting, analytics, private sector" },
+  "Govt Banking and Finance": { icon: Landmark, color: "amber", description: "IBPS SO, NABARD, RRB, agri credit, rural banking" },
+  "Other Govt Jobs": { icon: Building2, color: "teal", description: "SSC selection posts, Autonomous Bodies (NHB, APEDA, Coconut/Rubber Boards), State Admin jobs" },
 };
 
 interface QuizAnswers {
@@ -191,7 +178,43 @@ export default function CareerQuiz() {
   const [result, setResult] = useState<QuizResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
 
-  const totalSteps = answers.year_of_study === 1 ? 5 : 6;
+  const isResearchAcademicsLikely = useCallback(() => {
+    if (answers.year_of_study === 1) return false;
+    if (!answers.priorities_ranked || !answers.preferred_work_type) return false;
+    
+    const scores: Record<string, number> = {};
+    Object.keys(PRIORITY_PROFILES).forEach(path => {
+      scores[path] = 0;
+    });
+
+    answers.priorities_ranked.forEach((priority, index) => {
+      const weight = 10 - index;
+      Object.keys(PRIORITY_PROFILES).forEach(path => {
+        scores[path] += PRIORITY_PROFILES[path][priority] * weight;
+      });
+    });
+
+    const workTypeBonus: Record<number, string[]> = {
+      1: ["Research", "Academics"],
+      2: ["Academics", "Research"],
+      3: ["Agribusiness Management"],
+      4: ["Govt Banking and Finance"],
+      5: ["Other Govt Jobs"],
+    };
+
+    const bonusPaths = workTypeBonus[answers.preferred_work_type] || [];
+    bonusPaths.forEach((path, i) => {
+      scores[path] += (30 - i * 10);
+    });
+
+    const sortedPaths = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    const topTwo = sortedPaths.slice(0, 2).map(([path]) => path);
+    
+    return topTwo.includes("Research") || topTwo.includes("Academics");
+  }, [answers.priorities_ranked, answers.preferred_work_type, answers.year_of_study]);
+
+  const needsSubjectQuiz = isResearchAcademicsLikely();
+  const totalSteps = needsSubjectQuiz ? 6 : 5;
   const progress = ((step + 1) / totalSteps) * 100;
 
   const canProceed = useCallback(() => {
@@ -227,10 +250,9 @@ export default function CareerQuiz() {
       const workTypeBonus: Record<number, string[]> = {
         1: ["Research", "Academics"],
         2: ["Academics", "Research"],
-        3: ["Corporate"],
-        4: ["Banking"],
-        5: ["Govt Autonomous Bodies"],
-        6: ["State Agri Administrative Jobs"],
+        3: ["Agribusiness Management"],
+        4: ["Govt Banking and Finance"],
+        5: ["Other Govt Jobs"],
       };
 
       const bonusPaths = workTypeBonus[fullAnswers.preferred_work_type] || [];
@@ -307,41 +329,29 @@ export default function CareerQuiz() {
           "Aim for M.Sc with thesis-based research experience",
           "Build teaching skills through seminars and presentations"
         ],
-        "Corporate": [
+        "Agribusiness Management": [
           "Apply for internships in agri-tech startups and FMCG companies",
           "Build Excel, data analysis, and presentation skills",
           "Network on LinkedIn with agri-business professionals"
         ],
-        "Banking": [
+        "Govt Banking and Finance": [
           "Start IBPS SO (AFO) preparation - focus on agri awareness",
           "Practice quantitative aptitude and reasoning daily",
           "Read The Hindu, PIB for current affairs and agri schemes"
         ],
-        "Govt Autonomous Bodies": [
-          "Prepare for FCI, NABARD, ICAR Technical Officer exams",
+        "Other Govt Jobs": [
+          "Prepare for SSC, FCI, NABARD, state PSC exams",
           "Study general agriculture and current agri schemes thoroughly",
-          "Practice previous year question papers"
-        ],
-        "SSC Selection Posts": [
-          "Register for SSC CGL and Selection Post notifications",
-          "Focus on GK, quantitative aptitude, and English",
-          "Create a 6-month structured study plan"
-        ],
-        "State Agri Administrative Jobs": [
-          "Check your state PSC calendar for ADO/AO notifications",
-          "Study state-specific agricultural schemes and geography",
-          "Join coaching or online courses for state exams"
+          "Check notifications for NHB, APEDA, state board recruitments"
         ]
       };
 
       const timeHorizons: Record<string, string> = {
         "Research": "Requires M.Sc + PhD (5-7 years post B.Sc). Patience and passion for science are essential.",
         "Academics": "Needs M.Sc + NET/JRF + possibly PhD (4-8 years). Long-term but stable career.",
-        "Corporate": "Can start immediately after graduation. Growth depends on skills and networking.",
-        "Banking": "1-2 years preparation for IBPS SO. Job placement within 2-3 years of focused prep.",
-        "Govt Autonomous Bodies": "1-2 years exam preparation. Multiple attempts may be needed.",
-        "SSC Selection Posts": "6 months to 1 year focused preparation. Regular exam cycles available.",
-        "State Agri Administrative Jobs": "1-2 years state PSC preparation. Highly competitive but rewarding."
+        "Agribusiness Management": "Can start immediately after graduation. Growth depends on skills and networking.",
+        "Govt Banking and Finance": "1-2 years preparation for IBPS SO/NABARD. Job placement within 2-3 years of focused prep.",
+        "Other Govt Jobs": "6 months to 2 years focused preparation. Multiple exam options (SSC, PSC, Boards) increase chances."
       };
 
       const warnings: string[] = [];
@@ -358,7 +368,7 @@ export default function CareerQuiz() {
         warnings.push("JRF/NET exams are highly competitive with ~5% selection rate. Start preparation early and be consistent.");
       }
 
-      if (bestPath === "Banking" && fullAnswers.priorities_ranked.indexOf("Work Life Balance") < 3) {
+      if (bestPath === "Govt Banking and Finance" && fullAnswers.priorities_ranked.indexOf("Work Life Balance") < 3) {
         warnings.push("Banking jobs may involve transfers to rural areas. Work-life balance varies by posting location.");
       }
 
@@ -742,7 +752,7 @@ export default function CareerQuiz() {
               <Rocket className="absolute inset-0 m-auto h-10 w-10 text-emerald-400 animate-pulse" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">Analyzing Your Answers...</h2>
-            <p className="text-slate-400">Finding your best career fit from 7 paths</p>
+            <p className="text-slate-400">Finding your best career fit from 5 paths</p>
             
             <div className="mt-8 space-y-2">
               {["Evaluating priorities", "Matching work preferences", "Calculating path scores"].map((text, i) => (
