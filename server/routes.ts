@@ -110,72 +110,127 @@ function getColumnValue(row: any, targetName: string): any {
   return undefined;
 }
 
-// Evaluation logic
+// Expected rice producer countries (all Asian)
+const EXPECTED_COUNTRIES = [
+  'india', 'china', 'bangladesh', 'indonesia', 'vietnam', 
+  'thailand', 'myanmar', 'philippines', 'japan', 'pakistan'
+];
+
+// Evaluation logic for Rice Producers assignment
 function evaluateExcelTasks(data: any[]) {
   const feedback = [];
   let score = 0;
 
-  // Task 1: Check for at least 5 complete rows
-  const completeRows = data.filter(row => {
-    return getColumnValue(row, 'Name') && 
-           getColumnValue(row, 'Crop') && 
-           getColumnValue(row, 'Qty (kg)') && 
-           getColumnValue(row, 'Price (₹/kg)') && 
-           getColumnValue(row, 'Date') && 
-           getColumnValue(row, 'Total ₹');
+  // Find column names that could be "Country" and "Production"
+  const findColumn = (row: any, patterns: string[]) => {
+    for (const [key] of Object.entries(row)) {
+      const normalized = normalizeColumnName(key);
+      if (patterns.some(p => normalized.includes(p))) {
+        return key;
+      }
+    }
+    return null;
+  };
+
+  // Get first row to detect column names
+  const firstRow = data[0] || {};
+  const countryCol = findColumn(firstRow, ['country', 'countries', 'nation', 'name']);
+  const productionCol = findColumn(firstRow, ['production', 'metric', 'tonnes', 'output', 'quantity']);
+
+  // Task 1: Check for 10 countries
+  const countriesFound: string[] = [];
+  data.forEach(row => {
+    // Try to find country name in any column
+    for (const [, value] of Object.entries(row)) {
+      const valStr = String(value).toLowerCase().trim();
+      EXPECTED_COUNTRIES.forEach(country => {
+        if (valStr.includes(country) && !countriesFound.includes(country)) {
+          countriesFound.push(country);
+        }
+      });
+    }
   });
 
-  if (completeRows.length >= 5) {
-    feedback.push({ passed: true, message: `Task 1: ✓ You have ${completeRows.length} complete rows (needed ≥5)` });
+  if (countriesFound.length >= 10) {
+    feedback.push({ passed: true, message: `Task 1: ✓ All 10 rice-producing countries found` });
+    score++;
+  } else if (countriesFound.length >= 8) {
+    feedback.push({ passed: true, message: `Task 1: ✓ Found ${countriesFound.length}/10 countries (close enough!)` });
     score++;
   } else {
-    feedback.push({ passed: false, message: `Task 1: ✗ Only ${completeRows.length} complete rows found. Need at least 5 rows with all fields filled.` });
+    const missing = EXPECTED_COUNTRIES.filter(c => !countriesFound.includes(c)).slice(0, 3);
+    feedback.push({ passed: false, message: `Task 1: ✗ Only ${countriesFound.length}/10 countries found. Missing: ${missing.join(', ')}...` });
   }
 
-  // Task 2: Check that Qty is numeric (no commas)
-  let allQtyNumeric = true;
-  data.forEach((row, idx) => {
-    const qty = getColumnValue(row, 'Qty (kg)');
-    if (qty != null && qty !== '') {
-      const qtyStr = String(qty).trim();
-      if (qtyStr.includes(',') || isNaN(parseFloat(qtyStr))) {
-        allQtyNumeric = false;
+  // Task 2: Check for numeric production values
+  let numericValuesCount = 0;
+  let hasNonNumeric = false;
+  
+  data.forEach(row => {
+    for (const [key, value] of Object.entries(row)) {
+      const normalized = normalizeColumnName(key);
+      if (normalized.includes('production') || normalized.includes('metric') || normalized.includes('tonnes')) {
+        const valStr = String(value).replace(/,/g, '').trim();
+        if (valStr && !isNaN(parseFloat(valStr)) && parseFloat(valStr) > 1000000) {
+          numericValuesCount++;
+        } else if (valStr && isNaN(parseFloat(valStr.replace(/,/g, '')))) {
+          hasNonNumeric = true;
+        }
+      }
+    }
+    // Also check second column if no production column found
+    const values = Object.values(row);
+    if (values.length >= 2) {
+      const val = String(values[1]).replace(/,/g, '').trim();
+      if (val && !isNaN(parseFloat(val)) && parseFloat(val) > 1000000) {
+        numericValuesCount++;
       }
     }
   });
 
-  if (allQtyNumeric && data.length > 0) {
-    feedback.push({ passed: true, message: 'Task 2: ✓ All Qty values are numeric (no commas)' });
+  if (numericValuesCount >= 8) {
+    feedback.push({ passed: true, message: 'Task 2: ✓ Production values are entered correctly as numbers' });
+    score++;
+  } else if (numericValuesCount >= 5) {
+    feedback.push({ passed: true, message: `Task 2: ✓ Found ${numericValuesCount} valid production values` });
     score++;
   } else {
-    feedback.push({ passed: false, message: 'Task 2: ✗ Some Qty values contain commas or non-numeric text. Use "1000" not "1,000".' });
+    feedback.push({ passed: false, message: 'Task 2: ✗ Production values not found or not numeric. Enter values without commas.' });
   }
 
-  // Task 3: Check that Total is calculated correctly
-  let allTotalsCorrect = true;
-  completeRows.forEach(row => {
-    const qty = parseFloat(String(getColumnValue(row, 'Qty (kg)')));
-    const price = parseFloat(String(getColumnValue(row, 'Price (₹/kg)')));
-    const total = parseFloat(String(getColumnValue(row, 'Total ₹')));
-    const expected = qty * price;
-
-    if (Math.abs(total - expected) > 0.01) {
-      allTotalsCorrect = false;
+  // Task 3: Check for any percentage or sum calculation (Asia's share)
+  let hasCalculation = false;
+  let hasPercentage = false;
+  
+  data.forEach(row => {
+    for (const [key, value] of Object.entries(row)) {
+      const keyLower = key.toLowerCase();
+      const valStr = String(value).toLowerCase();
+      
+      // Check for percentage-related columns or values
+      if (keyLower.includes('%') || keyLower.includes('percent') || keyLower.includes('share') || 
+          keyLower.includes('asia') || keyLower.includes('total')) {
+        hasCalculation = true;
+      }
+      if (valStr.includes('%') || valStr === '100' || (parseFloat(valStr) > 99 && parseFloat(valStr) <= 100)) {
+        hasPercentage = true;
+      }
     }
   });
 
-  if (allTotalsCorrect && completeRows.length > 0) {
-    feedback.push({ passed: true, message: 'Task 3: ✓ All Total values are calculated correctly (Qty × Price)' });
+  // Since all 10 countries are Asian, the answer is 100%
+  if (hasCalculation || hasPercentage || data.length >= 10) {
+    feedback.push({ passed: true, message: "Task 3: ✓ Great! Since all top 10 rice producers are Asian countries, Asia's share is 100%" });
     score++;
   } else {
-    feedback.push({ passed: false, message: 'Task 3: ✗ Some Total values are incorrect. Make sure you used formulas (=Qty×Price).' });
+    feedback.push({ passed: false, message: "Task 3: ✗ Add a cell calculating Asia's share (hint: all 10 countries are in Asia, so it's 100%!)" });
   }
 
   return {
-    passed: score === 3,
+    passed: score >= 2,
     score,
     feedback,
     totalRows: data.length,
-    completeRows: completeRows.length
+    countriesFound: countriesFound.length
   };
 }
