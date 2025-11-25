@@ -887,15 +887,15 @@ export default function CareerQuiz() {
 
             <Card className="bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border-emerald-500/30 p-6 text-center">
               <h3 className="text-lg font-semibold text-white mb-3">Ready to Start Your Journey?</h3>
-              <p className="text-slate-300 mb-4">To embark on your ideal career path, contact us at</p>
+              <p className="text-slate-300 mb-4">To embark on your ideal career path, contact us at tavcareercompass@gmail.com</p>
               <Button 
                 asChild 
                 className="bg-emerald-500 hover:bg-emerald-400"
                 data-testid="button-contact"
               >
-                <a href="mailto:tavcareercompass@gmail.com">
+                <a href={`mailto:tavcareercompass@gmail.com?subject=${encodeURIComponent(`Interested in Career Advisory-Stream-${result.recommended_path.name}`)}&body=${encodeURIComponent(`Hi Team,\n\nI recently took the career quiz on AgroClimb and my recommended path is ${result.recommended_path.name}.\n\nI would like to know more about how I can get guidance for this career path.\n\nLooking forward to hearing from you.\n\nThanks`)}`}>
                   <Mail className="h-4 w-4 mr-2" />
-                  tavcareercompass@gmail.com
+                  Enquire Now
                 </a>
               </Button>
             </Card>
