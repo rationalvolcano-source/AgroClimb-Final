@@ -14,7 +14,7 @@ const WellnessCentre = lazy(() => import("@/pages/WellnessCentre"));
 const Books = lazy(() => import("@/pages/Books"));
 const Games = lazy(() => import("@/pages/Games"));
 const PlanB = lazy(() => import("@/pages/PlanB"));
-const CareerQuizComingSoon = lazy(() => import("@/pages/CareerQuizComingSoon"));
+const CareerQuiz = lazy(() => import("@/pages/CareerQuiz"));
 const SubjectRecommenderComingSoon = lazy(() => import("@/pages/SubjectRecommenderComingSoon"));
 const RecordedClassesComingSoon = lazy(() => import("@/pages/RecordedClassesComingSoon"));
 const AlumniWebinarsComingSoon = lazy(() => import("@/pages/AlumniWebinarsComingSoon"));
@@ -49,7 +49,7 @@ function Router() {
         <Route path="/excel-quiz" component={ExcelQuiz}/>
         <Route path="/excel-orientation" component={ExcelOrientation}/>
         <Route path="/excel-sprints" component={ExcelSprints}/>
-        <Route path="/career-quiz" component={CareerQuizComingSoon}/>
+        <Route path="/career-quiz" component={CareerQuiz}/>
         <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
         <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
         <Route path="/alumni-webinars" component={AlumniWebinarsComingSoon}/>
