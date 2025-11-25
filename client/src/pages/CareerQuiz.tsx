@@ -50,6 +50,7 @@ import {
   Rocket,
   ChevronRight,
   GripVertical,
+  Mail,
 } from "lucide-react";
 
 const COURSES = [
@@ -325,19 +326,20 @@ export default function CareerQuiz() {
           "Read research papers in your interest area weekly"
         ],
         "Academics": [
-          "Clear NET/JRF for eligibility as Assistant Professor",
-          "Aim for M.Sc with thesis-based research experience",
-          "Build teaching skills through seminars and presentations"
+          "Aim for AIEEA-PG and secure seat at eminent agri universities",
+          "In PG, focus on NET to become eligible for becoming professor",
+          "Complete PhD for long-term academic career"
         ],
         "Agribusiness Management": [
-          "Apply for internships in agri-tech startups and FMCG companies",
-          "Build Excel, data analysis, and presentation skills",
-          "Network on LinkedIn with agri-business professionals"
+          "Prepare for CAT exam",
+          "Upskill yourself with relevant certifications",
+          "Prepare for interviews",
+          "Hustle in MBA colleges to secure placement!"
         ],
         "Govt Banking and Finance": [
-          "Start IBPS SO (AFO) preparation - focus on agri awareness",
-          "Practice quantitative aptitude and reasoning daily",
-          "Read The Hindu, PIB for current affairs and agri schemes"
+          "List down exams you are interested in",
+          "Most go for IBPS (AFO) - also explore IBPS RRB, NABARD",
+          "Constant practice is the key to success"
         ],
         "Other Govt Jobs": [
           "Prepare for SSC, FCI, NABARD, state PSC exams",
@@ -883,8 +885,23 @@ export default function CareerQuiz() {
               </Card>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button
+            <Card className="bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border-emerald-500/30 p-6 text-center">
+              <h3 className="text-lg font-semibold text-white mb-3">Ready to Start Your Journey?</h3>
+              <p className="text-slate-300 mb-4">To embark on your ideal career path, contact us at</p>
+              <Button 
+                asChild 
+                className="bg-emerald-500 hover:bg-emerald-400"
+                data-testid="button-contact"
+              >
+                <a href="mailto:tavcareercompass@gmail.com">
+                  <Mail className="h-4 w-4 mr-2" />
+                  tavcareercompass@gmail.com
+                </a>
+              </Button>
+            </Card>
+
+            <div className="text-center pt-2">
+              <button
                 onClick={() => {
                   setResult(null);
                   setStep(0);
@@ -893,19 +910,11 @@ export default function CareerQuiz() {
                     subject_liking: Object.fromEntries(SUBJECTS.map(s => [s.id, 5])),
                   });
                 }}
-                variant="outline"
-                className="flex-1"
+                className="text-sm text-slate-500 hover:text-slate-300 underline"
                 data-testid="button-retake"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
                 Retake Quiz
-              </Button>
-              <Button asChild className="flex-1 bg-emerald-500 hover:bg-emerald-400" data-testid="button-explore">
-                <Link href="/planb">
-                  Explore Pathways
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
-              </Button>
+              </button>
             </div>
           </motion.div>
         </main>
