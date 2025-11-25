@@ -34,7 +34,7 @@ const SPRINTS: Sprint[] = [
     description: "Learn IF, XLOOKUP, and dynamic formulas",
     Icon: Brain,
     color: "from-purple-500 to-pink-500",
-    locked: true
+    locked: false
   },
   {
     id: 4,
@@ -181,6 +181,14 @@ export default function ExcelSprints() {
             if (sprint.id === 2) {
               return (
                 <a key={sprint.id} href="/sprint2.html" data-testid={`link-sprint-${sprint.id}`}>
+                  {cardContent}
+                </a>
+              );
+            }
+            
+            if (sprint.id === 3) {
+              return (
+                <a key={sprint.id} href="/sprint3.html" data-testid={`link-sprint-${sprint.id}`}>
                   {cardContent}
                 </a>
               );
