@@ -50,7 +50,7 @@ import {
   Rocket,
   ChevronRight,
   GripVertical,
-  Mail,
+  MessageCircle,
 } from "lucide-react";
 
 const COURSES = [
@@ -887,15 +887,19 @@ export default function CareerQuiz() {
 
             <Card className="bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border-emerald-500/30 p-6 text-center">
               <h3 className="text-lg font-semibold text-white mb-3">Ready to Start Your Journey?</h3>
-              <p className="text-slate-300 mb-4">To embark on your ideal career path, contact us at tavcareercompass@gmail.com</p>
+              <p className="text-slate-300 mb-4">Get personalized career guidance from our experts</p>
               <Button 
                 asChild 
-                className="bg-emerald-500 hover:bg-emerald-400"
+                className="bg-green-500 hover:bg-green-400"
                 data-testid="button-contact"
               >
-                <a href={`mailto:tavcareercompass@gmail.com?subject=${encodeURIComponent(`Interested in Career Advisory-Stream-${result.recommended_path.name}`)}&body=${encodeURIComponent(`Hi Team,\n\nI recently took the career quiz on AgroClimb and my recommended path is ${result.recommended_path.name}.\n\nI would like to know more about how I can get guidance for this career path.\n\nLooking forward to hearing from you.\n\nThanks`)}`}>
-                  <Mail className="h-4 w-4 mr-2" />
-                  Enquire Now
+                <a 
+                  href={`https://wa.me/918250904021?text=${encodeURIComponent(`Hi! I took the AgroClimb career quiz and my recommended path is *${result.recommended_path.name}*.\n\nI would like to know more about career guidance for this path.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Chat on WhatsApp
                 </a>
               </Button>
             </Card>
