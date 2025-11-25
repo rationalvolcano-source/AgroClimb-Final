@@ -50,7 +50,7 @@ const SPRINTS: Sprint[] = [
     description: "Use Flash Fill, Power Query, and shortcuts",
     Icon: Zap,
     color: "from-yellow-500 to-orange-500",
-    locked: true
+    locked: false
   },
   {
     id: 6,
@@ -189,6 +189,14 @@ export default function ExcelSprints() {
             if (sprint.id === 4) {
               return (
                 <a key={sprint.id} href="/sprint4.html" data-testid={`link-sprint-${sprint.id}`}>
+                  {cardContent}
+                </a>
+              );
+            }
+            
+            if (sprint.id === 5) {
+              return (
+                <a key={sprint.id} href="/sprint5.html" data-testid={`link-sprint-${sprint.id}`}>
                   {cardContent}
                 </a>
               );

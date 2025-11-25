@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excel S5 — Quick Automation | AgroClimb</title>
+  <meta name="description" content="Learn Flash Fill, Power Query, and keyboard shortcuts to automate your Excel workflows.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark: #0b1420;
+      --bg-card: #101a28;
+      --border: #1e2b3f;
+      --accent: #26A69A;
+      --mint: #14B8A6;
+      --text: #eef4f8;
+      --text-muted: #9fb2c3;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, #0f1530 50%, var(--bg-dark) 100%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-card { text-align: center; }
+
+    .header-card h1 {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--mint));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(38, 166, 154, 0.1);
+      border: 1px solid rgba(38, 166, 154, 0.3);
+      border-radius: 999px;
+      font-size: 0.875rem;
+      color: var(--accent);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 12px;
+    }
+
+    .nav-link {
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .nav-link:hover { text-decoration: underline; }
+
+    .coming-soon {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: rgba(38, 166, 154, 0.05);
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+    }
+
+    .coming-soon-icon { font-size: 4rem; margin-bottom: 1rem; }
+
+    .coming-soon h3 {
+      font-size: 1.5rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .coming-soon p {
+      color: var(--text-muted);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .playlist-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(38, 166, 154, 0.1);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/excel-sprints" class="nav-link" data-testid="link-back-sprints">
+      <span>←</span> Back to Excel Sprints
+    </a>
+
+    <div class="card header-card">
+      <h1>Quick Automation</h1>
+      <span class="pill">Sprint 5 of 7</span>
+      <p style="color: var(--text-muted); margin-top: 1rem;">
+        Master Flash Fill, Power Query, and keyboard shortcuts to work faster in Excel.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Step 1: Watch the Playlist</h2>
+      
+      <div class="playlist-note">
+        <span>📺</span> Video Playlist — Watch all videos in order
+      </div>
+      
+      <div class="video-wrapper" data-testid="video-player">
+        <iframe 
+          src="https://www.youtube.com/embed/videoseries?list=PLCZxHKdpVXC6-oAZUiDfcEFRVQBBPUee9&rel=0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <p style="color: var(--text-muted);">
+        Learn time-saving automation techniques to speed up your daily Excel tasks.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Step 2: Practice</h2>
+      
+      <div class="coming-soon">
+        <div class="coming-soon-icon">🚧</div>
+        <h3>Practice Set Coming Soon</h3>
+        <p>
+          We're creating exercises to help you practice Flash Fill, Power Query, and shortcuts. Check back soon!
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
