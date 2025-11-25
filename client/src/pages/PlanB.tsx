@@ -63,7 +63,7 @@ const IconInterview = (p: SVGProps<SVGSVGElement>) => (
 
 export default function PlanB() {
   const items = [
-    { Icon: IconExcel, label: "Excel Training", link: "/excel-quiz" },
+    { Icon: IconExcel, label: "Excel Training", link: "/excel-sprints" },
     { Icon: IconPPT, label: "PowerPoint Training" },
     { Icon: IconViz, label: "Data Visualization" },
     { Icon: IconNews, label: "Daily News Update" },

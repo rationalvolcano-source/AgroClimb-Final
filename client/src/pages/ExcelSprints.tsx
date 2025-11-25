@@ -26,7 +26,7 @@ const SPRINTS: Sprint[] = [
     description: "Master data cleaning techniques and remove duplicates",
     Icon: Database,
     color: "from-blue-500 to-cyan-500",
-    locked: true
+    locked: false
   },
   {
     id: 3,
@@ -86,10 +86,10 @@ export default function ExcelSprints() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/excel-orientation">
-                <button type="button" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" data-testid="button-back-orientation">
+              <Link href="/planb">
+                <button type="button" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition" data-testid="button-back-planb">
                   <ArrowLeft className="w-5 h-5" />
-                  <span className="text-sm font-medium hidden sm:inline">Back to Orientation</span>
+                  <span className="text-sm font-medium hidden sm:inline">Back to Plan B</span>
                 </button>
               </Link>
               <div>
@@ -99,6 +99,9 @@ export default function ExcelSprints() {
                 <p className="text-sm text-[#9fb2c3] mt-1">Master Excel in 8 focused sprints</p>
               </div>
             </div>
+            <Link href="/excel-orientation" className="text-sm text-[#9fb2c3] hover:text-[#26A69A] transition hidden sm:block" data-testid="link-orientation">
+              View Course Overview
+            </Link>
           </div>
         </div>
       </div>
@@ -166,10 +169,18 @@ export default function ExcelSprints() {
             </div>
             );
 
-            // Sprint 1 is clickable and links to sprint1.html
+            // Sprints 1 and 2 are clickable
             if (sprint.id === 1) {
               return (
                 <a key={sprint.id} href="/sprint1.html" data-testid={`link-sprint-${sprint.id}`}>
+                  {cardContent}
+                </a>
+              );
+            }
+            
+            if (sprint.id === 2) {
+              return (
+                <a key={sprint.id} href="/sprint2.html" data-testid={`link-sprint-${sprint.id}`}>
                   {cardContent}
                 </a>
               );
