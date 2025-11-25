@@ -42,7 +42,7 @@ const SPRINTS: Sprint[] = [
     description: "Create data stories with PivotTables and visualizations",
     Icon: BarChart3,
     color: "from-green-500 to-emerald-500",
-    locked: true
+    locked: false
   },
   {
     id: 5,
@@ -189,6 +189,14 @@ export default function ExcelSprints() {
             if (sprint.id === 3) {
               return (
                 <a key={sprint.id} href="/sprint3.html" data-testid={`link-sprint-${sprint.id}`}>
+                  {cardContent}
+                </a>
+              );
+            }
+            
+            if (sprint.id === 4) {
+              return (
+                <a key={sprint.id} href="/sprint4.html" data-testid={`link-sprint-${sprint.id}`}>
                   {cardContent}
                 </a>
               );
