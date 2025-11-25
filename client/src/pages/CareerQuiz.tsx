@@ -80,11 +80,11 @@ const REASONS = [
 ];
 
 const WORK_TYPES = [
-  { value: 1, label: "Researching in Lab", icon: FlaskConical, description: "Scientific research, ICAR institutes, biotech labs" },
-  { value: 2, label: "Teaching Students", icon: BookOpen, description: "College/university faculty, academics" },
-  { value: 3, label: "Agribusiness Management", icon: Briefcase, description: "Agri-business, consulting, analytics, private sector" },
-  { value: 4, label: "Govt Banking & Finance", icon: Landmark, description: "IBPS SO, NABARD, RRB, agri credit" },
-  { value: 5, label: "Other Govt Jobs", icon: Building2, description: "SSC posts, Autonomous Bodies (NHB, APEDA, Boards), State Admin" },
+  { value: 1, label: "Experimenting & discovering new solutions", icon: FlaskConical, description: "Lab work, data analysis, finding answers to unsolved problems" },
+  { value: 2, label: "Explaining concepts & helping others grow", icon: BookOpen, description: "Sharing knowledge, mentoring, simplifying complex ideas" },
+  { value: 3, label: "Strategizing & driving business growth", icon: Briefcase, description: "Problem-solving, fast-paced decisions, competitive environment" },
+  { value: 4, label: "Working with numbers & financial planning", icon: Landmark, description: "Analyzing data, structured processes, helping with credit decisions" },
+  { value: 5, label: "Serving communities & implementing policies", icon: Building2, description: "Public service, administrative processes, grassroots impact" },
 ];
 
 const PRIORITIES = [
