@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excel S2 — Clean Messy Data | AgroClimb</title>
+  <meta name="description" content="Learn essential data cleaning techniques in Excel. Fix spelling errors, remove extra spaces, handle missing values, and standardize data.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark: #0b1420;
+      --bg-card: #101a28;
+      --border: #1e2b3f;
+      --accent: #26A69A;
+      --mint: #14B8A6;
+      --text: #eef4f8;
+      --text-muted: #9fb2c3;
+      --success: #10b981;
+      --warning: #fbbf24;
+      --danger: #ef4444;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, #0f1530 50%, var(--bg-dark) 100%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-card { text-align: center; }
+
+    .header-card h1 {
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--mint));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(38, 166, 154, 0.1);
+      border: 1px solid rgba(38, 166, 154, 0.3);
+      border-radius: 999px;
+      font-size: 0.875rem;
+      color: var(--accent);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    /* YouTube Lite */
+    lite-yt {
+      display: block;
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+    }
+
+    lite-yt button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 68px;
+      height: 48px;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    lite-yt button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 52%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      border-left: 16px solid white;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+
+    lite-yt iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--mint));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(38, 166, 154, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(159, 178, 195, 0.1);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(159, 178, 195, 0.2);
+      color: var(--text);
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* Tasks */
+    .task-list {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: rgba(159, 178, 195, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .task-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    /* Upload Area */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    .upload-area:hover, .upload-area.dragover {
+      border-color: var(--accent);
+      background: rgba(38, 166, 154, 0.05);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .upload-text { color: var(--text-muted); }
+
+    .file-info {
+      display: none;
+      background: rgba(38, 166, 154, 0.1);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .file-info.show { display: block; }
+
+    .file-name {
+      font-weight: 600;
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    /* Feedback */
+    .feedback-card {
+      display: none;
+      margin-top: 1.5rem;
+    }
+
+    .feedback-card.show { display: block; }
+
+    .feedback-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+    }
+
+    .feedback-item.passed {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 3px solid var(--success);
+    }
+
+    .feedback-item.failed {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 3px solid var(--danger);
+    }
+
+    .score-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+
+    .score-badge.passed {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .score-badge.failed {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+
+    /* Loading */
+    .loading { display: none; }
+    .loading.show { display: block; text-align: center; padding: 2rem; }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Hidden */
+    .hidden { display: none; }
+
+    /* Data Issues Box */
+    .issues-box {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .issues-box h3 {
+      color: var(--warning);
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+    }
+
+    .issues-list {
+      list-style: none;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .issues-list li {
+      padding: 0.35rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .issues-list li::before {
+      content: '!';
+      position: absolute;
+      left: 0;
+      color: var(--warning);
+      font-weight: 700;
+    }
+
+    /* Download Section */
+    .download-section {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .download-section h3 {
+      color: #60a5fa;
+      margin-bottom: 0.5rem;
+    }
+
+    .download-section p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Navigation */
+    .nav-link {
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .nav-link:hover { text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .card { padding: 1.25rem; }
+      .btn { width: 100%; text-align: center; }
+      .btn-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/excel-sprints" class="nav-link" data-testid="link-back-sprints">
+      <span>←</span> Back to Excel Sprints
+    </a>
+
+    <!-- Header -->
+    <div class="card header-card">
+      <h1>Clean Messy Data</h1>
+      <span class="pill">Sprint 2 of 8</span>
+      <p style="color: var(--text-muted); margin-top: 1rem;">
+        Learn to fix spelling errors, remove extra spaces, handle missing values, and standardize data formats.
+      </p>
+    </div>
+
+    <!-- Video Section -->
+    <div class="card" id="videoCard">
+      <h2 class="section-title">Step 1: Watch the Video</h2>
+      
+      <lite-yt data-id="oT4emh72fuA" data-testid="video-player">
+        <button type="button" aria-label="Play video" data-testid="button-play-video"></button>
+      </lite-yt>
+
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+        This video covers 10 essential ways to clean messy data in Excel. Watch it fully before practicing!
+      </p>
+
+      <button class="btn btn-primary" id="startPracticeBtn" data-testid="button-start-practice">
+        Start Practice
+      </button>
+    </div>
+
+    <!-- Practice Section -->
+    <div class="card hidden" id="practiceCard">
+      <h2 class="section-title">Step 2: Download & Clean the Data</h2>
+      
+      <!-- Download Section -->
+      <div class="download-section">
+        <h3>Download Practice File</h3>
+        <p>This Excel file contains messy data with various issues. Download it and clean it using the techniques from the video.</p>
+        <a href="/ways_to_clean_data.xlsx" download class="btn btn-download" data-testid="button-download-file">
+          Download Excel File
+        </a>
+      </div>
+
+      <!-- Issues to Fix -->
+      <div class="issues-box">
+        <h3>Issues You Need to Fix:</h3>
+        <ul class="issues-list">
+          <li>Extra trailing spaces in names (e.g., "John Smith   ")</li>
+          <li>Extra spaces within names (e.g., "Mike   Tyson")</li>
+          <li>Spelling errors in Rating column (e.g., "Excelent" instead of "Excellent")</li>
+          <li>Invalid values like "inf" instead of numbers</li>
+          <li>Missing price values that need handling</li>
+        </ul>
+      </div>
+
+      <ul class="task-list">
+        <li class="task-item">
+          <span class="task-icon">1</span>
+          <div>
+            <strong>Fix extra spaces</strong> — Use TRIM() function to remove leading, trailing, and extra spaces between words.
+          </div>
+        </li>
+        <li class="task-item">
+          <span class="task-icon">2</span>
+          <div>
+            <strong>Fix spelling errors</strong> — Find "Excelent" and replace with "Excellent" using Find & Replace (Ctrl+H).
+          </div>
+        </li>
+        <li class="task-item">
+          <span class="task-icon">3</span>
+          <div>
+            <strong>Handle invalid values</strong> — Replace "inf" with 0 or a valid number. Fix any errors in formulas.
+          </div>
+        </li>
+      </ul>
+
+      <p style="color: var(--warning); margin-bottom: 1.5rem; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px;">
+        Save your cleaned file as .xlsx when done!
+      </p>
+
+      <h3 style="margin: 1.5rem 0 1rem; color: var(--text);">Step 3: Upload Your Cleaned File</h3>
+
+      <div class="upload-area" id="uploadArea" data-testid="upload-area">
+        <div class="upload-icon"></div>
+        <p class="upload-text">Drag & drop your cleaned Excel file here<br>or click to browse</p>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden data-testid="input-file">
+      </div>
+
+      <div class="file-info" id="fileInfo">
+        <span class="file-name" id="fileName"></span>
+        <span style="color: var(--text-muted); font-size: 0.875rem;" id="fileSize"></span>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="submitBtn" disabled data-testid="button-submit">
+          Submit for Evaluation
+        </button>
+        <button class="btn btn-secondary hidden" id="retryBtn" data-testid="button-retry">
+          Try Again
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <p style="color: var(--text-muted);">Evaluating your work...</p>
+      </div>
+
+      <!-- Feedback -->
+      <div class="feedback-card" id="feedbackCard">
+        <h3 style="margin-bottom: 1rem;">Evaluation Results</h3>
+        <div id="scoreDisplay"></div>
+        <div id="feedbackList"></div>
+        <div id="nextStepSection" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+          <p style="color: var(--success); margin-bottom: 1rem;">
+            Sprint 2 Complete! You've unlocked Sprint 3.
+          </p>
+          <a href="/excel-sprints" class="btn btn-primary" data-testid="link-next-sprint">
+            Continue to Next Sprint
+          </a>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary" id="selectFileBtn" data-testid="button-select-file" style="margin-top: 1rem;">
+        Select File
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // YouTube Lite Embed
+    class LiteYT extends HTMLElement {
+      connectedCallback() {
+        const vid = this.dataset.id;
+        this.style.backgroundImage = `url(https://i.ytimg.com/vi/${vid}/hqdefault.jpg)`;
+        this.style.backgroundSize = 'cover';
+        this.style.backgroundPosition = 'center';
+        
+        this.querySelector('button').onclick = () => {
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube.com/embed/${vid}?autoplay=1&rel=0`;
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+          this.appendChild(iframe);
+          this.querySelector('button').style.display = 'none';
+        };
+      }
+    }
+    customElements.define('lite-yt', LiteYT);
+
+    // Elements
+    const startPracticeBtn = document.getElementById('startPracticeBtn');
+    const practiceCard = document.getElementById('practiceCard');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const submitBtn = document.getElementById('submitBtn');
+    const selectFileBtn = document.getElementById('selectFileBtn');
+    const retryBtn = document.getElementById('retryBtn');
+    const loadingState = document.getElementById('loadingState');
+    const feedbackCard = document.getElementById('feedbackCard');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const feedbackList = document.getElementById('feedbackList');
+    const nextStepSection = document.getElementById('nextStepSection');
+
+    let selectedFile = null;
+
+    // Show practice section
+    startPracticeBtn.onclick = () => {
+      practiceCard.classList.remove('hidden');
+      practiceCard.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // File selection
+    selectFileBtn.onclick = () => fileInput.click();
+    uploadArea.onclick = () => fileInput.click();
+
+    // Drag & drop
+    uploadArea.ondragover = (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    };
+    uploadArea.ondragleave = () => uploadArea.classList.remove('dragover');
+    uploadArea.ondrop = (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    };
+
+    fileInput.onchange = () => {
+      if (fileInput.files.length) {
+        handleFile(fileInput.files[0]);
+      }
+    };
+
+    function handleFile(file) {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+        alert('Please select an Excel (.xlsx, .xls) or CSV file.');
+        return;
+      }
+      selectedFile = file;
+      fileName.textContent = file.name;
+      fileSize.textContent = ` (${(file.size / 1024).toFixed(1)} KB)`;
+      fileInfo.classList.add('show');
+      submitBtn.disabled = false;
+      feedbackCard.classList.remove('show');
+    }
+
+    // Submit
+    submitBtn.onclick = async () => {
+      if (!selectedFile) return;
+
+      submitBtn.disabled = true;
+      loadingState.classList.add('show');
+      feedbackCard.classList.remove('show');
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        const res = await fetch('/api/evaluate-sprint2', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        showFeedback(data);
+      } catch (err) {
+        alert('Error submitting file. Please try again.');
+        submitBtn.disabled = false;
+      } finally {
+        loadingState.classList.remove('show');
+      }
+    };
+
+    function showFeedback(data) {
+      // Score
+      const passed = data.passed;
+      scoreDisplay.innerHTML = `
+        <span class="score-badge ${passed ? 'passed' : 'failed'}">
+          ${data.score}/3 Tasks Complete
+        </span>
+      `;
+
+      // Feedback items
+      feedbackList.innerHTML = data.feedback.map(f => `
+        <div class="feedback-item ${f.passed ? 'passed' : 'failed'}">
+          ${f.message}
+        </div>
+      `).join('');
+
+      if (passed) {
+        nextStepSection.classList.remove('hidden');
+        retryBtn.classList.add('hidden');
+        // Save progress
+        localStorage.setItem('sprint2_complete', 'true');
+        localStorage.setItem('sprint3_unlocked', 'true');
+      } else {
+        nextStepSection.classList.add('hidden');
+        retryBtn.classList.remove('hidden');
+      }
+
+      feedbackCard.classList.add('show');
+    }
+
+    // Retry
+    retryBtn.onclick = () => {
+      selectedFile = null;
+      fileInfo.classList.remove('show');
+      fileInput.value = '';
+      submitBtn.disabled = true;
+      feedbackCard.classList.remove('show');
+      retryBtn.classList.add('hidden');
+    };
+  </script>
+</body>
+</html>

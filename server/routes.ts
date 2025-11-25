@@ -79,9 +79,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Sprint 2 data cleaning evaluation endpoint
+  app.post('/api/evaluate-sprint2', upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      const fileName = req.file.originalname.toLowerCase();
+      const validExtensions = ['.xlsx', '.xls', '.csv'];
+      const hasValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
+      
+      if (!hasValidExtension) {
+        await fs.unlink(req.file.path).catch(() => {});
+        return res.status(400).json({ 
+          error: 'Invalid file type. Please upload an Excel (.xlsx, .xls) or CSV (.csv) file.' 
+        });
+      }
+
+      const filePath = req.file.path;
+      const workbook = XLSX.readFile(filePath);
+      
+      // Find the Data sheet or first sheet
+      let sheetName = workbook.SheetNames.find(s => s.toLowerCase() === 'data') || workbook.SheetNames[0];
+      
+      if (!sheetName) {
+        await fs.unlink(filePath).catch(() => {});
+        return res.status(400).json({ error: 'No data found in file.' });
+      }
+
+      const worksheet = workbook.Sheets[sheetName];
+      const data = XLSX.utils.sheet_to_json(worksheet, { defval: '' }) as any[];
+
+      await fs.unlink(filePath).catch(() => {});
+
+      if (!data || data.length === 0) {
+        return res.status(400).json({ error: 'No data rows found in file.' });
+      }
+
+      const evaluation = evaluateSprint2Tasks(data);
+      res.json(evaluation);
+    } catch (error) {
+      console.error('Error evaluating Sprint 2 file:', error);
+      res.status(500).json({ error: 'Failed to evaluate file. Please try again.' });
+    }
+  });
+
   // Serve sprint1.html as a static file
   app.get('/sprint1.html', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/sprint1.html'));
+  });
+
+  // Serve sprint2.html as a static file
+  app.get('/sprint2.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/sprint2.html'));
   });
 
   // Redirect old sprint1-v2.html to sprint1.html for backward compatibility
@@ -232,5 +283,83 @@ function evaluateExcelTasks(data: any[]) {
     feedback,
     totalRows: data.length,
     countriesFound: countriesFound.length
+  };
+}
+
+// Sprint 2: Data Cleaning Evaluation
+function evaluateSprint2Tasks(data: any[]) {
+  const feedback = [];
+  let score = 0;
+
+  // Task 1: Check for extra spaces in Name column
+  let hasExtraSpaces = false;
+  let spacesFixed = true;
+  
+  data.forEach(row => {
+    const name = getColumnValue(row, 'Name');
+    if (name) {
+      const nameStr = String(name);
+      // Check for trailing spaces or multiple consecutive spaces
+      if (nameStr !== nameStr.trim() || /\s{2,}/.test(nameStr)) {
+        hasExtraSpaces = true;
+        spacesFixed = false;
+      }
+    }
+  });
+
+  if (spacesFixed && data.length > 0) {
+    feedback.push({ passed: true, message: 'Task 1: ✓ Names are clean - no extra spaces found!' });
+    score++;
+  } else {
+    feedback.push({ passed: false, message: 'Task 1: ✗ Some names still have extra spaces. Use TRIM() function to clean them.' });
+  }
+
+  // Task 2: Check for spelling errors in Rating column
+  let hasSpellingErrors = false;
+  const validRatings = ['excellent', 'good', 'average', 'poor'];
+  
+  data.forEach(row => {
+    const rating = getColumnValue(row, 'Rating');
+    if (rating) {
+      const ratingStr = String(rating).toLowerCase().trim();
+      // Check for common misspelling "excelent"
+      if (ratingStr === 'excelent' || (ratingStr && !validRatings.includes(ratingStr) && ratingStr !== '')) {
+        hasSpellingErrors = true;
+      }
+    }
+  });
+
+  if (!hasSpellingErrors && data.length > 0) {
+    feedback.push({ passed: true, message: 'Task 2: ✓ Rating spelling is correct - no "Excelent" typos!' });
+    score++;
+  } else {
+    feedback.push({ passed: false, message: 'Task 2: ✗ Found spelling errors in Rating column. Fix "Excelent" → "Excellent".' });
+  }
+
+  // Task 3: Check for "inf" or invalid values in Price column
+  let hasInvalidValues = false;
+  
+  data.forEach(row => {
+    const price = getColumnValue(row, 'Price Per Unit');
+    if (price) {
+      const priceStr = String(price).toLowerCase().trim();
+      if (priceStr === 'inf' || priceStr === 'infinity' || priceStr === '#value!' || priceStr === '#ref!') {
+        hasInvalidValues = true;
+      }
+    }
+  });
+
+  if (!hasInvalidValues && data.length > 0) {
+    feedback.push({ passed: true, message: 'Task 3: ✓ No invalid values like "inf" found - data is clean!' });
+    score++;
+  } else {
+    feedback.push({ passed: false, message: 'Task 3: ✗ Found invalid values like "inf". Replace with 0 or valid numbers.' });
+  }
+
+  return {
+    passed: score >= 2,
+    score,
+    feedback,
+    totalRows: data.length
   };
 }
