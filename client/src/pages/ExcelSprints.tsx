@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { Database, Brain, BarChart3, Printer, Zap, Download, Trophy, ArrowLeft, BookOpen } from 'lucide-react';
+import { Database, Brain, BarChart3, Zap, Download, Trophy, ArrowLeft, BookOpen } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface Sprint {
@@ -46,14 +46,6 @@ const SPRINTS: Sprint[] = [
   },
   {
     id: 5,
-    title: "Print-Ready Reports",
-    description: "Design professional reports for presentations",
-    Icon: Printer,
-    color: "from-orange-500 to-amber-500",
-    locked: true
-  },
-  {
-    id: 6,
     title: "Quick Automation",
     description: "Use Flash Fill, Power Query, and shortcuts",
     Icon: Zap,
@@ -61,7 +53,7 @@ const SPRINTS: Sprint[] = [
     locked: true
   },
   {
-    id: 7,
+    id: 6,
     title: "Everyday Tricks",
     description: "Import PDFs, scrape web tables, and more",
     Icon: Download,
@@ -69,7 +61,7 @@ const SPRINTS: Sprint[] = [
     locked: true
   },
   {
-    id: 8,
+    id: 7,
     title: "Final Project",
     description: "Clean, analyze, and visualize real datasets",
     Icon: Trophy,
@@ -96,7 +88,7 @@ export default function ExcelSprints() {
                 <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#26A69A] to-[#14B8A6] bg-clip-text text-transparent" data-testid="text-sprints-title">
                   Excel Sprints
                 </h1>
-                <p className="text-sm text-[#9fb2c3] mt-1">Master Excel in 8 focused sprints</p>
+                <p className="text-sm text-[#9fb2c3] mt-1">Master Excel in 7 focused sprints</p>
               </div>
             </div>
             <Link href="/excel-orientation" className="text-sm text-[#9fb2c3] hover:text-[#26A69A] transition hidden sm:block" data-testid="link-orientation">
