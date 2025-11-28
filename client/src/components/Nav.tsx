@@ -1,12 +1,18 @@
-import { ArrowRight, Home } from "lucide-react";
+import { ArrowRight, Home, ChevronDown, Gamepad2, Video, TrendingUp, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import logoPath from "@assets/image_1761115104637.webp";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const isLandingPage = location === '/';
 
   useEffect(() => {
@@ -17,6 +23,13 @@ export default function Nav() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const planBItems = [
+    { label: "Plan B Overview", href: "/planb", Icon: Briefcase },
+    { label: "Games", href: "/games", Icon: Gamepad2 },
+    { label: "Alumni Webinars", href: "/alumni-webinars", Icon: Video },
+    { label: "Upskilling", href: "/planb-webinars", Icon: TrendingUp },
+  ];
 
   return (
     <div className="sticky top-0 z-40 backdrop-blur-md bg-slate-950/70 border-b border-slate-800 transition-all duration-300">
@@ -40,11 +53,27 @@ export default function Nav() {
             </Button>
           )}
           <Link href="/books" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-books">Books</Link>
-          <Link href="/games" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-games">Games</Link>
-          <Link href="/planb-webinars" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-planb-webinars">
-            <span className="hidden md:inline">Plan B & Webinars</span>
-            <span className="md:hidden">Plan B</span>
-          </Link>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1 text-slate-300 hover:text-slate-50 transition-colors" data-testid="dropdown-planb">
+              Plan B
+              <ChevronDown className="h-3 w-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-slate-900 border-slate-700">
+              {planBItems.map((item) => (
+                <DropdownMenuItem 
+                  key={item.href}
+                  onClick={() => setLocation(item.href)}
+                  className="cursor-pointer hover:bg-slate-800"
+                  data-testid={`dropdown-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <item.Icon className="h-4 w-4 mr-2 text-slate-400" />
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
           <Link href="/swm" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-binaural">SWM</Link>
           <Link href="/wellness" className="text-slate-300 hover:text-slate-50 transition-colors hidden sm:inline" data-testid="link-wellness">Wellness</Link>
         </div>
