@@ -9,12 +9,12 @@ export default function HowItWorks() {
     },
     {
       title: "Get Your Blueprint",
-      desc: "Receive Plan A (ideal path) + Plan B (future-proof backup) instantly.",
+      desc: "Receive your career blueprint along with complementary upskilling.",
       icon: Target,
     },
     {
       title: "Start Growing",
-      desc: "Access Pro tools today. Ultra deep-courses unlock as you progress.",
+      desc: "Access career tools, interview prep, and live upskilling sessions.",
       icon: TrendingUp,
     },
   ];

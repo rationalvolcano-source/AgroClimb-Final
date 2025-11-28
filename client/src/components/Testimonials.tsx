@@ -4,11 +4,11 @@ const testimonials = [
     name: "Ananya, ABM",
   },
   {
-    quote: "Flashcard Duel makes revision addictive. My mock scores jumped in 2 weeks.",
+    quote: "The interview prep guidance helped me crack my first banking interview confidently.",
     name: "Rishi, JRF Horti",
   },
   {
-    quote: "Ultra plan's weekly upskilling helped me switch to an analyst role.",
+    quote: "Weekly upskilling sessions helped me switch to an analyst role in 3 months.",
     name: "Meera, Banking",
   },
 ];

@@ -3,7 +3,6 @@ import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
-import Plans from "@/components/Plans";
 import SocialProof from "@/components/SocialProof";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
@@ -18,7 +17,6 @@ export default function LandingPage() {
       <div className="max-w-6xl mx-auto px-4 py-6">
         <HowItWorks />
         <Features />
-        <Plans />
       </div>
       <SocialProof />
       <Testimonials />

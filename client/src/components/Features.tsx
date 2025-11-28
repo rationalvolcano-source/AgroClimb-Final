@@ -1,4 +1,4 @@
-import { Brain, FlaskConical, Gamepad2, BookOpen, Video, Heart, Puzzle, Users } from "lucide-react";
+import { Brain, BookOpen, Puzzle, Users, TrendingUp, Newspaper } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Features() {
@@ -6,20 +6,8 @@ export default function Features() {
     { 
       icon: Brain, 
       title: "Career Guidance Quiz", 
-      desc: "AI-powered fit analysis across 8 career clusters—Academia to Banking, Corporate to Entrepreneurship.",
+      desc: "AI-powered fit analysis across 5 career paths—Research, Academics, Agribusiness, Banking & Govt Jobs.",
       link: "/career-quiz"
-    },
-    { 
-      icon: FlaskConical, 
-      title: "Subject Recommender", 
-      desc: "Academic path? Get precise subject recommendations starting with Horticulture JRF.",
-      link: "/subject-recommender"
-    },
-    { 
-      icon: Gamepad2, 
-      title: "Interactive Games", 
-      desc: "Master recall, reasoning, and speed through Flashcard Duel, Logic Orchard & Number Sprint.",
-      link: "/games"
     },
     { 
       icon: BookOpen, 
@@ -28,27 +16,27 @@ export default function Features() {
       link: "/books"
     },
     { 
-      icon: Video, 
-      title: "Recorded Classes", 
-      desc: "Learn anytime with expert educators. Ultra courses expand pathway-by-pathway.",
-      link: "/recorded-classes"
-    },
-    { 
-      icon: Heart, 
-      title: "Wellness Centre", 
-      desc: "Free micro-sessions for focus and calm. Embedded tools for sustainable study habits.",
-      link: "/wellness"
+      icon: TrendingUp, 
+      title: "Interview Prep", 
+      desc: "Exam-specific guidance for ABM, IBPS SO-AFO & more. Master self-presentation and common questions.",
+      link: "/interview-prep"
     },
     { 
       icon: Puzzle, 
-      title: "Plan B Skills", 
-      desc: "Practical upskilling in Excel, PPT, AI tools, freelancing & agri-consulting.",
-      link: "/planb"
+      title: "Digital Skills", 
+      desc: "7-week live Zoom training—Excel, Data Visualization & PowerPoint for career-ready skills.",
+      link: "/digital-skills"
+    },
+    { 
+      icon: Newspaper, 
+      title: "Daily News", 
+      desc: "Stay updated with curated agricultural news and current affairs for competitive exams.",
+      link: "/daily-news"
     },
     { 
       icon: Users, 
       title: "Alumni Webinars", 
-      desc: "Weekly ₹9 live sessions for real insights, motivation & personalized doubt-clearing.",
+      desc: "Live sessions for real insights, motivation & personalized doubt-clearing from industry professionals.",
       link: "/alumni-webinars"
     },
   ];
@@ -58,7 +46,7 @@ export default function Features() {
       <h2 className="text-3xl md:text-4xl font-extrabold text-center" data-testid="text-features-title">Features</h2>
       <p className="text-slate-400 text-center mt-1" data-testid="text-features-subtitle">Focused tools for learning, clarity & momentum</p>
 
-      <div className="grid md:grid-cols-4 gap-4 md:gap-6 mt-6">
+      <div className="grid md:grid-cols-3 gap-4 md:gap-6 mt-6">
         {data.map((f, i) => {
           const Icon = f.icon;
           const CardContent = (
