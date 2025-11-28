@@ -4,26 +4,28 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 
 ## Recent Updates (November 2025)
 
-### Upskilling Restructure - Live Zoom Classes (November 28, 2025)
--   **Plan B Overview Removed**: Content merged into Upskilling page
--   **Navigation Simplified**: Plan B dropdown now contains:
-    - Upskilling (/planb-webinars)
+### Navigation & Feature Restructure (November 28, 2025)
+-   **Main Navigation Updated**: 
+    - Books, Plan B dropdown, Interview Prep, Daily News
+    - Removed: Wellness Centre, Study With Me (SWM)
+-   **Plan B Dropdown**: Now contains:
+    - Digital Skills (/digital-skills) - Live Zoom training
     - Games (/games)
     - Alumni Webinars (/alumni-webinars)
--   **Upskilling Page Redesigned**: Now offers 3 main options:
-    - Digital Skills (Live Zoom) - links to /digital-skills
-    - Daily News Update - Coming Soon
-    - Interview Prep (Live Zoom) - links to /interview-prep
--   **Digital Skills Page Created** (/digital-skills):
-    - 7-week curriculum: Excel (Weeks 1-3), Data Visualization (Weeks 4-5), PowerPoint (Weeks 6-7)
-    - Highlights: Weekly live sessions, 1-2 hours per session, Small batch, WhatsApp group
-    - WhatsApp CTA to join training group (+91 8250904021)
-    - Lightweight design for 2G/3G networks
--   **Interview Prep Page Created** (/interview-prep):
+-   **Interview Prep** - Now a main nav item at /interview-prep:
     - Exam selection dropdown: ABM/CAT, IBPS SO-AFO, Others (with text input)
     - Topics covered: Self-presentation, common questions, body language, mock interviews
     - WhatsApp CTA with selected exam name pre-filled in message
     - Button disabled until exam type is selected
+-   **Daily News** - Now a main nav item at /daily-news:
+    - Coming Soon placeholder page
+    - WhatsApp notification signup
+-   **Digital Skills Page** (/digital-skills):
+    - 7-week curriculum: Excel (Weeks 1-3), Data Visualization (Weeks 4-5), PowerPoint (Weeks 6-7)
+    - Highlights: Weekly live sessions, 1-2 hours per session, Small batch, WhatsApp group
+    - WhatsApp CTA to join training group (+91 8250904021)
+    - Lightweight design for 2G/3G networks
+-   **Legacy Redirect**: /planb-webinars now redirects to /digital-skills
 
 ### Games Restructure (November 28, 2025)
 -   **Games Page Simplified**: Shows only 3 games directly (no stream selector):

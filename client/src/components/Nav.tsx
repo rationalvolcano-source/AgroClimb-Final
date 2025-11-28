@@ -1,4 +1,4 @@
-import { ArrowRight, Home, ChevronDown, Gamepad2, Video, TrendingUp } from "lucide-react";
+import { ArrowRight, Home, ChevronDown, Gamepad2, Video, TrendingUp, Newspaper, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,7 +25,7 @@ export default function Nav() {
   }, []);
 
   const planBItems = [
-    { label: "Upskilling", href: "/planb-webinars", Icon: TrendingUp },
+    { label: "Digital Skills", href: "/digital-skills", Icon: TrendingUp },
     { label: "Games", href: "/games", Icon: Gamepad2 },
     { label: "Alumni Webinars", href: "/alumni-webinars", Icon: Video },
   ];
@@ -73,8 +73,8 @@ export default function Nav() {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Link href="/swm" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-binaural">SWM</Link>
-          <Link href="/wellness" className="text-slate-300 hover:text-slate-50 transition-colors hidden sm:inline" data-testid="link-wellness">Wellness</Link>
+          <Link href="/interview-prep" className="text-slate-300 hover:text-slate-50 transition-colors hidden sm:inline" data-testid="link-interview-prep">Interview Prep</Link>
+          <Link href="/daily-news" className="text-slate-300 hover:text-slate-50 transition-colors hidden md:inline" data-testid="link-daily-news">Daily News</Link>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="hidden md:inline-flex" data-testid="button-signin">Sign in</Button>

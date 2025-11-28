@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect } from "wouter";
 import { lazy, Suspense } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -9,15 +9,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import LandingPage from "@/pages/LandingPage";
 
 // Lazy load all other pages for code splitting
-const StudyWithMe = lazy(() => import("@/pages/StudyWithMe"));
-const WellnessCentre = lazy(() => import("@/pages/WellnessCentre"));
 const Books = lazy(() => import("@/pages/Books"));
 const Games = lazy(() => import("@/pages/Games"));
 const CareerQuiz = lazy(() => import("@/pages/CareerQuiz"));
 const SubjectRecommenderComingSoon = lazy(() => import("@/pages/SubjectRecommenderComingSoon"));
 const RecordedClassesComingSoon = lazy(() => import("@/pages/RecordedClassesComingSoon"));
 const AlumniWebinarsComingSoon = lazy(() => import("@/pages/AlumniWebinarsComingSoon"));
-const PlanBWebinarsHub = lazy(() => import("@/pages/PlanBWebinarsHub"));
 const FlashcardDuel = lazy(() => import("@/pages/FlashcardDuel"));
 const ExcelQuiz = lazy(() => import("@/pages/ExcelQuiz"));
 const ExcelOrientation = lazy(() => import("@/pages/ExcelOrientation"));
@@ -26,6 +23,7 @@ const GamesHub = lazy(() => import("@/pages/GamesHub"));
 const WordSprint = lazy(() => import("@/pages/WordSprint"));
 const DigitalSkills = lazy(() => import("@/pages/DigitalSkills"));
 const InterviewPrep = lazy(() => import("@/pages/InterviewPrep"));
+const DailyNews = lazy(() => import("@/pages/DailyNews"));
 
 // Loading component with brand styling
 const PageLoader = () => (
@@ -42,14 +40,12 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path="/" component={LandingPage}/>
-        <Route path="/swm" component={StudyWithMe}/>
-        <Route path="/wellness" component={WellnessCentre}/>
         <Route path="/books" component={Books}/>
         <Route path="/games" component={Games}/>
         <Route path="/flashcard-duel" component={FlashcardDuel}/>
-        <Route path="/planb-webinars" component={PlanBWebinarsHub}/>
         <Route path="/digital-skills" component={DigitalSkills}/>
         <Route path="/interview-prep" component={InterviewPrep}/>
+        <Route path="/daily-news" component={DailyNews}/>
         <Route path="/excel-quiz" component={ExcelQuiz}/>
         <Route path="/excel-orientation" component={ExcelOrientation}/>
         <Route path="/excel-sprints" component={ExcelSprints}/>
@@ -59,6 +55,7 @@ function Router() {
         <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
         <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
         <Route path="/alumni-webinars" component={AlumniWebinarsComingSoon}/>
+        <Route path="/planb-webinars">{() => <Redirect to="/digital-skills" />}</Route>
         <Route path="*" component={LandingPage} />
       </Switch>
     </Suspense>
