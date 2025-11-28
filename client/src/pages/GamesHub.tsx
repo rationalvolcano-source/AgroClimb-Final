@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { ArrowLeft, Zap, Calculator, Compass, Trophy, RotateCcw } from "lucide-react";
 
 // =============================
@@ -437,7 +437,11 @@ function DirectionDash() {
 // GAMES HUB - Main Menu
 // =============================
 export default function GamesHub() {
-  const [game, setGame] = useState<string | null>(null);
+  const searchString = useSearch();
+  const params = new URLSearchParams(searchString);
+  const initialGame = params.get("game");
+  
+  const [game, setGame] = useState<string | null>(initialGame);
 
   const games = [
     {

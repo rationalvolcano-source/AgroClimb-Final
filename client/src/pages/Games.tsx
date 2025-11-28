@@ -81,6 +81,9 @@ export default function Games() {
     if (gameId === "flashcard") {
       // Navigate to internal Flashcard Duel game
       setLocation("/flashcard-duel");
+    } else if (gameId === "sprint") {
+      // Navigate to Number Sprint games hub
+      setLocation("/games-hub?game=sprint");
     } else {
       // Other games - under construction
       alert(`${GAME_INFO[gameId].title} is coming soon!`);
