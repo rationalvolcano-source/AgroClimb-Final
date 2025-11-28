@@ -38,10 +38,7 @@ export default function Nav() {
         </Link>
         <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm ml-4">
           {isLandingPage ? (
-            <>
-              <a href="#features" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-features">Features</a>
-              <a href="#pricing" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-pricing">Plans</a>
-            </>
+            <a href="#features" className="hidden sm:inline text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-features">Features</a>
           ) : (
             <Button asChild variant="ghost" size="sm">
               <Link href="/" data-testid="link-home">
@@ -50,7 +47,7 @@ export default function Nav() {
               </Link>
             </Button>
           )}
-          <Link href="/books" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-books">Books</Link>
+          <Link href="/books" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-notes">Notes</Link>
           
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1 text-slate-300 hover:text-slate-50 transition-colors" data-testid="dropdown-planb">

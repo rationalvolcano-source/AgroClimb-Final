@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Clock } from "lucide-react";
 import Nav from "@/components/Nav";
 
 import horticultureImg from "@assets/image_1759944361004.webp";
@@ -74,91 +74,107 @@ export default function Books() {
     <div className="min-h-screen bg-slate-950 text-slate-50">
       <Nav />
       
-      <main className="mx-auto max-w-7xl px-4 py-12">
+      <main className="mx-auto max-w-7xl px-4 py-12 relative">
         <motion.div
           variants={fadeUp}
           initial="hidden"
           animate="show"
           className="text-center mb-12"
         >
-          <h1 className="text-3xl md:text-5xl font-bold mb-4" data-testid="text-books-title">
-            Study Materials & Books
+          <h1 className="text-3xl md:text-5xl font-bold mb-4" data-testid="text-notes-title">
+            Study Notes & Materials
           </h1>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto" data-testid="text-books-subtitle">
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto" data-testid="text-notes-subtitle">
             Complete PDFs, topic-wise tests, and exam-ready content for ABM, Banking, and JRF Horticulture
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {books.map((book, i) => (
-            <motion.div
-              key={book.id}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Card className="bg-slate-900/60 border-slate-800 hover:border-primary/30 transition-all rounded-2xl overflow-hidden h-full flex flex-col">
-                <div className="relative aspect-[2/3] overflow-hidden">
-                  <img
-                    src={book.image}
-                    alt={book.title}
-                    className="w-full h-full object-cover"
-                    data-testid={`img-book-${book.id}`}
-                  />
-                </div>
-                <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-lg font-semibold mb-1" data-testid={`text-book-title-${book.id}`}>
-                    {book.title}
-                  </h3>
-                  <p className="text-sm text-slate-400 mb-4" data-testid={`text-book-subtitle-${book.id}`}>
-                    {book.subtitle}
-                  </p>
-                  <div className="mt-auto">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-2xl font-bold text-primary" data-testid={`text-book-price-${book.id}`}>
-                        {book.price}
-                      </span>
-                    </div>
-                    <Button className="w-full bg-primary hover:bg-primary/90" data-testid={`button-buy-${book.id}`}>
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      Buy Now
-                    </Button>
+        <div className="relative">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {books.map((book, i) => (
+              <motion.div
+                key={book.id}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <Card className="bg-slate-900/60 border-slate-800 hover:border-primary/30 transition-all rounded-2xl overflow-hidden h-full flex flex-col">
+                  <div className="relative aspect-[2/3] overflow-hidden">
+                    <img
+                      src={book.image}
+                      alt={book.title}
+                      className="w-full h-full object-cover"
+                      data-testid={`img-book-${book.id}`}
+                    />
                   </div>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-lg font-semibold mb-1" data-testid={`text-book-title-${book.id}`}>
+                      {book.title}
+                    </h3>
+                    <p className="text-sm text-slate-400 mb-4" data-testid={`text-book-subtitle-${book.id}`}>
+                      {book.subtitle}
+                    </p>
+                    <div className="mt-auto">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-2xl font-bold text-primary" data-testid={`text-book-price-${book.id}`}>
+                          {book.price}
+                        </span>
+                      </div>
+                      <Button className="w-full bg-primary hover:bg-primary/90" data-testid={`button-buy-${book.id}`}>
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Buy Now
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
 
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="mt-16 text-center"
-        >
-          <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-8 max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold mb-3" data-testid="text-bundle-title">
-              Complete Study Bundle
-            </h2>
-            <p className="text-slate-400 mb-6" data-testid="text-bundle-desc">
-              Get all 7 books and unlock the complete learning experience at a special price
-            </p>
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <span className="text-slate-500 line-through text-xl" data-testid="text-bundle-original">₹4,200</span>
-              <span className="text-4xl font-bold text-primary" data-testid="text-bundle-price">₹2,800</span>
-              <span className="text-sm bg-emerald-500/10 text-emerald-300 px-3 py-1 rounded-full ring-1 ring-emerald-500/30" data-testid="badge-bundle-save">
-                Save 33%
-              </span>
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="mt-16 text-center"
+          >
+            <Card className="bg-slate-900/60 border-slate-800 rounded-2xl p-8 max-w-3xl mx-auto">
+              <h2 className="text-2xl font-bold mb-3" data-testid="text-bundle-title">
+                Complete Study Bundle
+              </h2>
+              <p className="text-slate-400 mb-6" data-testid="text-bundle-desc">
+                Get all 7 books and unlock the complete learning experience at a special price
+              </p>
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <span className="text-slate-500 line-through text-xl" data-testid="text-bundle-original">₹4,200</span>
+                <span className="text-4xl font-bold text-primary" data-testid="text-bundle-price">₹2,800</span>
+                <span className="text-sm bg-emerald-500/10 text-emerald-300 px-3 py-1 rounded-full ring-1 ring-emerald-500/30" data-testid="badge-bundle-save">
+                  Save 33%
+                </span>
+              </div>
+              <Button size="lg" className="bg-primary hover:bg-primary/90" data-testid="button-buy-bundle">
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Buy Complete Bundle
+              </Button>
+            </Card>
+          </motion.div>
+
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-3xl" data-testid="overlay-coming-soon">
+            <div className="text-center p-8">
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-emerald-500/10 text-emerald-400 mb-4">
+                <Clock className="h-8 w-8" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-3" data-testid="text-coming-soon">
+                Coming Soon!
+              </h2>
+              <p className="text-slate-400 text-lg max-w-md">
+                We're preparing high-quality study materials for you. Stay tuned!
+              </p>
             </div>
-            <Button size="lg" className="bg-primary hover:bg-primary/90" data-testid="button-buy-bundle">
-              <ShoppingCart className="w-5 h-5 mr-2" />
-              Buy Complete Bundle
-            </Button>
-          </Card>
-        </motion.div>
+          </div>
+        </div>
       </main>
     </div>
   );
