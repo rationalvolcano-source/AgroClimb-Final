@@ -10,7 +10,6 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
     - Removed: Wellness Centre, Study With Me (SWM)
 -   **Plan B Dropdown**: Now contains:
     - Digital Skills (/digital-skills) - Live Zoom training
-    - Games (/games)
     - Alumni Webinars (/alumni-webinars)
 -   **Interview Prep** - Now a main nav item at /interview-prep:
     - Exam selection dropdown: ABM/CAT, IBPS SO-AFO, Others (with text input)
@@ -27,18 +26,9 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
     - Lightweight design for 2G/3G networks
 -   **Legacy Redirect**: /planb-webinars now redirects to /digital-skills
 
-### Games Restructure (November 28, 2025)
--   **Games Page Simplified**: Shows only 3 games directly (no stream selector):
-    - Flashcard Duel - Memory & recall training
-    - Number Sprint - Mental math speed challenges
-    - Word Sprint - Daily crossword puzzles
--   **Word Sprint Created**: New crossword puzzle game at `/word-sprint`:
-    - Daily reset based on day of year
-    - 3 rotating puzzle themes (Agricultural, Banking, Research)
-    - Hint system with localStorage persistence
-    - Valid crossword grids with proper intersections
-    - Completion detection and tracking
--   **Number Sprint Removed from Plan B**: Now accessible only via Games
+### Games Section Removed (November 28, 2025)
+-   **Games Scrapped**: All game pages removed (Flashcard Duel, Number Sprint, Word Sprint)
+-   **Simplified Focus**: Platform now focuses on career prep and upskilling
 
 ## Previous Updates (October 2025)
 

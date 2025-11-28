@@ -10,17 +10,13 @@ import LandingPage from "@/pages/LandingPage";
 
 // Lazy load all other pages for code splitting
 const Books = lazy(() => import("@/pages/Books"));
-const Games = lazy(() => import("@/pages/Games"));
 const CareerQuiz = lazy(() => import("@/pages/CareerQuiz"));
 const SubjectRecommenderComingSoon = lazy(() => import("@/pages/SubjectRecommenderComingSoon"));
 const RecordedClassesComingSoon = lazy(() => import("@/pages/RecordedClassesComingSoon"));
 const AlumniWebinarsComingSoon = lazy(() => import("@/pages/AlumniWebinarsComingSoon"));
-const FlashcardDuel = lazy(() => import("@/pages/FlashcardDuel"));
 const ExcelQuiz = lazy(() => import("@/pages/ExcelQuiz"));
 const ExcelOrientation = lazy(() => import("@/pages/ExcelOrientation"));
 const ExcelSprints = lazy(() => import("@/pages/ExcelSprints"));
-const GamesHub = lazy(() => import("@/pages/GamesHub"));
-const WordSprint = lazy(() => import("@/pages/WordSprint"));
 const DigitalSkills = lazy(() => import("@/pages/DigitalSkills"));
 const InterviewPrep = lazy(() => import("@/pages/InterviewPrep"));
 const DailyNews = lazy(() => import("@/pages/DailyNews"));
@@ -41,16 +37,12 @@ function Router() {
       <Switch>
         <Route path="/" component={LandingPage}/>
         <Route path="/books" component={Books}/>
-        <Route path="/games" component={Games}/>
-        <Route path="/flashcard-duel" component={FlashcardDuel}/>
         <Route path="/digital-skills" component={DigitalSkills}/>
         <Route path="/interview-prep" component={InterviewPrep}/>
         <Route path="/daily-news" component={DailyNews}/>
         <Route path="/excel-quiz" component={ExcelQuiz}/>
         <Route path="/excel-orientation" component={ExcelOrientation}/>
         <Route path="/excel-sprints" component={ExcelSprints}/>
-        <Route path="/games-hub" component={GamesHub}/>
-        <Route path="/word-sprint" component={WordSprint}/>
         <Route path="/career-quiz" component={CareerQuiz}/>
         <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
         <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
