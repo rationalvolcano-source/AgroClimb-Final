@@ -25,6 +25,7 @@ const ExcelSprints = lazy(() => import("@/pages/ExcelSprints"));
 const GamesHub = lazy(() => import("@/pages/GamesHub"));
 const WordSprint = lazy(() => import("@/pages/WordSprint"));
 const DigitalSkills = lazy(() => import("@/pages/DigitalSkills"));
+const InterviewPrep = lazy(() => import("@/pages/InterviewPrep"));
 
 // Loading component with brand styling
 const PageLoader = () => (
@@ -48,6 +49,7 @@ function Router() {
         <Route path="/flashcard-duel" component={FlashcardDuel}/>
         <Route path="/planb-webinars" component={PlanBWebinarsHub}/>
         <Route path="/digital-skills" component={DigitalSkills}/>
+        <Route path="/interview-prep" component={InterviewPrep}/>
         <Route path="/excel-quiz" component={ExcelQuiz}/>
         <Route path="/excel-orientation" component={ExcelOrientation}/>
         <Route path="/excel-sprints" component={ExcelSprints}/>

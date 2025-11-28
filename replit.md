@@ -13,12 +13,17 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 -   **Upskilling Page Redesigned**: Now offers 3 main options:
     - Digital Skills (Live Zoom) - links to /digital-skills
     - Daily News Update - Coming Soon
-    - Interview Prep (Live Zoom) - Coming Soon
+    - Interview Prep (Live Zoom) - links to /interview-prep
 -   **Digital Skills Page Created** (/digital-skills):
     - 7-week curriculum: Excel (Weeks 1-3), Data Visualization (Weeks 4-5), PowerPoint (Weeks 6-7)
     - Highlights: Weekly live sessions, 1-2 hours per session, Small batch, WhatsApp group
     - WhatsApp CTA to join training group (+91 8250904021)
     - Lightweight design for 2G/3G networks
+-   **Interview Prep Page Created** (/interview-prep):
+    - Exam selection dropdown: ABM/CAT, IBPS SO-AFO, Others (with text input)
+    - Topics covered: Self-presentation, common questions, body language, mock interviews
+    - WhatsApp CTA with selected exam name pre-filled in message
+    - Button disabled until exam type is selected
 
 ### Games Restructure (November 28, 2025)
 -   **Games Page Simplified**: Shows only 3 games directly (no stream selector):

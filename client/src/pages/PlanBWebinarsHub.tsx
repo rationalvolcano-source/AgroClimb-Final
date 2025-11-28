@@ -64,7 +64,7 @@ export default function PlanBWebinarsHub() {
       Icon: IconInterview,
       label: "Interview Prep",
       description: "Live Zoom sessions for mock interviews and communication skills",
-      link: null,
+      link: "/interview-prep",
       hasLive: true,
       color: "purple",
     },
