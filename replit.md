@@ -4,12 +4,23 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 
 ## Recent Updates (November 2025)
 
-### Navigation & Games Restructure (November 28, 2025)
--   **Navigation Simplified**: Plan B is now a dropdown containing:
-    - Plan B Overview (/planb)
+### Upskilling Restructure - Live Zoom Classes (November 28, 2025)
+-   **Plan B Overview Removed**: Content merged into Upskilling page
+-   **Navigation Simplified**: Plan B dropdown now contains:
+    - Upskilling (/planb-webinars)
     - Games (/games)
     - Alumni Webinars (/alumni-webinars)
-    - Upskilling (/planb-webinars) - renamed from "Plan B Skills"
+-   **Upskilling Page Redesigned**: Now offers 3 main options:
+    - Digital Skills (Live Zoom) - links to /digital-skills
+    - Daily News Update - Coming Soon
+    - Interview Prep (Live Zoom) - Coming Soon
+-   **Digital Skills Page Created** (/digital-skills):
+    - 7-week curriculum: Excel (Weeks 1-3), Data Visualization (Weeks 4-5), PowerPoint (Weeks 6-7)
+    - Highlights: Weekly live sessions, 1-2 hours per session, Small batch, WhatsApp group
+    - WhatsApp CTA to join training group (+91 8250904021)
+    - Lightweight design for 2G/3G networks
+
+### Games Restructure (November 28, 2025)
 -   **Games Page Simplified**: Shows only 3 games directly (no stream selector):
     - Flashcard Duel - Memory & recall training
     - Number Sprint - Mental math speed challenges
