@@ -1,4 +1,4 @@
-import { ArrowRight, Home, ChevronDown, Gamepad2, Video, TrendingUp, Briefcase } from "lucide-react";
+import { ArrowRight, Home, ChevronDown, Gamepad2, Video, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,10 +25,9 @@ export default function Nav() {
   }, []);
 
   const planBItems = [
-    { label: "Plan B Overview", href: "/planb", Icon: Briefcase },
+    { label: "Upskilling", href: "/planb-webinars", Icon: TrendingUp },
     { label: "Games", href: "/games", Icon: Gamepad2 },
     { label: "Alumni Webinars", href: "/alumni-webinars", Icon: Video },
-    { label: "Upskilling", href: "/planb-webinars", Icon: TrendingUp },
   ];
 
   return (

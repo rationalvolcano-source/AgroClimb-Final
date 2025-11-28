@@ -13,7 +13,6 @@ const StudyWithMe = lazy(() => import("@/pages/StudyWithMe"));
 const WellnessCentre = lazy(() => import("@/pages/WellnessCentre"));
 const Books = lazy(() => import("@/pages/Books"));
 const Games = lazy(() => import("@/pages/Games"));
-const PlanB = lazy(() => import("@/pages/PlanB"));
 const CareerQuiz = lazy(() => import("@/pages/CareerQuiz"));
 const SubjectRecommenderComingSoon = lazy(() => import("@/pages/SubjectRecommenderComingSoon"));
 const RecordedClassesComingSoon = lazy(() => import("@/pages/RecordedClassesComingSoon"));
@@ -46,7 +45,6 @@ function Router() {
         <Route path="/books" component={Books}/>
         <Route path="/games" component={Games}/>
         <Route path="/flashcard-duel" component={FlashcardDuel}/>
-        <Route path="/planb" component={PlanB}/>
         <Route path="/planb-webinars" component={PlanBWebinarsHub}/>
         <Route path="/excel-quiz" component={ExcelQuiz}/>
         <Route path="/excel-orientation" component={ExcelOrientation}/>

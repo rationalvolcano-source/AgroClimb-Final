@@ -1,69 +1,106 @@
+import type { ReactNode, SVGProps } from "react";
 import { Link } from "wouter";
 import Nav from "@/components/Nav";
-import { Puzzle, Users } from "lucide-react";
+
+const Card = ({ children, clickable = false }: { children: ReactNode; clickable?: boolean }) => (
+  <div className={`rounded-3xl border border-slate-800 bg-slate-900/60 p-6 transition ${
+    clickable ? 'hover:border-emerald-500/50 cursor-pointer group' : 'hover:border-slate-700'
+  }`}>
+    {children}
+  </div>
+);
+
+const Title = ({ children }: { children: ReactNode }) => (
+  <h3 className="mt-4 text-lg font-semibold text-slate-50">{children}</h3>
+);
+
+const IconExcel = (p: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 48 48" fill="none" {...p}>
+    <rect x="4" y="8" width="40" height="32" rx="6" stroke="#10b981" strokeWidth="2"/>
+    <path d="M16 8v32M8 16h12M8 24h12M8 32h12" stroke="#22d3ee" strokeWidth="2"/>
+    <path d="M28 18l6 12M34 18l-6 12" stroke="#10b981" strokeWidth="2"/>
+  </svg>
+);
+
+const IconPPT = (p: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 48 48" fill="none" {...p}>
+    <rect x="6" y="10" width="36" height="28" rx="4" stroke="#10b981" strokeWidth="2"/>
+    <circle cx="20" cy="24" r="8" stroke="#22d3ee" strokeWidth="2"/>
+    <path d="M18 20h4a3 3 0 0 1 0 6h-4v-6z" stroke="#10b981" strokeWidth="2"/>
+    <path d="M28 17h10M28 23h10M28 29h10" stroke="#22d3ee" strokeWidth="2"/>
+  </svg>
+);
+
+const IconViz = (p: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 48 48" fill="none" {...p}>
+    <path d="M8 38h32" stroke="#1f2937" strokeWidth="2"/>
+    <rect x="10" y="26" width="6" height="10" rx="2" fill="#10b981"/>
+    <rect x="20" y="20" width="6" height="16" rx="2" fill="#22d3ee"/>
+    <rect x="30" y="12" width="6" height="24" rx="2" fill="#10b981"/>
+    <path d="M10 12l10 6 10-8 8 4" stroke="#22d3ee" strokeWidth="2"/>
+  </svg>
+);
+
+const IconNews = (p: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 48 48" fill="none" {...p}>
+    <rect x="8" y="10" width="32" height="28" rx="4" stroke="#10b981" strokeWidth="2"/>
+    <path d="M14 16h20M14 22h20M14 28h12" stroke="#22d3ee" strokeWidth="2"/>
+    <rect x="28" y="26" width="6" height="6" rx="1" stroke="#10b981" strokeWidth="2"/>
+    <circle cx="24" cy="6" r="3" fill="#22d3ee"/>
+  </svg>
+);
+
+const IconInterview = (p: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 48 48" fill="none" {...p}>
+    <circle cx="24" cy="14" r="6" stroke="#22d3ee" strokeWidth="2"/>
+    <path d="M14 38c0-6 4-10 10-10s10 4 10 10" stroke="#10b981" strokeWidth="2"/>
+    <rect x="10" y="32" width="28" height="12" rx="3" stroke="#10b981" strokeWidth="2"/>
+    <path d="M18 36h12M18 40h8" stroke="#22d3ee" strokeWidth="2"/>
+    <circle cx="38" cy="12" r="3" fill="#10b981"/>
+    <circle cx="10" cy="12" r="3" fill="#22d3ee"/>
+  </svg>
+);
 
 export default function PlanBWebinarsHub() {
+  const skillItems = [
+    { Icon: IconExcel, label: "Excel Training", link: "/excel-sprints" },
+    { Icon: IconPPT, label: "PowerPoint Training" },
+    { Icon: IconViz, label: "Data Visualization" },
+    { Icon: IconNews, label: "Daily News Update" },
+    { Icon: IconInterview, label: "Interview Prep" },
+  ];
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
       <Nav />
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        <div className="text-center mb-12" data-testid="section-hub-header">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4" data-testid="text-hub-title">
-            Plan B & Webinars
-          </h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto" data-testid="text-hub-description">
-            Choose your path: upskill for alternate income or connect with alumni experts.{" "}
-            <Link href="/#pricing" className="text-emerald-400 hover:text-emerald-300 underline transition-colors" data-testid="link-unlock-pro">
-              Unlock with a Pro plan
-            </Link>
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <header className="mb-8" data-testid="section-upskilling-header">
+          <h1 className="text-3xl md:text-5xl font-semibold" data-testid="text-upskilling-title">Upskilling</h1>
+          <p className="text-slate-300 mt-2" data-testid="text-upskilling-description">
+            Stay industry-ready with in-demand skills, news, interview preparation and more
           </p>
-        </div>
+        </header>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Plan B Option */}
-          <Link href="/planb" data-testid="link-planb-hub">
-            <div className="group relative rounded-3xl border border-slate-800 bg-slate-900/60 p-8 hover:border-emerald-500/50 transition-all cursor-pointer" data-testid="card-planb-option">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              
-              <div className="relative">
-                <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-emerald-500/10 text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
-                  <Puzzle className="h-8 w-8" />
+        <section className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+          {skillItems.map(({ Icon, label, link }, i) => {
+            const content = (
+              <>
+                <div className="h-28 grid place-items-center" data-testid={`icon-skill-${i}`}>
+                  <Icon className="w-20 h-20" />
                 </div>
-                
-                <h2 className="text-3xl font-bold mb-3" data-testid="text-planb-title">Plan B Skills</h2>
-                <p className="text-slate-300 mb-6" data-testid="text-planb-description">
-                  Be Industry ready with News, Skills, Interview Prep and more
-                </p>
-                
-                <div className="inline-flex items-center text-emerald-400 font-medium group-hover:translate-x-2 transition-transform">
-                  Explore Plan B →
-                </div>
-              </div>
-            </div>
-          </Link>
+                <Title>{label}</Title>
+              </>
+            );
 
-          {/* Alumni Webinars Option */}
-          <Link href="/alumni-webinars" data-testid="link-webinars-hub">
-            <div className="group relative rounded-3xl border border-slate-800 bg-slate-900/60 p-8 hover:border-cyan-500/50 transition-all cursor-pointer" data-testid="card-webinars-option">
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              
-              <div className="relative">
-                <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-cyan-500/10 text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
-                  <Users className="h-8 w-8" />
-                </div>
-                
-                <h2 className="text-3xl font-bold mb-3" data-testid="text-webinars-title">Alumni Webinars</h2>
-                <p className="text-slate-300 mb-6" data-testid="text-webinars-description">
-                  Weekly ₹9 live sessions with alumni for real insights, motivation, and personalized doubt-clearing.
-                </p>
-                
-                <div className="inline-flex items-center text-cyan-400 font-medium group-hover:translate-x-2 transition-transform">
-                  Join Webinars →
-                </div>
-              </div>
-            </div>
-          </Link>
-        </div>
+            return link ? (
+              <Link key={label} href={link}>
+                <Card clickable>{content}</Card>
+              </Link>
+            ) : (
+              <Card key={label}>{content}</Card>
+            );
+          })}
+        </section>
       </main>
     </div>
   );
