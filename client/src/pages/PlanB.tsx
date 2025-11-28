@@ -74,7 +74,6 @@ const IconSprint = (p: SVGProps<SVGSVGElement>) => (
 export default function PlanB() {
   const items = [
     { Icon: IconExcel, label: "Excel Training", link: "/excel-sprints" },
-    { Icon: IconSprint, label: "Number Sprint", link: "/games" },
     { Icon: IconPPT, label: "PowerPoint Training" },
     { Icon: IconViz, label: "Data Visualization" },
     { Icon: IconNews, label: "Daily News Update" },
