@@ -61,9 +61,22 @@ const IconInterview = (p: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+const IconGames = (p: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 48 48" fill="none" {...p}>
+    <rect x="6" y="14" width="36" height="22" rx="6" stroke="#10b981" strokeWidth="2"/>
+    <circle cx="16" cy="25" r="4" stroke="#22d3ee" strokeWidth="2"/>
+    <path d="M14 25h4M16 23v4" stroke="#22d3ee" strokeWidth="2"/>
+    <circle cx="32" cy="22" r="2" fill="#10b981"/>
+    <circle cx="36" cy="26" r="2" fill="#22d3ee"/>
+    <circle cx="28" cy="26" r="2" fill="#10b981"/>
+    <circle cx="32" cy="30" r="2" fill="#22d3ee"/>
+  </svg>
+);
+
 export default function PlanB() {
   const items = [
     { Icon: IconExcel, label: "Excel Training", link: "/excel-sprints" },
+    { Icon: IconGames, label: "Math & Logic Games", link: "/games-hub" },
     { Icon: IconPPT, label: "PowerPoint Training" },
     { Icon: IconViz, label: "Data Visualization" },
     { Icon: IconNews, label: "Daily News Update" },

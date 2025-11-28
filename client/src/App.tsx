@@ -23,6 +23,7 @@ const FlashcardDuel = lazy(() => import("@/pages/FlashcardDuel"));
 const ExcelQuiz = lazy(() => import("@/pages/ExcelQuiz"));
 const ExcelOrientation = lazy(() => import("@/pages/ExcelOrientation"));
 const ExcelSprints = lazy(() => import("@/pages/ExcelSprints"));
+const GamesHub = lazy(() => import("@/pages/GamesHub"));
 
 // Loading component with brand styling
 const PageLoader = () => (
@@ -49,6 +50,7 @@ function Router() {
         <Route path="/excel-quiz" component={ExcelQuiz}/>
         <Route path="/excel-orientation" component={ExcelOrientation}/>
         <Route path="/excel-sprints" component={ExcelSprints}/>
+        <Route path="/games-hub" component={GamesHub}/>
         <Route path="/career-quiz" component={CareerQuiz}/>
         <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
         <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
