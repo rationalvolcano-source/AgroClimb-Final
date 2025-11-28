@@ -26,8 +26,8 @@ export default function Footer() {
             <h4 className="font-medium mb-3" data-testid="footer-product-heading">Product</h4>
             <ul className="space-y-2 text-sm text-slate-400">
               <li><a href="#features" className="hover:text-slate-300 transition-colors" data-testid="link-footer-features">Features</a></li>
-              <li><a href="#pricing" className="hover:text-slate-300 transition-colors" data-testid="link-footer-pricing">Pricing</a></li>
-              <li><Link href="/games" className="hover:text-slate-300 transition-colors" data-testid="link-footer-games">Interactive Games</Link></li>
+              <li><Link href="/digital-skills" className="hover:text-slate-300 transition-colors" data-testid="link-footer-digital-skills">Digital Skills</Link></li>
+              <li><Link href="/interview-prep" className="hover:text-slate-300 transition-colors" data-testid="link-footer-interview-prep">Interview Prep</Link></li>
             </ul>
           </div>
           
