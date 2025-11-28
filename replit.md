@@ -2,7 +2,27 @@
 
 AgroClimb is an AI-powered career guidance platform for agricultural students in India, focusing on ABM, Banking, and JRF Horticulture. It offers AI-guided quizzes, interactive learning games, personalized study plans, and alumni mentorship. Inspired by Duolingo's engagement patterns and Linear/Notion's design, the platform aims to provide career clarity through instant fit scores, adaptive learning, and gamified experiences. Key features include a comprehensive wellness center, study tools, and a hub for upskilling and webinars.
 
-## Recent Updates (October 2025)
+## Recent Updates (November 2025)
+
+### Navigation & Games Restructure (November 28, 2025)
+-   **Navigation Simplified**: Plan B is now a dropdown containing:
+    - Plan B Overview (/planb)
+    - Games (/games)
+    - Alumni Webinars (/alumni-webinars)
+    - Upskilling (/planb-webinars) - renamed from "Plan B Skills"
+-   **Games Page Simplified**: Shows only 3 games directly (no stream selector):
+    - Flashcard Duel - Memory & recall training
+    - Number Sprint - Mental math speed challenges
+    - Word Sprint - Daily crossword puzzles
+-   **Word Sprint Created**: New crossword puzzle game at `/word-sprint`:
+    - Daily reset based on day of year
+    - 3 rotating puzzle themes (Agricultural, Banking, Research)
+    - Hint system with localStorage persistence
+    - Valid crossword grids with proper intersections
+    - Completion detection and tracking
+-   **Number Sprint Removed from Plan B**: Now accessible only via Games
+
+## Previous Updates (October 2025)
 
 ### Platform Rebrand (October 22, 2025)
 -   **Platform Name**: Changed from "The Agro Vision" to "AgroClimb"
