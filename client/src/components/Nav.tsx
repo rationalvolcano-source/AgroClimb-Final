@@ -73,7 +73,6 @@ export default function Nav() {
           <Link href="/daily-news" className="text-slate-300 hover:text-slate-50 transition-colors hidden md:inline" data-testid="link-daily-news">Daily News</Link>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" className="hidden md:inline-flex" data-testid="button-signin">Sign in</Button>
           <div className="relative group">
             <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-white" data-testid="button-quiz-cta">
               <Link href="/career-quiz">
