@@ -46,6 +46,8 @@ import {
   Calculator,
   CheckCircle2,
   AlertTriangle,
+  AlertCircle,
+  HelpCircle,
   Target,
   Rocket,
   ChevronRight,
@@ -927,15 +929,25 @@ export default function CareerQuiz() {
                 {result.recommended_path.name}
               </h1>
               <p className="text-slate-400">{pathInfo?.description}</p>
-              <div className={`inline-flex items-center gap-2 mt-4 px-3 py-1 rounded-full text-sm ${
+              <div className={`inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full text-sm font-medium ${
                 result.recommended_path.confidence_level === "high" 
-                  ? "bg-emerald-500/20 text-emerald-400" 
+                  ? "bg-green-500/20 text-green-400 border border-green-500/30" 
                   : result.recommended_path.confidence_level === "medium"
-                  ? "bg-amber-500/20 text-amber-400"
-                  : "bg-slate-700 text-slate-400"
-              }`}>
-                <Target className="h-4 w-4" />
-                {result.recommended_path.confidence_level.charAt(0).toUpperCase() + result.recommended_path.confidence_level.slice(1)} confidence match
+                  ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                  : "bg-red-500/20 text-red-400 border border-red-500/30"
+              }`} data-testid="badge-confidence">
+                {result.recommended_path.confidence_level === "high" ? (
+                  <CheckCircle2 className="h-4 w-4" />
+                ) : result.recommended_path.confidence_level === "medium" ? (
+                  <HelpCircle className="h-4 w-4" />
+                ) : (
+                  <AlertCircle className="h-4 w-4" />
+                )}
+                {result.recommended_path.confidence_level === "high" 
+                  ? "High Confidence Match" 
+                  : result.recommended_path.confidence_level === "medium"
+                  ? "Moderate Confidence Match"
+                  : "Low Confidence Match"}
               </div>
             </div>
 
