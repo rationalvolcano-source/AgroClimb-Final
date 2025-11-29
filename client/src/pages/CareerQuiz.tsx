@@ -149,12 +149,37 @@ const PATH_INFO: Record<string, { icon: typeof FlaskConical; color: string; desc
   "Other Govt Jobs": { icon: Building2, color: "teal", description: "SSC selection posts, Autonomous Bodies (NHB, APEDA, Coconut/Rubber Boards), State Admin jobs" },
 };
 
+const RISK_TOLERANCE = [
+  { 
+    value: "A", 
+    label: "Steady income with predictable growth, even if slower", 
+    icon: Shield, 
+    color: "emerald",
+    reinforces: ["Other Govt Jobs", "Academics", "Research"]
+  },
+  { 
+    value: "B", 
+    label: "Variable income with potential for big wins (or losses)", 
+    icon: TrendingUp, 
+    color: "amber",
+    reinforces: ["Agribusiness Management"]
+  },
+  { 
+    value: "C", 
+    label: "I'd trade money for meaningful impact", 
+    icon: Heart, 
+    color: "violet",
+    reinforces: ["Research", "Academics"]
+  },
+];
+
 interface QuizAnswers {
   course: string;
   year_of_study: number;
   reason_for_course: string;
   preferred_work_type: number;
   priorities_ranked: string[];
+  risk_tolerance: string;
   subject_liking: Record<string, number>;
 }
 
@@ -168,6 +193,7 @@ interface QuizResult {
     time_horizon_note: string;
   };
   key_warnings: string[];
+  has_contradiction: boolean;
 }
 
 export default function CareerQuiz() {
@@ -215,7 +241,7 @@ export default function CareerQuiz() {
   }, [answers.priorities_ranked, answers.preferred_work_type, answers.year_of_study]);
 
   const needsSubjectQuiz = isResearchAcademicsLikely();
-  const totalSteps = needsSubjectQuiz ? 6 : 5;
+  const totalSteps = needsSubjectQuiz ? 7 : 6;
   const progress = ((step + 1) / totalSteps) * 100;
 
   const canProceed = useCallback(() => {
@@ -225,7 +251,8 @@ export default function CareerQuiz() {
       case 2: return !!answers.reason_for_course;
       case 3: return !!answers.preferred_work_type;
       case 4: return answers.priorities_ranked && answers.priorities_ranked.length === 10;
-      case 5: return true;
+      case 5: return !!answers.risk_tolerance;
+      case 6: return true;
       default: return false;
     }
   }, [step, answers]);
@@ -283,11 +310,38 @@ export default function CareerQuiz() {
         scores["Academics"] = Math.min(scores["Academics"], 0);
       }
 
+      const riskToleranceBonus = RISK_TOLERANCE.find(r => r.value === fullAnswers.risk_tolerance);
+      if (riskToleranceBonus) {
+        riskToleranceBonus.reinforces.forEach(path => {
+          scores[path] += 15;
+        });
+      }
+
       let bestPath = Object.entries(scores).reduce((a, b) => a[1] > b[1] ? a : b)[0];
       const maxScore = scores[bestPath];
       const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
       const secondBest = sortedScores[1];
-      const confidence = maxScore - secondBest[1] > 20 ? "high" : maxScore - secondBest[1] > 10 ? "medium" : "low";
+      
+      const detectContradiction = (): boolean => {
+        const riskAnswer = fullAnswers.risk_tolerance;
+        const workType = fullAnswers.preferred_work_type;
+        const topPriorities = fullAnswers.priorities_ranked.slice(0, 3);
+        
+        if (riskAnswer === "A" && workType === 3) return true;
+        
+        if (riskAnswer === "B" && (workType === 1 || workType === 2 || workType === 4 || workType === 5)) return true;
+        
+        if (riskAnswer === "C" && topPriorities.includes("Salary")) return true;
+        
+        if (riskAnswer === "B" && topPriorities.includes("Job Security")) return true;
+        
+        if (riskAnswer === "A" && topPriorities.includes("Career Growth") && topPriorities.indexOf("Career Growth") === 0) return true;
+        
+        return false;
+      };
+      
+      const hasContradiction = detectContradiction();
+      const confidence = hasContradiction ? "low" : (maxScore - secondBest[1] > 20 ? "high" : maxScore - secondBest[1] > 10 ? "medium" : "low");
 
       let subjectClusters: string[] = [];
       if ((bestPath === "Research" || bestPath === "Academics") && fullAnswers.subject_liking && fullAnswers.year_of_study !== 1) {
@@ -402,7 +456,8 @@ export default function CareerQuiz() {
           immediate_next_steps: pathNextSteps[bestPath] || [],
           time_horizon_note: timeHorizons[bestPath] || ""
         },
-        key_warnings: warnings
+        key_warnings: warnings,
+        has_contradiction: hasContradiction
       });
       
       setIsCalculating(false);
@@ -673,6 +728,58 @@ export default function CareerQuiz() {
         );
 
       case 5:
+        return (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="space-y-6"
+          >
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-rose-500/10 text-rose-400 mb-4">
+                <Heart className="h-8 w-8" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">What matters more to you in a career?</h2>
+              <p className="text-slate-400">Choose what feels most true to you</p>
+            </div>
+            
+            <div className="grid gap-4">
+              {RISK_TOLERANCE.map((option) => {
+                const Icon = option.icon;
+                const isSelected = answers.risk_tolerance === option.value;
+                const colorMap: Record<string, { bg: string; ring: string; border: string; text: string }> = {
+                  emerald: { bg: "bg-emerald-500/10", ring: "ring-emerald-500/50", border: "border-emerald-500", text: "text-emerald-400" },
+                  amber: { bg: "bg-amber-500/10", ring: "ring-amber-500/50", border: "border-amber-500", text: "text-amber-400" },
+                  violet: { bg: "bg-violet-500/10", ring: "ring-violet-500/50", border: "border-violet-500", text: "text-violet-400" },
+                };
+                const colorClasses = colorMap[option.color] || colorMap.emerald;
+                
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() => setAnswers(a => ({ ...a, risk_tolerance: option.value }))}
+                    className={`flex items-center gap-4 p-5 rounded-xl border transition-all ${
+                      isSelected 
+                        ? `${colorClasses.border} ${colorClasses.bg} ring-2 ${colorClasses.ring}` 
+                        : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
+                    }`}
+                    data-testid={`option-risk-${option.value}`}
+                  >
+                    <div className={`p-3 rounded-xl ${isSelected ? colorClasses.bg : "bg-slate-700"}`}>
+                      <Icon className={`h-6 w-6 ${isSelected ? colorClasses.text : "text-slate-400"}`} />
+                    </div>
+                    <span className={`font-medium text-left ${isSelected ? colorClasses.text : "text-white"}`}>
+                      {option.label}
+                    </span>
+                    {isSelected && <CheckCircle2 className={`h-5 w-5 ${colorClasses.text} ml-auto`} />}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        );
+
+      case 6:
         if (answers.year_of_study === 1) return null;
         
         return (
@@ -885,23 +992,56 @@ export default function CareerQuiz() {
               </Card>
             )}
 
-            <Card className="bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border-emerald-500/30 p-6 text-center">
-              <h3 className="text-lg font-semibold text-white mb-3">Ready to Start Your Journey?</h3>
-              <p className="text-slate-300 mb-4">Get personalized career guidance from our experts</p>
+            {result.has_contradiction && (
+              <Card className="bg-rose-500/10 border-rose-500/30 p-6">
+                <h3 className="text-lg font-semibold text-rose-400 mb-3 flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5" />
+                  Important Notice
+                </h3>
+                <p className="text-rose-200/80 text-sm mb-4">
+                  We noticed some mixed signals in your responses. Your career preferences and risk tolerance seem to point in different directions. 
+                  <strong className="text-rose-300"> You may benefit from further counselling before choosing your career pathway.</strong>
+                </p>
+                <Button 
+                  asChild 
+                  size="sm"
+                  className="bg-green-500 hover:bg-green-400"
+                  data-testid="button-counselling-whatsapp"
+                >
+                  <a 
+                    href={`https://wa.me/918250904021?text=${encodeURIComponent(`Hi! I took the AgroClimb career quiz and received mixed signals in my responses. I would like personal counselling to understand my career pathway better.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Get Free Counselling on WhatsApp
+                  </a>
+                </Button>
+              </Card>
+            )}
+
+            <Card className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-500/40 p-6 text-center">
+              <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-green-500/20 text-green-400 mb-4">
+                <MessageCircle className="h-7 w-7" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Get Detailed Career Pathway</h3>
+              <p className="text-slate-300 mb-4">Free counselling from successful alumni who've walked this path</p>
               <Button 
                 asChild 
-                className="bg-green-500 hover:bg-green-400"
+                size="lg"
+                className="bg-green-500 hover:bg-green-400 text-white shadow-lg shadow-green-500/25 hover:shadow-green-400/40 transition-shadow"
                 data-testid="button-contact"
               >
                 <a 
-                  href={`https://wa.me/918250904021?text=${encodeURIComponent(`Hi! I took the AgroClimb career quiz and my recommended path is *${result.recommended_path.name}*.\n\nI would like to know more about career guidance for this path.`)}`}
+                  href={`https://wa.me/918250904021?text=${encodeURIComponent(`Hi! I took the AgroClimb career quiz and my recommended path is *${result.recommended_path.name}*.\n\nI would like a detailed career pathway and free counselling from successful alumni.`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Chat on WhatsApp
+                  <MessageCircle className="h-5 w-5 mr-2" />
+                  Chat on WhatsApp for Free Guidance
                 </a>
               </Button>
+              <p className="text-xs text-slate-500 mt-3">Speak with alumni who succeeded in {result.recommended_path.name}</p>
             </Card>
 
             <div className="text-center pt-2">
