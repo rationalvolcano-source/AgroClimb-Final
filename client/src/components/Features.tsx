@@ -1,4 +1,4 @@
-import { Brain, BookOpen, Puzzle, Users, TrendingUp, Newspaper } from "lucide-react";
+import { Brain, Puzzle, Users, TrendingUp, Newspaper } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Features() {
@@ -8,12 +8,6 @@ export default function Features() {
       title: "Career Guidance Quiz", 
       desc: "AI-powered fit analysis across 5 career paths—Research, Academics, Agribusiness, Banking & Govt Jobs.",
       link: "/career-quiz"
-    },
-    { 
-      icon: BookOpen, 
-      title: "Books & PYQs", 
-      desc: "High-yield PDFs and topic-wise practice tests. Single titles or complete bundles.",
-      link: "/books"
     },
     { 
       icon: TrendingUp, 

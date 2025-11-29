@@ -34,13 +34,8 @@ export default function Hero() {
               Get My Career Plan → <PlayCircle className="ml-2 h-5 w-5" />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="secondary" data-testid="button-games">
-            <Link href="/games">
-              Preview Games
-            </Link>
-          </Button>
         </div>
-        <ul className="text-sm text-slate-400 grid grid-cols-1 sm:grid-cols-3 gap-2 max-w-xl mt-2">
+        <ul className="text-sm text-slate-400 grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-xl mt-2">
           <li data-testid="text-feature-1">
             <Link href="/planb" className="hover:text-emerald-400 transition-colors">
               Up-skilling for Plan B (Excel, PPT, AI)
@@ -49,11 +44,6 @@ export default function Hero() {
           <li data-testid="text-feature-2">
             <Link href="/alumni-webinars" className="hover:text-emerald-400 transition-colors">
               Alumni Connect – live workshops
-            </Link>
-          </li>
-          <li data-testid="text-feature-3">
-            <Link href="/books" className="hover:text-emerald-400 transition-colors">
-              Flashcards • PYQs • Notes
             </Link>
           </li>
         </ul>

@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
-import { GraduationCap, BookOpen, Gamepad2, LineChart } from "lucide-react";
+import { GraduationCap, LineChart, TrendingUp, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "wouter";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -15,19 +14,19 @@ const items = [
     desc: "A 100% unbiased, data-backed fit analysis for ABM, Banking, and JRF Horticulture. If your strengths align better with another path, AgroClimb will suggest trusted alternatives instead of forcing a mismatch.",
   },
   {
-    icon: BookOpen,
-    title: "Notes, PYQs & Mocks",
-    desc: "High-yield content by topic and difficulty, with spaced repetition.",
+    icon: TrendingUp,
+    title: "Digital Skills Training",
+    desc: "7-week live Zoom program covering Excel, Data Visualization & PowerPoint for career-ready skills.",
   },
   {
-    icon: Gamepad2,
-    title: "Interactive Games",
-    desc: "Study without fatigue — quiz duels, runners, and match-3 recall to make practice stick.",
+    icon: Users,
+    title: "Alumni Webinars",
+    desc: "Live sessions for real insights, motivation & personalized doubt-clearing from industry professionals.",
   },
   {
     icon: LineChart,
-    title: "Recorded Classes",
-    desc: "Learn anytime from top educators. Structured lessons with topic-wise clarity and exam-ready focus.",
+    title: "Interview Prep",
+    desc: "Exam-specific guidance for ABM, IBPS SO-AFO & more. Master self-presentation and ace your interviews.",
   },
 ];
 
@@ -53,17 +52,7 @@ export default function ValueProps() {
           
           return (
             <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-              {it.title === "Notes, PYQs & Mocks" ? (
-                <Link href="/books" className="block cursor-pointer">
-                  {cardContent}
-                </Link>
-              ) : it.title === "Interactive Games" ? (
-                <Link href="/games" className="block cursor-pointer">
-                  {cardContent}
-                </Link>
-              ) : (
-                cardContent
-              )}
+              {cardContent}
             </motion.div>
           );
         })}

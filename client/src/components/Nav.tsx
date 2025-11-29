@@ -47,8 +47,6 @@ export default function Nav() {
               </Link>
             </Button>
           )}
-          <Link href="/books" className="text-slate-300 hover:text-slate-50 transition-colors" data-testid="link-notes">Notes</Link>
-          
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1 text-slate-300 hover:text-slate-50 transition-colors" data-testid="dropdown-planb">
               Plan B

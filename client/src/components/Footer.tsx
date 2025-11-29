@@ -34,8 +34,8 @@ export default function Footer() {
           <div>
             <h4 className="font-medium mb-3" data-testid="footer-resources-heading">Resources</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li><Link href="/books" className="hover:text-slate-300 transition-colors" data-testid="link-footer-notes">Notes & PYQs</Link></li>
-              <li><a href="#" className="hover:text-slate-300 transition-colors" data-testid="link-footer-alumni">Alumni Connect</a></li>
+              <li><Link href="/alumni-webinars" className="hover:text-slate-300 transition-colors" data-testid="link-footer-alumni">Alumni Webinars</Link></li>
+              <li><Link href="/daily-news" className="hover:text-slate-300 transition-colors" data-testid="link-footer-news">Daily News</Link></li>
             </ul>
           </div>
           
