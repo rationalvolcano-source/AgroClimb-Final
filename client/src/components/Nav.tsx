@@ -1,4 +1,4 @@
-import { ArrowRight, Home, ChevronDown, Video, TrendingUp } from "lucide-react";
+import { ArrowRight, Home, ChevronDown, Video, TrendingUp, MessageSquare, Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,6 +27,11 @@ export default function Nav() {
   const planBItems = [
     { label: "Digital Skills", href: "/digital-skills", Icon: TrendingUp },
     { label: "Alumni Webinars", href: "/alumni-webinars", Icon: Video },
+  ];
+
+  const mobileOnlyItems = [
+    { label: "Interview Prep", href: "/interview-prep", Icon: MessageSquare },
+    { label: "Daily News", href: "/daily-news", Icon: Newspaper },
   ];
 
   return (
@@ -59,6 +64,17 @@ export default function Nav() {
                   onClick={() => setLocation(item.href)}
                   className="cursor-pointer hover:bg-slate-800"
                   data-testid={`dropdown-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <item.Icon className="h-4 w-4 mr-2 text-slate-400" />
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+              {mobileOnlyItems.map((item) => (
+                <DropdownMenuItem 
+                  key={item.href}
+                  onClick={() => setLocation(item.href)}
+                  className="cursor-pointer hover:bg-slate-800 sm:hidden"
+                  data-testid={`dropdown-item-mobile-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <item.Icon className="h-4 w-4 mr-2 text-slate-400" />
                   {item.label}
