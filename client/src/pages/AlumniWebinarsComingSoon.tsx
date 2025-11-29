@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import { Check, Calendar, Clock, Users, MessageCircle, Target } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const webinarModules = [
   {
@@ -45,6 +46,13 @@ const highlights = [
 ];
 
 export default function AlumniWebinarsComingSoon() {
+  useSEO({
+    title: "Alumni Webinars - Career Mentorship for Agriculture Students",
+    description: "Learn from successful agriculture alumni. Career goal setting, industry insights, resume building, and interview preparation. Live Zoom sessions with professionals from banking, research, and agribusiness.",
+    keywords: "agriculture career mentorship, alumni webinars agriculture, career guidance BSc Agriculture, agriculture industry insights, resume building freshers agriculture, agriculture career counselling",
+    canonicalPath: "/alumni-webinars",
+  });
+
   const whatsappMessage = encodeURIComponent(
     "Hi, I want to join the Alumni Webinars group for career guidance and industry insights."
   );

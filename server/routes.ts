@@ -18,6 +18,52 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // SEO: Sitemap.xml route
+  app.get('/sitemap.xml', (req, res) => {
+    const baseUrl = 'https://agroclimb.com';
+    const pages = [
+      { url: '/', priority: '1.0', changefreq: 'weekly' },
+      { url: '/career-quiz', priority: '0.9', changefreq: 'monthly' },
+      { url: '/books', priority: '0.8', changefreq: 'weekly' },
+      { url: '/digital-skills', priority: '0.8', changefreq: 'monthly' },
+      { url: '/interview-prep', priority: '0.8', changefreq: 'monthly' },
+      { url: '/daily-news', priority: '0.7', changefreq: 'daily' },
+      { url: '/alumni-webinars', priority: '0.7', changefreq: 'monthly' },
+      { url: '/careers/research', priority: '0.8', changefreq: 'monthly' },
+      { url: '/careers/academics', priority: '0.8', changefreq: 'monthly' },
+      { url: '/careers/agribusiness', priority: '0.8', changefreq: 'monthly' },
+      { url: '/careers/banking', priority: '0.8', changefreq: 'monthly' },
+      { url: '/careers/govt-jobs', priority: '0.8', changefreq: 'monthly' },
+    ];
+
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${pages.map(page => `  <url>
+    <loc>${baseUrl}${page.url}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+
+    res.header('Content-Type', 'application/xml');
+    res.send(sitemap);
+  });
+
+  // SEO: Robots.txt route
+  app.get('/robots.txt', (req, res) => {
+    const robotsTxt = `User-agent: *
+Allow: /
+
+Sitemap: https://agroclimb.com/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+`;
+    res.header('Content-Type', 'text/plain');
+    res.send(robotsTxt);
+  });
+
   // put application routes here
   // prefix all routes with /api
 

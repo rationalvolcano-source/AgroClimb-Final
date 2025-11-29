@@ -11,6 +11,7 @@ import LandingPage from "@/pages/LandingPage";
 // Lazy load all other pages for code splitting
 const Books = lazy(() => import("@/pages/Books"));
 const CareerQuiz = lazy(() => import("@/pages/CareerQuiz"));
+const CareerPath = lazy(() => import("@/pages/CareerPath"));
 const SubjectRecommenderComingSoon = lazy(() => import("@/pages/SubjectRecommenderComingSoon"));
 const RecordedClassesComingSoon = lazy(() => import("@/pages/RecordedClassesComingSoon"));
 const AlumniWebinarsComingSoon = lazy(() => import("@/pages/AlumniWebinarsComingSoon"));
@@ -44,6 +45,7 @@ function Router() {
         <Route path="/excel-orientation" component={ExcelOrientation}/>
         <Route path="/excel-sprints" component={ExcelSprints}/>
         <Route path="/career-quiz" component={CareerQuiz}/>
+        <Route path="/careers/:path" component={CareerPath}/>
         <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
         <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
         <Route path="/alumni-webinars" component={AlumniWebinarsComingSoon}/>

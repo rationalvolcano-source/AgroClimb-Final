@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Clock } from "lucide-react";
 import Nav from "@/components/Nav";
+import { useSEO } from "@/hooks/useSEO";
 
 import horticultureImg from "@assets/image_1759944361004.webp";
 import agricultureImg from "@assets/image_1759877033749.webp";
@@ -70,6 +71,13 @@ const books = [
 ];
 
 export default function Books() {
+  useSEO({
+    title: "Study Books for IBPS AFO, ICAR JRF, Agriculture Exams India",
+    description: "Buy study materials for IBPS AFO, ICAR JRF, NABARD exams. Horticulture, Agriculture, Maths, Reasoning, Finance, and English books. Quality preparation materials for agriculture competitive exams.",
+    keywords: "IBPS AFO study material, ICAR JRF books, agriculture exam books India, horticulture study material, NABARD exam preparation books, agriculture competitive exam books",
+    canonicalPath: "/books",
+  });
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
       <Nav />

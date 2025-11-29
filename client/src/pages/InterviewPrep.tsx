@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Nav from "@/components/Nav";
 import { Check, Calendar, Clock, Users, MessageCircle, ChevronDown } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const examOptions = [
   { value: "", label: "Select your target exam" },
@@ -28,6 +29,13 @@ const whatYouLearn = [
 ];
 
 export default function InterviewPrep() {
+  useSEO({
+    title: "Interview Preparation - IBPS AFO, CAT, Agriculture Jobs India",
+    description: "Prepare for IBPS AFO, CAT/MBA, and agriculture job interviews. Live mock sessions, one-on-one feedback, body language tips. Boost your confidence for banking and agribusiness interviews.",
+    keywords: "IBPS AFO interview preparation, CAT interview tips, agriculture job interview, NABARD interview preparation, agribusiness MBA interview, banking interview agriculture",
+    canonicalPath: "/interview-prep",
+  });
+
   const [selectedExam, setSelectedExam] = useState("");
   const [otherExam, setOtherExam] = useState("");
 

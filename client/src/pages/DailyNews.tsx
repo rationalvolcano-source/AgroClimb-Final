@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import { Check, Newspaper, Clock, Bell, BookOpen, TrendingUp } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const highlights = [
   { icon: Newspaper, text: "Daily curated news updates" },
@@ -27,6 +28,13 @@ const categories = [
 ];
 
 export default function DailyNews() {
+  useSEO({
+    title: "Daily Agriculture News & Current Affairs for Exams India",
+    description: "Daily curated news updates for IBPS AFO, NABARD, FCI exam preparation. Agriculture sector news, banking current affairs, government schemes, and market trends. 5-minute morning read for agriculture students.",
+    keywords: "agriculture current affairs daily, IBPS AFO current affairs, NABARD exam news, agriculture sector news India, farming policy updates, agriculture GK daily, banking current affairs agriculture",
+    canonicalPath: "/daily-news",
+  });
+
   const whatsappMessage = encodeURIComponent(
     "Hi, I want to join the Daily News Update WhatsApp group for agriculture and exam-related current affairs."
   );

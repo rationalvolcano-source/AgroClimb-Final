@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import { Check, Calendar, Clock, Users, MessageCircle } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const curriculum = [
   {
@@ -46,6 +47,13 @@ const highlights = [
 ];
 
 export default function DigitalSkills() {
+  useSEO({
+    title: "Digital Skills Training - Excel, PowerPoint for Agriculture Students",
+    description: "Learn Excel, Data Visualization & PowerPoint in 7 weeks. Live Zoom classes for BSc Agriculture, Horticulture students. Build skills for agribusiness, banking exams, and corporate jobs.",
+    keywords: "Excel training agriculture students, PowerPoint course BSc Agriculture, digital skills agribusiness, data visualization agriculture, Excel for IBPS AFO, Excel course India",
+    canonicalPath: "/digital-skills",
+  });
+
   const whatsappMessage = encodeURIComponent(
     "Hi, I want to join the Digital Skills Zoom training group for Excel, Data Visualization & PowerPoint classes."
   );

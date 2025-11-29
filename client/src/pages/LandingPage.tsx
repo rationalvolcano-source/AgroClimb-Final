@@ -7,8 +7,16 @@ import SocialProof from "@/components/SocialProof";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function LandingPage() {
+  useSEO({
+    title: "Career Guidance for BSc Agriculture & Horticulture Students India",
+    description: "Free career guidance for BSc Agriculture, BSc Horticulture students. Discover your path - ICAR JRF, IBPS AFO Banking, Agribusiness MBA, Government Jobs. Take our AI career quiz and get personalized guidance from successful alumni.",
+    keywords: "BSc Agriculture career, BSc Horticulture jobs India, ICAR JRF preparation, IBPS AFO exam, agriculture career guidance, BSc Agriculture government jobs, agribusiness MBA CAT, career after BSc agriculture, horticulture career options",
+    canonicalPath: "/",
+  });
+
   return (
     <div className="min-h-screen w-full bg-slate-950 text-slate-50">
       <GradientBG />

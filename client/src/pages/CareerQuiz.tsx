@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import { Link } from "wouter";
 import Nav from "@/components/Nav";
+import { useSEO } from "@/hooks/useSEO";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -199,6 +200,13 @@ interface QuizResult {
 }
 
 export default function CareerQuiz() {
+  useSEO({
+    title: "Free Career Quiz for BSc Agriculture & Horticulture Students",
+    description: "Take the free AI-powered career quiz to find your best-fit path after BSc Agriculture or Horticulture. Discover if Research, Academics, Agribusiness, or Banking is right for you. Get personalized recommendations in minutes.",
+    keywords: "BSc Agriculture career quiz, career test agriculture students, what to do after BSc Agriculture, BSc Horticulture career options quiz, agriculture career counselling free, ICAR JRF or MBA which is better",
+    canonicalPath: "/career-quiz",
+  });
+
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<QuizAnswers>>({
     priorities_ranked: PRIORITIES.map(p => p.id),
