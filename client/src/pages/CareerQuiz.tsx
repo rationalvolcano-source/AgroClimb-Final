@@ -263,11 +263,15 @@ export default function CareerQuiz() {
     setTimeout(() => {
       const fullAnswers = answers as QuizAnswers;
       
+      // SCORING: Questions 4, 5, 6 carry MAXIMUM weightage for career pathway recommendation
+      // Questions 1, 2, 3 only affect confidence level
+      
       const scores: Record<string, number> = {};
       Object.keys(PRIORITY_PROFILES).forEach(path => {
         scores[path] = 0;
       });
 
+      // Question 4: Priority ranking - MAXIMUM WEIGHT (base scoring)
       fullAnswers.priorities_ranked.forEach((priority, index) => {
         const weight = 10 - index;
         Object.keys(PRIORITY_PROFILES).forEach(path => {
@@ -275,73 +279,87 @@ export default function CareerQuiz() {
         });
       });
 
-      const workTypeBonus: Record<number, string[]> = {
-        1: ["Research", "Academics"],
-        2: ["Academics", "Research"],
-        3: ["Agribusiness Management"],
-        4: ["Govt Banking and Finance"],
-        5: ["Other Govt Jobs"],
-      };
-
-      const bonusPaths = workTypeBonus[fullAnswers.preferred_work_type] || [];
-      bonusPaths.forEach((path, i) => {
-        scores[path] += (30 - i * 10);
-      });
-
-      const canChooseResearchAcademics = () => {
-        if (fullAnswers.reason_for_course === "C") {
-          if (!fullAnswers.subject_liking || fullAnswers.year_of_study === 1) return false;
-          const technicalSubjects = ["crop_production", "crop_protection", "horticulture", "agri_engineering", 
-            "genetics_breeding", "biochem_biotech", "economics_extension", "statistics", "forestry"];
-          return technicalSubjects.some(s => (fullAnswers.subject_liking[s] || 0) >= 8);
-        }
-        if (fullAnswers.reason_for_course === "D") {
-          if (!fullAnswers.subject_liking || fullAnswers.year_of_study === 1) return false;
-          const technicalSubjects = ["crop_production", "crop_protection", "horticulture", "agri_engineering", 
-            "genetics_breeding", "biochem_biotech", "economics_extension", "statistics", "forestry"];
-          const highScores = technicalSubjects.filter(s => (fullAnswers.subject_liking[s] || 0) > 6);
-          return highScores.length >= 2;
-        }
-        return true;
-      };
-
-      if (!canChooseResearchAcademics()) {
-        scores["Research"] = Math.min(scores["Research"], 0);
-        scores["Academics"] = Math.min(scores["Academics"], 0);
-      }
-
+      // Question 6: Risk tolerance - HIGH WEIGHT (20 points for reinforced paths)
       const riskToleranceBonus = RISK_TOLERANCE.find(r => r.value === fullAnswers.risk_tolerance);
       if (riskToleranceBonus) {
         riskToleranceBonus.reinforces.forEach(path => {
-          scores[path] += 15;
+          scores[path] += 20;
         });
       }
+
+      // Question 5 (subject liking) - HIGH WEIGHT for Research/Academics
+      if (fullAnswers.subject_liking && fullAnswers.year_of_study !== 1) {
+        const technicalSubjects = ["crop_production", "crop_protection", "horticulture", "agri_engineering", 
+          "genetics_breeding", "biochem_biotech", "economics_extension", "statistics", "forestry"];
+        
+        const highScoreSubjects = technicalSubjects.filter(s => (fullAnswers.subject_liking[s] || 0) >= 8);
+        const moderateScoreSubjects = technicalSubjects.filter(s => {
+          const score = fullAnswers.subject_liking[s] || 0;
+          return score >= 6 && score < 8;
+        });
+        
+        // Strong subject interest adds significant points to Research/Academics
+        scores["Research"] += highScoreSubjects.length * 8;
+        scores["Academics"] += highScoreSubjects.length * 8;
+        scores["Research"] += moderateScoreSubjects.length * 3;
+        scores["Academics"] += moderateScoreSubjects.length * 3;
+      }
+
+      // NOTE: Question 3 (preferred_work_type) does NOT add to scores - only affects confidence
+      // This ensures Questions 4, 5, 6 determine the pathway
 
       let bestPath = Object.entries(scores).reduce((a, b) => a[1] > b[1] ? a : b)[0];
       const maxScore = scores[bestPath];
       const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
       const secondBest = sortedScores[1];
       
+      // CONFIDENCE DETECTION: Based on Questions 1-3 alignment with recommended path
       const detectContradiction = (): boolean => {
         const riskAnswer = fullAnswers.risk_tolerance;
         const workType = fullAnswers.preferred_work_type;
         const topPriorities = fullAnswers.priorities_ranked.slice(0, 3);
         
-        if (riskAnswer === "A" && workType === 3) return true;
+        // KEY CONTRADICTION: User chose Agribusiness (3) or Banking (4) in Q3,
+        // but Q4/Q5/Q6 indicate Research/Academics preference
+        if ((workType === 3 || workType === 4) && (bestPath === "Research" || bestPath === "Academics")) {
+          return true;
+        }
         
-        if (riskAnswer === "B" && (workType === 1 || workType === 2 || workType === 4 || workType === 5)) return true;
+        // User chose Research/Academics work (1 or 2) but ended up with business/banking path
+        if ((workType === 1 || workType === 2) && (bestPath === "Agribusiness Management" || bestPath === "Govt Banking and Finance")) {
+          return true;
+        }
         
-        if (riskAnswer === "C" && topPriorities.includes("Salary")) return true;
+        // Risk tolerance contradictions
+        if (riskAnswer === "A" && bestPath === "Agribusiness Management") return true;
+        if (riskAnswer === "B" && (bestPath === "Other Govt Jobs" || bestPath === "Govt Banking and Finance")) return true;
+        if (riskAnswer === "C" && topPriorities.includes("Salary") && topPriorities.indexOf("Salary") === 0) return true;
         
-        if (riskAnswer === "B" && topPriorities.includes("Job Security")) return true;
-        
-        if (riskAnswer === "A" && topPriorities.includes("Career Growth") && topPriorities.indexOf("Career Growth") === 0) return true;
+        // Reason for course contradictions
+        if (fullAnswers.reason_for_course === "C" && (bestPath === "Research" || bestPath === "Academics")) {
+          // Wanted faster employment but got research/academics
+          return true;
+        }
         
         return false;
       };
       
       const hasContradiction = detectContradiction();
-      const confidence = hasContradiction ? "low" : (maxScore - secondBest[1] > 20 ? "high" : maxScore - secondBest[1] > 10 ? "medium" : "low");
+      
+      // Confidence based on score gap AND contradiction detection
+      let confidence: string;
+      if (hasContradiction) {
+        confidence = "low";
+      } else {
+        const scoreGap = maxScore - secondBest[1];
+        if (scoreGap > 25) {
+          confidence = "high";
+        } else if (scoreGap > 12) {
+          confidence = "medium";
+        } else {
+          confidence = "low";
+        }
+      }
 
       let subjectClusters: string[] = [];
       if ((bestPath === "Research" || bestPath === "Academics") && fullAnswers.subject_liking && fullAnswers.year_of_study !== 1) {
