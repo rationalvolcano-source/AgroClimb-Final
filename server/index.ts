@@ -4,6 +4,27 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
+// Security middleware: HTTPS redirect and security headers
+// Must be first to ensure all requests are secure
+app.use((req: Request, res: Response, next: NextFunction) => {
+  // Add security headers to all responses
+  res.setHeader('Content-Security-Policy', "upgrade-insecure-requests");
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  
+  // In production, redirect HTTP to HTTPS
+  // Check x-forwarded-proto header (used by proxies/load balancers like Replit)
+  if (process.env.NODE_ENV === 'production') {
+    const proto = req.get('x-forwarded-proto');
+    if (proto && proto !== 'https') {
+      return res.redirect(301, `https://${req.get('host')}${req.url}`);
+    }
+  }
+  
+  next();
+});
+
 // SEO routes MUST be registered FIRST before any middleware
 // to prevent Vite/static middleware from intercepting them
 app.get('/sitemap.xml', (req, res) => {
