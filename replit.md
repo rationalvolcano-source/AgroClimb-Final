@@ -4,6 +4,17 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 
 ## Recent Updates (November 2025)
 
+### SEO Implementation (November 29, 2025)
+-   **Custom useSEO Hook**: Dynamic meta tag management with proper cleanup on route changes
+-   **Sitemap.xml**: Dynamic sitemap served at /sitemap.xml with all pages, priorities, and change frequencies
+-   **Robots.txt**: Crawler-friendly robots.txt at /robots.txt pointing to sitemap
+-   **Structured Data** (JSON-LD in index.html):
+    - EducationalOrganization schema (platform info)
+    - WebSite schema with search action
+    - FAQPage schema for common career questions
+-   **SEO Landing Pages**: 5 career path pages (/careers/research, /careers/academics, /careers/agribusiness, /careers/banking, /careers/govt-jobs)
+-   **Target Keywords**: BSc Agriculture career, BSc Horticulture jobs, ICAR JRF, IBPS AFO, agriculture career guidance India, government jobs agriculture
+
 ### Navigation & Feature Restructure (November 28, 2025)
 -   **Main Navigation Updated**: 
     - Books, Plan B dropdown, Interview Prep, Daily News
