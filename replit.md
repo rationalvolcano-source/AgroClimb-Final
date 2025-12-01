@@ -4,6 +4,24 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 
 ## Recent Updates (November 2025)
 
+### SEO Keyword Optimization (December 1, 2025)
+-   **Primary Target Keywords**: agriculture career guidance, agriculture career plan, horticulture career guidance, horticulture career plan
+-   **Homepage Meta Updates**:
+    - Title: "Agriculture Career Guidance & Career Plan | Horticulture Career Quiz - AgroClimb"
+    - Description includes all 4 target keywords naturally
+    - OG and Twitter cards updated with keyword-rich content
+-   **Hero Section Updates**:
+    - Headline: "Get your Agriculture Career Plan in 5 minutes"
+    - Subheadline mentions both agriculture and horticulture career guidance
+-   **Structured Data Updated**: JSON-LD descriptions include target keywords
+-   **Mobile Navigation Fixed**: Interview Prep and Daily News now visible in Plan B dropdown on mobile
+-   **Preview Games Button Removed**: CTA section cleaned up (games feature scrapped)
+
+### Security Implementation (November 29, 2025)
+-   **HTTPS Redirect**: HTTP to HTTPS redirect for production environment
+-   **Security Headers**: Content-Security-Policy (upgrade-insecure-requests), X-Content-Type-Options, X-Frame-Options, Referrer-Policy
+-   **CSP Meta Tag**: Added as client-side fallback in index.html
+
 ### SEO Implementation (November 29, 2025)
 -   **Custom useSEO Hook**: Dynamic meta tag management with proper cleanup on route changes
 -   **Sitemap.xml**: Dynamic sitemap served at /sitemap.xml with all pages, priorities, and change frequencies
