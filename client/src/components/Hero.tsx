@@ -23,10 +23,10 @@ export default function Hero() {
           <ShieldCheck className="h-3.5 w-3.5"/> AI-guided, exam-proven learning
         </div>
         <h1 className="text-3xl md:text-5xl font-extrabold leading-tight" data-testid="text-headline">
-          Find your Agri career fit in 5 minutes. <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">Stay confident</span> all year.
+          Get your Agriculture Career Plan in 5 minutes. <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">Stay confident</span> all year.
         </h1>
         <p className="text-slate-300 text-base md:text-lg max-w-xl" data-testid="text-subheadline">
-          With AI-backed quizzes, personalized pathways, and outcome-first guidance — your path becomes clear, not crowded.
+          Free agriculture career guidance and horticulture career guidance with AI-backed quizzes, personalized pathways, and outcome-first planning — your path becomes clear, not crowded.
         </p>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <Button asChild size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-400/40 transition-shadow" data-testid="button-quiz-primary">

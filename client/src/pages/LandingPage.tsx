@@ -11,9 +11,9 @@ import { useSEO } from "@/hooks/useSEO";
 
 export default function LandingPage() {
   useSEO({
-    title: "Career Guidance for BSc Agriculture & Horticulture Students India",
-    description: "Free career guidance for BSc Agriculture, BSc Horticulture students. Discover your path - ICAR JRF, IBPS AFO Banking, Agribusiness MBA, Government Jobs. Take our AI career quiz and get personalized guidance from successful alumni.",
-    keywords: "BSc Agriculture career, BSc Horticulture jobs India, ICAR JRF preparation, IBPS AFO exam, agriculture career guidance, BSc Agriculture government jobs, agribusiness MBA CAT, career after BSc agriculture, horticulture career options",
+    title: "Agriculture Career Guidance & Career Plan | Horticulture Career Quiz",
+    description: "Get your personalized agriculture career plan in 5 minutes. Free agriculture career guidance and horticulture career guidance for BSc students in India. Discover your best path - ICAR JRF, IBPS AFO Banking, MBA, Government Jobs with our AI career quiz.",
+    keywords: "agriculture career guidance, agriculture career plan, horticulture career guidance, horticulture career plan, BSc Agriculture career, BSc Horticulture jobs, ICAR JRF, IBPS AFO, career after BSc agriculture, horticulture career options",
     canonicalPath: "/",
   });
 
