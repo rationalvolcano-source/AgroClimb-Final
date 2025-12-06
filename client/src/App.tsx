@@ -22,6 +22,7 @@ const ExcelSprints = lazy(() => import("@/pages/ExcelSprints"));
 const DigitalSkills = lazy(() => import("@/pages/DigitalSkills"));
 const InterviewPrep = lazy(() => import("@/pages/InterviewPrep"));
 const DailyNews = lazy(() => import("@/pages/DailyNews"));
+const AuthError = lazy(() => import("@/pages/AuthError"));
 
 // Loading component with brand styling
 const PageLoader = () => (
@@ -51,6 +52,7 @@ function Router() {
         <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
         <Route path="/alumni-webinars" component={AlumniWebinarsComingSoon}/>
         <Route path="/planb-webinars">{() => <Redirect to="/digital-skills" />}</Route>
+        <Route path="/auth-error" component={AuthError}/>
         <Route path="*" component={LandingPage} />
       </Switch>
     </Suspense>
