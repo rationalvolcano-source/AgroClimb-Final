@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -33,6 +33,7 @@ export function EnrollmentGate({
 }: EnrollmentGateProps) {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const hasProcessedIntent = useRef(false);
 
   const enrollMutation = useMutation({
     mutationFn: async () => {
@@ -45,8 +46,20 @@ export function EnrollmentGate({
     },
   });
 
+  // Check for pending enrollment intent after login - runs once when auth state is known
+  useEffect(() => {
+    if (isLoading || hasProcessedIntent.current) return;
+    
+    const intent = sessionStorage.getItem("enrollmentIntent");
+    if (intent === program && isAuthenticated && !enrollMutation.isPending) {
+      hasProcessedIntent.current = true;
+      sessionStorage.removeItem("enrollmentIntent");
+      enrollMutation.mutate();
+    }
+  }, [isAuthenticated, isLoading, program, enrollMutation.isPending]);
+
   const handleClick = () => {
-    if (isLoading) return;
+    if (isLoading || enrollMutation.isPending) return;
 
     if (!isAuthenticated) {
       // Store the intent to redirect back after login
@@ -58,15 +71,6 @@ export function EnrollmentGate({
     // User is authenticated, enroll them
     enrollMutation.mutate();
   };
-
-  // Check for pending enrollment intent after login
-  useState(() => {
-    const intent = sessionStorage.getItem("enrollmentIntent");
-    if (intent === program && isAuthenticated) {
-      sessionStorage.removeItem("enrollmentIntent");
-      enrollMutation.mutate();
-    }
-  });
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 
