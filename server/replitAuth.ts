@@ -10,10 +10,18 @@ import { storage } from "./storage";
 
 const getOidcConfig = memoize(
   async () => {
-    return await client.discovery(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.REPL_ID!
-    );
+    const issuerUrl = process.env.ISSUER_URL ?? "https://replit.com/oidc";
+    try {
+      return await client.discovery(
+        new URL(issuerUrl),
+        process.env.REPL_ID!
+      );
+    } catch (error: any) {
+      console.error("OIDC Discovery Error:", error.message);
+      console.error("ISSUER_URL:", issuerUrl);
+      console.error("REPL_ID:", process.env.REPL_ID);
+      throw error;
+    }
   },
   { maxAge: 3600 * 1000 }
 );
