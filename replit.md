@@ -2,7 +2,22 @@
 
 AgroClimb is an AI-powered career guidance platform for agricultural students in India, focusing on ABM, Banking, and JRF Horticulture. It offers AI-guided quizzes, interactive learning games, personalized study plans, and alumni mentorship. Inspired by Duolingo's engagement patterns and Linear/Notion's design, the platform aims to provide career clarity through instant fit scores, adaptive learning, and gamified experiences. Key features include a comprehensive wellness center, study tools, and a hub for upskilling and webinars.
 
-## Recent Updates (November 2025)
+## Recent Updates (December 2025)
+
+### PWA Implementation (December 6, 2025)
+-   **Progressive Web App**: Site now installable as an Android app
+-   **Manifest.json**: App name, icons (8 sizes: 72x72 to 512x512), theme colors, shortcuts
+-   **Service Worker (sw.js)**: Offline caching with strategies:
+    - Network-first for navigation requests
+    - Cache-first for static assets (images, fonts, CSS)
+    - Stale-while-revalidate for API calls
+-   **Install Prompt Component**: User-friendly prompt to install the app
+-   **Cached Routes**: Homepage, career quiz, interview prep, daily news, digital skills
+-   **Files**:
+    - `/public/manifest.json` - PWA manifest
+    - `/public/sw.js` - Service worker
+    - `/public/icons/` - App icons in 8 sizes
+    - `/client/src/components/PWAInstallPrompt.tsx` - Install prompt UI
 
 ### SEO Keyword Optimization (December 1, 2025)
 -   **Primary Target Keywords**: agriculture career guidance, agriculture career plan, horticulture career guidance, horticulture career plan
