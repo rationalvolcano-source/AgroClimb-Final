@@ -1,11 +1,12 @@
 import express, { type Request, Response, NextFunction } from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
 // Security middleware: HTTPS redirect and security headers
-// Must be first to ensure all requests are secure
+// Must be first to ensure all requests are secure (including static files)
 app.use((req: Request, res: Response, next: NextFunction) => {
   // Add security headers to all responses
   res.setHeader('Content-Security-Policy', "upgrade-insecure-requests");
@@ -24,6 +25,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   
   next();
 });
+
+// Serve static files from public folder (PWA manifest, service worker, icons)
+// Must be before Vite middleware to prevent catch-all from intercepting
+app.use(express.static(path.resolve(import.meta.dirname, "..", "public")));
 
 // SEO routes MUST be registered FIRST before any middleware
 // to prevent Vite/static middleware from intercepting them
