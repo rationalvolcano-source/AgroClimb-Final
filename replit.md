@@ -4,6 +4,19 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 
 ## Recent Updates (December 2025)
 
+### Clerk Authentication Integration (December 7, 2025)
+-   **Replaced Replit Auth with Clerk**: Fixes production authentication on custom domain (www.agroclimb.com)
+-   **Issue Resolved**: Replit Auth caused "getaddrinfo EAI_AGAIN helium" DNS errors on custom domains
+-   **Clerk Features**: Google Sign-in enabled, modal-based authentication
+-   **Files Updated**:
+    - `client/src/App.tsx` - ClerkProvider wraps app
+    - `client/src/hooks/useAuth.ts` - Uses Clerk's useUser hook
+    - `client/src/components/EnrollmentGate.tsx` - Uses Clerk's SignInButton
+-   **Environment Variables**:
+    - `VITE_CLERK_PUBLISHABLE_KEY` - Frontend publishable key
+    - `CLERK_SECRET_KEY` - Backend secret (for future backend integration)
+-   **Protected Pages**: /digital-skills, /alumni-webinars, /daily-news (enrollment requires sign-in)
+
 ### PWA Implementation (December 6, 2025)
 -   **Progressive Web App**: Site now installable as an Android app
 -   **Manifest.json**: App name, icons (8 sizes: 72x72 to 512x512), theme colors, shortcuts

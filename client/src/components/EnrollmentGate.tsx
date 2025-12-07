@@ -8,8 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { SignInButton, useClerk } from "@clerk/clerk-react";
 import { CheckCircle, MessageCircle, Loader2 } from "lucide-react";
 
 interface EnrollmentGateProps {
@@ -35,56 +34,55 @@ export function EnrollmentGate({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const hasProcessedIntent = useRef(false);
 
-  const enrollMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/enroll", { program });
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/enrollments"] });
-      setShowSuccessModal(true);
-    },
-  });
-
-  // Check for pending enrollment intent after login - runs once when auth state is known
   useEffect(() => {
     if (isLoading || hasProcessedIntent.current) return;
     
     const intent = sessionStorage.getItem("enrollmentIntent");
-    if (intent === program && isAuthenticated && !enrollMutation.isPending) {
+    if (intent === program && isAuthenticated) {
       hasProcessedIntent.current = true;
       sessionStorage.removeItem("enrollmentIntent");
-      enrollMutation.mutate();
+      setShowSuccessModal(true);
     }
-  }, [isAuthenticated, isLoading, program, enrollMutation.isPending]);
+  }, [isAuthenticated, isLoading, program]);
 
-  const handleClick = () => {
-    if (isLoading || enrollMutation.isPending) return;
-
-    if (!isAuthenticated) {
-      // Store the intent to redirect back after login
-      sessionStorage.setItem("enrollmentIntent", program);
-      window.location.href = "/api/login";
-      return;
+  const handleAuthenticatedClick = () => {
+    if (isAuthenticated) {
+      setShowSuccessModal(true);
     }
-
-    // User is authenticated, enroll them
-    enrollMutation.mutate();
   };
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 
+  if (isLoading) {
+    return (
+      <Button className={buttonClassName} disabled data-testid={`button-enroll-${program}`}>
+        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+        Loading...
+      </Button>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <SignInButton mode="modal" forceRedirectUrl={window.location.pathname}>
+        <Button 
+          className={buttonClassName} 
+          onClick={() => sessionStorage.setItem("enrollmentIntent", program)}
+          data-testid={`button-enroll-${program}`}
+        >
+          {buttonText}
+        </Button>
+      </SignInButton>
+    );
+  }
+
   return (
     <>
       <Button
-        onClick={handleClick}
+        onClick={handleAuthenticatedClick}
         className={buttonClassName}
-        disabled={isLoading || enrollMutation.isPending}
         data-testid={`button-enroll-${program}`}
       >
-        {isLoading || enrollMutation.isPending ? (
-          <Loader2 className="w-4 h-4 animate-spin mr-2" />
-        ) : null}
         {buttonText}
       </Button>
 
@@ -145,7 +143,6 @@ export function EnrollmentGate({
   );
 }
 
-// Simple fallback link for users who prefer not to sign in
 export function DirectWhatsAppLink({
   buttonText,
   buttonClassName,

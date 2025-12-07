@@ -5,6 +5,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import { ClerkProvider } from "@clerk/clerk-react";
+
+const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 // Eager load only landing page for instant first paint
 import LandingPage from "@/pages/LandingPage";
@@ -60,14 +63,24 @@ function Router() {
 }
 
 function App() {
+  if (!CLERK_PUBLISHABLE_KEY) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-950 text-white">
+        <p>Missing Clerk Publishable Key</p>
+      </div>
+    );
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-        <PWAInstallPrompt />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+          <PWAInstallPrompt />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 }
 
