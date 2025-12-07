@@ -5,9 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
-import { ClerkProvider } from "@clerk/clerk-react";
-
-const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+import { RequireAuth } from "@/components/RequireAuth";
 
 // Eager load only landing page for instant first paint
 import LandingPage from "@/pages/LandingPage";
@@ -26,6 +24,8 @@ const DigitalSkills = lazy(() => import("@/pages/DigitalSkills"));
 const InterviewPrep = lazy(() => import("@/pages/InterviewPrep"));
 const DailyNews = lazy(() => import("@/pages/DailyNews"));
 const AuthError = lazy(() => import("@/pages/AuthError"));
+const SignInPage = lazy(() => import("@/pages/SignInPage"));
+const SignUpPage = lazy(() => import("@/pages/SignUpPage"));
 
 // Loading component with brand styling
 const PageLoader = () => (
@@ -41,11 +41,10 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
+        {/* Public routes */}
         <Route path="/" component={LandingPage}/>
         <Route path="/books" component={Books}/>
-        <Route path="/digital-skills" component={DigitalSkills}/>
         <Route path="/interview-prep" component={InterviewPrep}/>
-        <Route path="/daily-news" component={DailyNews}/>
         <Route path="/excel-quiz" component={ExcelQuiz}/>
         <Route path="/excel-orientation" component={ExcelOrientation}/>
         <Route path="/excel-sprints" component={ExcelSprints}/>
@@ -53,9 +52,30 @@ function Router() {
         <Route path="/careers/:path" component={CareerPath}/>
         <Route path="/subject-recommender" component={SubjectRecommenderComingSoon}/>
         <Route path="/recorded-classes" component={RecordedClassesComingSoon}/>
-        <Route path="/alumni-webinars" component={AlumniWebinarsComingSoon}/>
         <Route path="/planb-webinars">{() => <Redirect to="/digital-skills" />}</Route>
         <Route path="/auth-error" component={AuthError}/>
+        
+        {/* Auth routes */}
+        <Route path="/sign-in" component={SignInPage}/>
+        <Route path="/sign-up" component={SignUpPage}/>
+        
+        {/* Protected routes */}
+        <Route path="/digital-skills">
+          <RequireAuth>
+            <DigitalSkills />
+          </RequireAuth>
+        </Route>
+        <Route path="/alumni-webinars">
+          <RequireAuth>
+            <AlumniWebinarsComingSoon />
+          </RequireAuth>
+        </Route>
+        <Route path="/daily-news">
+          <RequireAuth>
+            <DailyNews />
+          </RequireAuth>
+        </Route>
+        
         <Route path="*" component={LandingPage} />
       </Switch>
     </Suspense>
@@ -63,24 +83,14 @@ function Router() {
 }
 
 function App() {
-  if (!CLERK_PUBLISHABLE_KEY) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-950 text-white">
-        <p>Missing Clerk Publishable Key</p>
-      </div>
-    );
-  }
-
   return (
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-          <PWAInstallPrompt />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ClerkProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Router />
+        <PWAInstallPrompt />
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 }
 

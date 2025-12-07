@@ -1,7 +1,7 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { requireAuth, getAuth } from "@clerk/express";
 import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
@@ -18,13 +18,17 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup Replit Auth
-  await setupAuth(app);
+  // Auth routes - removed Replit Auth setup, using Clerk instead
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Get authenticated user info
+  app.get('/api/auth/user', requireAuth(), async (req: Request, res: Response) => {
     try {
-      const userId = req.user.claims.sub;
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const user = await storage.getUser(userId);
       res.json(user);
     } catch (error) {
@@ -34,9 +38,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Enrollment endpoints
-  app.post('/api/enroll', isAuthenticated, async (req: any, res) => {
+  app.post('/api/enroll', requireAuth(), async (req: Request, res: Response) => {
     try {
-      const userId = req.user.claims.sub;
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const { program } = req.body;
       
       if (!program || !['digital-skills', 'webinars', 'daily-news'].includes(program)) {
@@ -57,9 +66,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/enrollments', isAuthenticated, async (req: any, res) => {
+  app.get('/api/enrollments', requireAuth(), async (req: Request, res: Response) => {
     try {
-      const userId = req.user.claims.sub;
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const enrollments = await storage.getUserEnrollments(userId);
       res.json(enrollments);
     } catch (error) {

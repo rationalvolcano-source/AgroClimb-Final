@@ -2,8 +2,12 @@ import express, { type Request, Response, NextFunction } from "express";
 import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
+
+// Clerk middleware - must be added early
+app.use(clerkMiddleware());
 
 // Security middleware: HTTPS redirect and security headers
 // Must be first to ensure all requests are secure (including static files)

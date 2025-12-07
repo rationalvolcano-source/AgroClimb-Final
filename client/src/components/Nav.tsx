@@ -9,6 +9,12 @@ import {
 import logoPath from "@assets/image_1761115104637.webp";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -87,6 +93,16 @@ export default function Nav() {
           <Link href="/daily-news" className="text-slate-300 hover:text-slate-50 transition-colors hidden md:inline" data-testid="link-daily-news">Daily News</Link>
         </div>
         <div className="flex items-center gap-2">
+          <SignedOut>
+            <SignInButton mode="modal" forceRedirectUrl="/">
+              <Button variant="outline" size="sm" className="text-slate-300 border-slate-600 hover:bg-slate-800" data-testid="button-sign-in">
+                Sign in
+              </Button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
           <div className="relative group">
             <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-white" data-testid="button-quiz-cta">
               <Link href="/career-quiz">
