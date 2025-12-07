@@ -6,9 +6,6 @@ import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
 
-// Clerk middleware - must be added early
-app.use(clerkMiddleware());
-
 // Security middleware: HTTPS redirect and security headers
 // Must be first to ensure all requests are secure (including static files)
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -82,6 +79,9 @@ Crawl-delay: 1
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Clerk middleware for authentication - added after security middleware
+app.use(clerkMiddleware());
 
 app.use((req, res, next) => {
   const start = Date.now();

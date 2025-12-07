@@ -18,19 +18,24 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth routes - removed Replit Auth setup, using Clerk instead
+  // Auth routes - using Clerk instead of Replit Auth
+  // Note: Frontend uses Clerk's useUser() hook directly, this endpoint is for backwards compatibility
 
   // Get authenticated user info
   app.get('/api/auth/user', requireAuth(), async (req: Request, res: Response) => {
     try {
-      const { userId } = getAuth(req);
+      const auth = getAuth(req);
       
-      if (!userId) {
+      if (!auth.userId) {
         return res.status(401).json({ message: "Not authenticated" });
       }
       
-      const user = await storage.getUser(userId);
-      res.json(user);
+      // Return minimal user info from Clerk session
+      // Full user info is accessed via Clerk's frontend SDK
+      res.json({ 
+        id: auth.userId,
+        sessionId: auth.sessionId 
+      });
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });

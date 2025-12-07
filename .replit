@@ -23,6 +23,10 @@ localPort = 40695
 externalPort = 3003
 
 [[ports]]
+localPort = 45321
+externalPort = 3002
+
+[[ports]]
 localPort = 45611
 externalPort = 3000
 
@@ -57,3 +61,4 @@ integrations = ["javascript_log_in_with_replit:1.0.0"]
 
 [userenv.shared]
 VITE_CLERK_PUBLISHABLE_KEY = "pk_test_Y3JlYXRpdmUtc3VuZmlzaC04NS5jbGVyay5hY2NvdW50cy5kZXYk"
+CLERK_PUBLISHABLE_KEY = "pk_test_Y3JlYXRpdmUtc3VuZmlzaC04NS5jbGVyay5hY2NvdW50cy5kZXYk"
