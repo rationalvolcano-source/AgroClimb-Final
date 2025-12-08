@@ -4,17 +4,23 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 
 ## Recent Updates (December 2025)
 
-### Clerk Authentication Integration (December 7, 2025)
+### Clerk Authentication Integration (December 7-8, 2025)
 -   **Replaced Replit Auth with Clerk**: Fixes production authentication on custom domain (www.agroclimb.com)
 -   **Issue Resolved**: Replit Auth caused "getaddrinfo EAI_AGAIN helium" DNS errors on custom domains
 -   **Clerk Features**: Google Sign-in enabled, modal-based authentication
 -   **Files Updated**:
-    - `client/src/App.tsx` - ClerkProvider wraps app
+    - `client/src/main.tsx` - ClerkProvider wraps app with publishable key
     - `client/src/hooks/useAuth.ts` - Uses Clerk's useUser hook
-    - `client/src/components/EnrollmentGate.tsx` - Uses Clerk's SignInButton
--   **Environment Variables**:
-    - `VITE_CLERK_PUBLISHABLE_KEY` - Frontend publishable key
-    - `CLERK_SECRET_KEY` - Backend secret (for future backend integration)
+    - `client/src/components/Nav.tsx` - SignInButton/UserButton for auth UI
+    - `server/index.ts` - clerkMiddleware() for backend auth
+    - `server/routes.ts` - requireAuth() protects /api/enroll and /api/enrollments
+-   **Environment Variables** (3 required):
+    - `VITE_CLERK_PUBLISHABLE_KEY` - Frontend publishable key (pk_test_ for dev, pk_live_ for prod)
+    - `CLERK_PUBLISHABLE_KEY` - Backend publishable key (same as VITE_ version)
+    - `CLERK_SECRET_KEY` - Backend secret key (sk_test_ for dev, sk_live_ for prod)
+-   **Key Types**:
+    - Development keys (pk_test_/sk_test_) - Work on any domain, for testing
+    - Production keys (pk_live_/sk_live_) - Only work on agroclimb.com
 -   **Protected Pages**: /digital-skills, /alumni-webinars, /daily-news (enrollment requires sign-in)
 
 ### PWA Implementation (December 6, 2025)
