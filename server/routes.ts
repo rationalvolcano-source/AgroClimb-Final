@@ -160,6 +160,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin analytics export endpoint - generates Excel file for download
+  // Admin user IDs that can access export (your Clerk userId)
+  const ADMIN_USER_IDS = ['user_2xxxxxxxxxxx']; // Replace with your actual Clerk user ID
+  
+  app.get('/api/admin/analytics/export', requireAuth(), async (req: Request, res: Response) => {
+    try {
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      // Simple admin check - you can add your Clerk user ID here
+      // For now, allow any authenticated user (you can restrict later)
+      // Uncomment below to restrict to specific admin IDs:
+      // if (!ADMIN_USER_IDS.includes(userId)) {
+      //   return res.status(403).json({ message: "Admin access required" });
+      // }
+      
+      // Parse date range from query params
+      const startDateStr = req.query.startDate as string;
+      const endDateStr = req.query.endDate as string;
+      
+      if (!startDateStr || !endDateStr) {
+        return res.status(400).json({ message: "startDate and endDate query parameters are required" });
+      }
+      
+      const startDate = new Date(startDateStr);
+      const endDate = new Date(endDateStr);
+      endDate.setHours(23, 59, 59, 999); // Include entire end day
+      
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        return res.status(400).json({ message: "Invalid date format. Use YYYY-MM-DD" });
+      }
+      
+      // Limit to 90 days max
+      const daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+      if (daysDiff > 90) {
+        return res.status(400).json({ message: "Date range cannot exceed 90 days" });
+      }
+      
+      // Fetch all analytics data
+      const [journeyEvents, weeklyActivity, dailyMetrics] = await Promise.all([
+        storage.getJourneyEventsForExport(startDate, endDate),
+        storage.getWeeklyActivityForExport(startDate, endDate),
+        storage.getDailyPageMetricsForExport(startDate, endDate),
+      ]);
+      
+      // Create workbook with multiple sheets
+      const workbook = XLSX.utils.book_new();
+      
+      // Journey Events sheet
+      const eventsSheet = XLSX.utils.json_to_sheet(journeyEvents.map(e => ({
+        'User ID': e.clerkUserId,
+        'Session ID': e.sessionId,
+        'Event Type': e.eventType,
+        'Page Path': e.path,
+        'Referrer Path': e.referrerPath || '',
+        'Duration (seconds)': e.durationSeconds || '',
+        'Timestamp': e.createdAt ? new Date(e.createdAt).toISOString() : '',
+      })));
+      XLSX.utils.book_append_sheet(workbook, eventsSheet, 'Journey Events');
+      
+      // Weekly Activity sheet
+      const weeklySheet = XLSX.utils.json_to_sheet(weeklyActivity.map(w => ({
+        'User ID': w.clerkUserId,
+        'Week Start': w.weekStart ? new Date(w.weekStart).toISOString().slice(0, 10) : '',
+        'Visit Count': w.visitCount,
+        'Unique Days': w.uniqueDays,
+        'Total Duration (seconds)': w.totalDurationSeconds,
+      })));
+      XLSX.utils.book_append_sheet(workbook, weeklySheet, 'Weekly Activity');
+      
+      // Daily Page Metrics sheet
+      const dailySheet = XLSX.utils.json_to_sheet(dailyMetrics.map(d => ({
+        'User ID': d.clerkUserId,
+        'Date': d.date ? new Date(d.date).toISOString().slice(0, 10) : '',
+        'Page Path': d.path,
+        'Visit Count': d.visitCount,
+        'Total Duration (seconds)': d.totalDurationSeconds,
+      })));
+      XLSX.utils.book_append_sheet(workbook, dailySheet, 'Daily Page Metrics');
+      
+      // Generate Excel buffer
+      const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+      
+      // Set headers for file download
+      const filename = `analytics_${startDateStr}_to_${endDateStr}.xlsx`;
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader('Content-Length', buffer.length);
+      
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error exporting analytics:", error);
+      res.status(500).json({ message: "Failed to export analytics" });
+    }
+  });
+
   // Excel file evaluation endpoint
   app.post('/api/evaluate-excel', upload.single('file'), async (req, res) => {
     try {
