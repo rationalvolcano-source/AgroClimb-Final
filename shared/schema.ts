@@ -50,3 +50,18 @@ export const insertEnrollmentSchema = createInsertSchema(enrollments).pick({
 
 export type InsertEnrollment = z.infer<typeof insertEnrollmentSchema>;
 export type Enrollment = typeof enrollments.$inferSelect;
+
+// User Profiles table for storing Gmail and WhatsApp (linked to Clerk userId)
+export const userProfiles = pgTable("user_profiles", {
+  clerkUserId: varchar("clerk_user_id").primaryKey(),
+  email: varchar("email").notNull(),
+  whatsappNumber: varchar("whatsapp_number"),
+});
+
+export const insertUserProfileSchema = createInsertSchema(userProfiles).extend({
+  email: z.string().email("Invalid email format"),
+  whatsappNumber: z.string().regex(/^\+?[1-9]\d{6,14}$/, "Invalid WhatsApp number format").optional().or(z.literal("")),
+});
+
+export type InsertUserProfile = z.infer<typeof insertUserProfileSchema>;
+export type UserProfile = typeof userProfiles.$inferSelect;

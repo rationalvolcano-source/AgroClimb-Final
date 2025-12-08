@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import multer from "multer";
 import XLSX from "xlsx";
 import fs from "fs/promises";
+import { insertUserProfileSchema } from "@shared/schema";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -84,6 +85,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching enrollments:", error);
       res.status(500).json({ message: "Failed to fetch enrollments" });
+    }
+  });
+
+  // User Profile endpoints (Gmail and WhatsApp storage)
+  app.get('/api/profile', requireAuth(), async (req: Request, res: Response) => {
+    try {
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const profile = await storage.getUserProfile(userId);
+      res.json(profile || null);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      res.status(500).json({ message: "Failed to fetch profile" });
+    }
+  });
+
+  app.post('/api/profile', requireAuth(), async (req: Request, res: Response) => {
+    try {
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const parseResult = insertUserProfileSchema.safeParse({
+        clerkUserId: userId,
+        email: req.body.email,
+        whatsappNumber: req.body.whatsappNumber || null,
+      });
+      
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid data", 
+          errors: parseResult.error.flatten().fieldErrors 
+        });
+      }
+      
+      const profile = await storage.upsertUserProfile(parseResult.data);
+      res.json({ message: "Profile saved successfully", profile });
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      res.status(500).json({ message: "Failed to save profile" });
     }
   });
 
