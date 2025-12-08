@@ -14,7 +14,7 @@ import {
   type AnalyticsEventInput,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, gte, lte } from "drizzle-orm";
 
 export interface IStorage {
   // User operations for Replit Auth
@@ -32,6 +32,11 @@ export interface IStorage {
   
   // Analytics operations
   recordAnalyticsEvents(clerkUserId: string, events: AnalyticsEventInput[]): Promise<void>;
+  
+  // Analytics export operations
+  getJourneyEventsForExport(startDate: Date, endDate: Date): Promise<any[]>;
+  getWeeklyActivityForExport(startDate: Date, endDate: Date): Promise<any[]>;
+  getDailyPageMetricsForExport(startDate: Date, endDate: Date): Promise<any[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -200,6 +205,62 @@ export class DatabaseStorage implements IStorage {
         });
       }
     }
+  }
+
+  async getJourneyEventsForExport(startDate: Date, endDate: Date): Promise<any[]> {
+    const events = await db.select({
+      id: userJourneyEvents.id,
+      clerkUserId: userJourneyEvents.clerkUserId,
+      sessionId: userJourneyEvents.sessionId,
+      eventType: userJourneyEvents.eventType,
+      path: userJourneyEvents.path,
+      referrerPath: userJourneyEvents.referrerPath,
+      durationSeconds: userJourneyEvents.durationSeconds,
+      createdAt: userJourneyEvents.createdAt,
+    })
+      .from(userJourneyEvents)
+      .where(and(
+        gte(userJourneyEvents.createdAt, startDate),
+        lte(userJourneyEvents.createdAt, endDate)
+      ))
+      .orderBy(userJourneyEvents.createdAt);
+    return events;
+  }
+
+  async getWeeklyActivityForExport(startDate: Date, endDate: Date): Promise<any[]> {
+    const activities = await db.select({
+      id: userWeeklyActivity.id,
+      clerkUserId: userWeeklyActivity.clerkUserId,
+      weekStart: userWeeklyActivity.weekStart,
+      visitCount: userWeeklyActivity.visitCount,
+      uniqueDays: userWeeklyActivity.uniqueDays,
+      totalDurationSeconds: userWeeklyActivity.totalDurationSeconds,
+    })
+      .from(userWeeklyActivity)
+      .where(and(
+        gte(userWeeklyActivity.weekStart, startDate),
+        lte(userWeeklyActivity.weekStart, endDate)
+      ))
+      .orderBy(userWeeklyActivity.weekStart);
+    return activities;
+  }
+
+  async getDailyPageMetricsForExport(startDate: Date, endDate: Date): Promise<any[]> {
+    const metrics = await db.select({
+      id: userDailyPageMetrics.id,
+      clerkUserId: userDailyPageMetrics.clerkUserId,
+      date: userDailyPageMetrics.date,
+      path: userDailyPageMetrics.path,
+      visitCount: userDailyPageMetrics.visitCount,
+      totalDurationSeconds: userDailyPageMetrics.totalDurationSeconds,
+    })
+      .from(userDailyPageMetrics)
+      .where(and(
+        gte(userDailyPageMetrics.date, startDate),
+        lte(userDailyPageMetrics.date, endDate)
+      ))
+      .orderBy(userDailyPageMetrics.date);
+    return metrics;
   }
 }
 
