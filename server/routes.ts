@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import multer from "multer";
 import XLSX from "xlsx";
 import fs from "fs/promises";
-import { insertUserProfileSchema } from "@shared/schema";
+import { insertUserProfileSchema, analyticsEventBatchSchema } from "@shared/schema";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -131,6 +131,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error saving profile:", error);
       res.status(500).json({ message: "Failed to save profile" });
+    }
+  });
+
+  // Analytics endpoints - tracks user journey
+  app.post('/api/analytics/events', requireAuth(), async (req: Request, res: Response) => {
+    try {
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const parseResult = analyticsEventBatchSchema.safeParse(req.body);
+      
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid data", 
+          errors: parseResult.error.flatten().fieldErrors 
+        });
+      }
+      
+      await storage.recordAnalyticsEvents(userId, parseResult.data.events);
+      res.json({ message: "Events recorded", count: parseResult.data.events.length });
+    } catch (error) {
+      console.error("Error recording analytics:", error);
+      res.status(500).json({ message: "Failed to record analytics" });
     }
   });
 
