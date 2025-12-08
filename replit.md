@@ -4,6 +4,24 @@ AgroClimb is an AI-powered career guidance platform for agricultural students in
 
 ## Recent Updates (December 2025)
 
+### User Analytics System (December 8, 2025)
+-   **User Journey Tracking**: Tracks signed-in user behavior for engagement analysis
+-   **Database Tables**:
+    - `user_journey_events` - Raw events (page views, CTA clicks, sign-ins)
+    - `user_weekly_activity` - Weekly rollups with visit count, unique days, total duration
+    - `user_daily_page_metrics` - Daily page-level metrics for path analysis
+-   **Frontend Tracking**: AnalyticsProvider component in App.tsx
+    - Batched event recording (10-second flush interval or 5 events)
+    - Session tracking with unique session IDs
+    - Page duration measurement
+    - beforeunload beacon for data persistence
+-   **API Endpoint**: POST /api/analytics/events (requires auth)
+-   **Files**:
+    - `shared/schema.ts` - Analytics table definitions and Zod schemas
+    - `server/storage.ts` - recordAnalyticsEvents method
+    - `server/routes.ts` - /api/analytics/events endpoint
+    - `client/src/components/AnalyticsProvider.tsx` - Frontend tracking
+
 ### Clerk Authentication Integration (December 7-8, 2025)
 -   **Replaced Replit Auth with Clerk**: Fixes production authentication on custom domain (www.agroclimb.com)
 -   **Issue Resolved**: Replit Auth caused "getaddrinfo EAI_AGAIN helium" DNS errors on custom domains
