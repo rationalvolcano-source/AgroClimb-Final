@@ -27,6 +27,7 @@ const DailyNews = lazy(() => import("@/pages/DailyNews"));
 const AuthError = lazy(() => import("@/pages/AuthError"));
 const SignInPage = lazy(() => import("@/pages/SignInPage"));
 const SignUpPage = lazy(() => import("@/pages/SignUpPage"));
+const AdminExport = lazy(() => import("@/pages/AdminExport"));
 
 // Loading component with brand styling
 const PageLoader = () => (
@@ -59,6 +60,9 @@ function Router() {
         {/* Auth routes */}
         <Route path="/sign-in" component={SignInPage}/>
         <Route path="/sign-up" component={SignUpPage}/>
+        
+        {/* Admin routes */}
+        <Route path="/admin/export" component={AdminExport}/>
         
         {/* Protected routes */}
         <Route path="/digital-skills">
