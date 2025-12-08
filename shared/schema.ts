@@ -65,3 +65,66 @@ export const insertUserProfileSchema = createInsertSchema(userProfiles).extend({
 
 export type InsertUserProfile = z.infer<typeof insertUserProfileSchema>;
 export type UserProfile = typeof userProfiles.$inferSelect;
+
+// Analytics: Raw journey events table
+export const userJourneyEvents = pgTable("user_journey_events", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clerkUserId: varchar("clerk_user_id").notNull(),
+  sessionId: varchar("session_id").notNull(),
+  eventType: varchar("event_type").notNull(), // 'page_view', 'cta_click', 'whatsapp_opened', 'sign_in', etc.
+  path: varchar("path").notNull(),
+  referrerPath: varchar("referrer_path"),
+  durationSeconds: varchar("duration_seconds"), // Time spent on previous page
+  metadata: jsonb("metadata"), // Additional context (button label, etc.)
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_journey_user_created").on(table.clerkUserId, table.createdAt),
+  index("idx_journey_session").on(table.sessionId, table.createdAt),
+]);
+
+export type UserJourneyEvent = typeof userJourneyEvents.$inferSelect;
+
+// Analytics: Weekly activity rollup
+export const userWeeklyActivity = pgTable("user_weekly_activity", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clerkUserId: varchar("clerk_user_id").notNull(),
+  weekStart: timestamp("week_start").notNull(), // Monday of the week
+  visitCount: varchar("visit_count").notNull().default("0"),
+  uniqueDays: varchar("unique_days").notNull().default("0"),
+  totalDurationSeconds: varchar("total_duration_seconds").notNull().default("0"),
+}, (table) => [
+  index("idx_weekly_user_week").on(table.clerkUserId, table.weekStart),
+]);
+
+export type UserWeeklyActivity = typeof userWeeklyActivity.$inferSelect;
+
+// Analytics: Daily page metrics rollup
+export const userDailyPageMetrics = pgTable("user_daily_page_metrics", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clerkUserId: varchar("clerk_user_id").notNull(),
+  date: timestamp("date").notNull(),
+  path: varchar("path").notNull(),
+  visitCount: varchar("visit_count").notNull().default("0"),
+  totalDurationSeconds: varchar("total_duration_seconds").notNull().default("0"),
+}, (table) => [
+  index("idx_daily_user_date_path").on(table.clerkUserId, table.date, table.path),
+]);
+
+export type UserDailyPageMetrics = typeof userDailyPageMetrics.$inferSelect;
+
+// Zod schema for analytics event input
+export const analyticsEventSchema = z.object({
+  sessionId: z.string(),
+  eventType: z.enum(['page_view', 'cta_click', 'whatsapp_opened', 'sign_in', 'sign_out', 'enroll']),
+  path: z.string(),
+  referrerPath: z.string().optional(),
+  durationSeconds: z.number().optional(),
+  metadata: z.record(z.any()).optional(),
+  timestamp: z.string().optional(),
+});
+
+export const analyticsEventBatchSchema = z.object({
+  events: z.array(analyticsEventSchema),
+});
+
+export type AnalyticsEventInput = z.infer<typeof analyticsEventSchema>;
