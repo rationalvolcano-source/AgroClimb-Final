@@ -98,24 +98,21 @@ export class DatabaseStorage implements IStorage {
   async recordAnalyticsEvents(clerkUserId: string, events: AnalyticsEventInput[]): Promise<void> {
     if (events.length === 0) return;
 
-    // Helper to get Monday of the week
     const getWeekStart = (date: Date): Date => {
       const d = new Date(date);
       const day = d.getDay();
-      const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Sunday
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1);
       d.setDate(diff);
       d.setHours(0, 0, 0, 0);
       return d;
     };
 
-    // Helper to get start of day
     const getDayStart = (date: Date): Date => {
       const d = new Date(date);
       d.setHours(0, 0, 0, 0);
       return d;
     };
 
-    // Insert raw events
     const eventRecords = events.map(event => ({
       clerkUserId,
       sessionId: event.sessionId,
@@ -128,36 +125,45 @@ export class DatabaseStorage implements IStorage {
 
     await db.insert(userJourneyEvents).values(eventRecords);
 
-    // Update weekly activity rollup
     const now = new Date();
     const weekStart = getWeekStart(now);
     const dayStart = getDayStart(now);
-    
-    // Calculate total duration from events
+    const dayKey = dayStart.toISOString().slice(0, 10);
     const totalDuration = events.reduce((sum, e) => sum + (e.durationSeconds || 0), 0);
 
-    // Upsert weekly activity
-    await db
-      .insert(userWeeklyActivity)
-      .values({
+    // Check if weekly record exists and update or insert
+    const existingWeekly = await db.select()
+      .from(userWeeklyActivity)
+      .where(and(
+        eq(userWeeklyActivity.clerkUserId, clerkUserId),
+        eq(userWeeklyActivity.weekStart, weekStart)
+      ));
+
+    if (existingWeekly.length > 0) {
+      const existing = existingWeekly[0];
+      const currentDays = existing.visitedDays ? (existing.visitedDays as string[]) : [];
+      const newDays = currentDays.includes(dayKey) ? currentDays : [...currentDays, dayKey];
+      
+      await db.update(userWeeklyActivity)
+        .set({
+          visitCount: (parseInt(existing.visitCount || "0") + events.length).toString(),
+          totalDurationSeconds: (parseInt(existing.totalDurationSeconds || "0") + totalDuration).toString(),
+          uniqueDays: newDays.length.toString(),
+          visitedDays: newDays,
+        })
+        .where(eq(userWeeklyActivity.id, existing.id));
+    } else {
+      await db.insert(userWeeklyActivity).values({
         clerkUserId,
         weekStart,
         visitCount: events.length.toString(),
         uniqueDays: "1",
         totalDurationSeconds: totalDuration.toString(),
-      })
-      .onConflictDoNothing(); // Simple insert for now, updates handled separately
+        visitedDays: [dayKey],
+      });
+    }
 
-    // Try to update existing weekly record
-    await db.execute(sql`
-      UPDATE user_weekly_activity 
-      SET visit_count = (CAST(visit_count AS INTEGER) + ${events.length})::VARCHAR,
-          total_duration_seconds = (CAST(total_duration_seconds AS INTEGER) + ${totalDuration})::VARCHAR
-      WHERE clerk_user_id = ${clerkUserId} 
-        AND week_start = ${weekStart}
-    `);
-
-    // Upsert daily page metrics for each unique path
+    // Aggregate events by path
     const pathCounts = new Map<string, { count: number; duration: number }>();
     for (const event of events) {
       const existing = pathCounts.get(event.path) || { count: 0, duration: 0 };
@@ -166,27 +172,33 @@ export class DatabaseStorage implements IStorage {
       pathCounts.set(event.path, existing);
     }
 
+    // Update or insert daily page metrics
     for (const [path, data] of Array.from(pathCounts.entries())) {
-      await db
-        .insert(userDailyPageMetrics)
-        .values({
+      const existingDaily = await db.select()
+        .from(userDailyPageMetrics)
+        .where(and(
+          eq(userDailyPageMetrics.clerkUserId, clerkUserId),
+          eq(userDailyPageMetrics.date, dayStart),
+          eq(userDailyPageMetrics.path, path)
+        ));
+
+      if (existingDaily.length > 0) {
+        const existing = existingDaily[0];
+        await db.update(userDailyPageMetrics)
+          .set({
+            visitCount: (parseInt(existing.visitCount || "0") + data.count).toString(),
+            totalDurationSeconds: (parseInt(existing.totalDurationSeconds || "0") + data.duration).toString(),
+          })
+          .where(eq(userDailyPageMetrics.id, existing.id));
+      } else {
+        await db.insert(userDailyPageMetrics).values({
           clerkUserId,
           date: dayStart,
           path,
           visitCount: data.count.toString(),
           totalDurationSeconds: data.duration.toString(),
-        })
-        .onConflictDoNothing();
-
-      // Try to update existing
-      await db.execute(sql`
-        UPDATE user_daily_page_metrics 
-        SET visit_count = (CAST(visit_count AS INTEGER) + ${data.count})::VARCHAR,
-            total_duration_seconds = (CAST(total_duration_seconds AS INTEGER) + ${data.duration})::VARCHAR
-        WHERE clerk_user_id = ${clerkUserId} 
-          AND date = ${dayStart}
-          AND path = ${path}
-      `);
+        });
+      }
     }
   }
 }

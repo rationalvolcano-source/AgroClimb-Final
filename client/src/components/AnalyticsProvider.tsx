@@ -60,6 +60,9 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   }, [isSignedIn]);
 
   const queueEvent = useCallback((event: AnalyticsEvent) => {
+    // Don't queue events when not signed in
+    if (!isSignedIn) return;
+    
     eventsQueue.current.push(event);
     
     if (flushTimeoutRef.current) {
@@ -72,7 +75,7 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     if (eventsQueue.current.length >= 5) {
       flushEvents();
     }
-  }, [flushEvents]);
+  }, [flushEvents, isSignedIn]);
 
   const trackEvent = useCallback((eventType: EventType, path: string, metadata?: Record<string, unknown>) => {
     const event: AnalyticsEvent = {

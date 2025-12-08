@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import { RequireAuth } from "@/components/RequireAuth";
+import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 
 // Eager load only landing page for instant first paint
 import LandingPage from "@/pages/LandingPage";
@@ -86,9 +87,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Router />
-        <PWAInstallPrompt />
+        <AnalyticsProvider>
+          <Toaster />
+          <Router />
+          <PWAInstallPrompt />
+        </AnalyticsProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

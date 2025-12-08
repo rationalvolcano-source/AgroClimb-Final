@@ -92,6 +92,7 @@ export const userWeeklyActivity = pgTable("user_weekly_activity", {
   visitCount: varchar("visit_count").notNull().default("0"),
   uniqueDays: varchar("unique_days").notNull().default("0"),
   totalDurationSeconds: varchar("total_duration_seconds").notNull().default("0"),
+  visitedDays: jsonb("visited_days"), // Array of date strings to track unique days
 }, (table) => [
   index("idx_weekly_user_week").on(table.clerkUserId, table.weekStart),
 ]);
