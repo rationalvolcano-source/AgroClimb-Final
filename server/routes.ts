@@ -251,7 +251,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.send(buffer);
     } catch (error) {
       console.error("Error exporting analytics:", error);
-      res.status(500).json({ message: "Failed to export analytics" });
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      res.status(500).json({ message: "Failed to export analytics", error: errorMessage });
     }
   });
 
