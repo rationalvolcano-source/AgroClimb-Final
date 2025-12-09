@@ -249,10 +249,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Content-Length', buffer.length);
       
       res.send(buffer);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error exporting analytics:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      res.status(500).json({ message: "Failed to export analytics", error: errorMessage });
+      const errorMessage = error?.message || error?.toString() || JSON.stringify(error) || "Unknown error";
+      res.status(500).json({ message: "Failed to export analytics", error: errorMessage, stack: error?.stack });
     }
   });
 
