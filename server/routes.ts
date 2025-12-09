@@ -161,8 +161,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin analytics export endpoint - generates Excel file for download
-  // Admin user IDs that can access export (your Clerk userId)
-  const ADMIN_USER_IDS = ['user_2xxxxxxxxxxx']; // Replace with your actual Clerk user ID
+  const ADMIN_USER_IDS = ['user_36ZgNIb9gRj2HTvoFaUmTYnHCXc'];
   
   app.get('/api/admin/analytics/export', requireAuth(), async (req: Request, res: Response) => {
     try {
@@ -172,12 +171,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Not authenticated" });
       }
       
-      // Simple admin check - you can add your Clerk user ID here
-      // For now, allow any authenticated user (you can restrict later)
-      // Uncomment below to restrict to specific admin IDs:
-      // if (!ADMIN_USER_IDS.includes(userId)) {
-      //   return res.status(403).json({ message: "Admin access required" });
-      // }
+      if (!ADMIN_USER_IDS.includes(userId)) {
+        return res.status(403).json({ message: "Admin access required" });
+      }
       
       // Parse date range from query params
       const startDateStr = req.query.startDate as string;
