@@ -197,11 +197,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Date range cannot exceed 90 days" });
       }
       
-      // Fetch all analytics data
+      // Fetch all analytics data with retry logic for DNS issues
+      const fetchWithRetry = async <T>(fn: () => Promise<T>, retries = 3): Promise<T> => {
+        for (let i = 0; i < retries; i++) {
+          try {
+            return await fn();
+          } catch (err: any) {
+            if (i === retries - 1) throw err;
+            // Wait before retry (exponential backoff)
+            await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+          }
+        }
+        throw new Error("Max retries exceeded");
+      };
+      
       const [journeyEvents, weeklyActivity, dailyMetrics] = await Promise.all([
-        storage.getJourneyEventsForExport(startDate, endDate),
-        storage.getWeeklyActivityForExport(startDate, endDate),
-        storage.getDailyPageMetricsForExport(startDate, endDate),
+        fetchWithRetry(() => storage.getJourneyEventsForExport(startDate, endDate)),
+        fetchWithRetry(() => storage.getWeeklyActivityForExport(startDate, endDate)),
+        fetchWithRetry(() => storage.getDailyPageMetricsForExport(startDate, endDate)),
       ]);
       
       // Create workbook with multiple sheets
