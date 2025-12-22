@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="mb-8 text-center">
           <p className="text-sm text-slate-400" data-testid="footer-trust">
-            Trusted by students from 120+ colleges
+            Trusted across campuses
           </p>
         </div>
         
