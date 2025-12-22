@@ -3,8 +3,6 @@ import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
-import SocialProof from "@/components/SocialProof";
-import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { useSEO } from "@/hooks/useSEO";
@@ -26,8 +24,6 @@ export default function LandingPage() {
         <HowItWorks />
         <Features />
       </div>
-      <SocialProof />
-      <Testimonials />
       <CTA />
       <Footer />
     </div>
