@@ -130,15 +130,15 @@ export default function PlanBWebinarsHub() {
         
         <div className="mt-12 text-center">
           <p className="text-slate-400 text-sm">
-            Have questions? Contact us on{" "}
+            Have questions? Join our{" "}
             <a 
-              href="https://wa.me/918250904021?text=Hi%2C%20I%20have%20a%20question%20about%20the%20upskilling%20courses"
+              href="https://t.me/+kXJ-3Kmyd_JmMDU1"
               target="_blank"
               rel="noopener noreferrer"
               className="text-emerald-400 hover:text-emerald-300 underline transition-colors"
-              data-testid="link-whatsapp-contact"
+              data-testid="link-telegram-contact"
             >
-              WhatsApp
+              Telegram group
             </a>
           </p>
         </div>

@@ -1,13 +1,13 @@
 import Nav from "@/components/Nav";
-import { Check, Newspaper, Clock, Bell, BookOpen, TrendingUp } from "lucide-react";
+import { Check, Newspaper, Clock, Bell, BookOpen, TrendingUp, Send } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import { EnrollmentGate, DirectWhatsAppLink } from "@/components/EnrollmentGate";
+import { EnrollmentGate, DirectTelegramLink } from "@/components/EnrollmentGate";
 
 const highlights = [
   { icon: Newspaper, text: "Daily curated news updates" },
   { icon: Clock, text: "5-minute morning read" },
   { icon: BookOpen, text: "Exam-focused content" },
-  { icon: Bell, text: "WhatsApp notifications" },
+  { icon: Send, text: "Telegram notifications" },
 ];
 
 const whatYouGet = [
@@ -28,6 +28,8 @@ const categories = [
   { name: "Exam Updates", desc: "Notifications, results, important dates" },
 ];
 
+const TELEGRAM_LINK = "https://t.me/+0dQoa5KZak02MDk9";
+
 export default function DailyNews() {
   useSEO({
     title: "Daily Agriculture News & Current Affairs for Exams India",
@@ -35,8 +37,6 @@ export default function DailyNews() {
     keywords: "agriculture current affairs daily, IBPS AFO current affairs, NABARD exam news, agriculture sector news India, farming policy updates, agriculture GK daily, banking current affairs agriculture",
     canonicalPath: "/daily-news",
   });
-
-  const whatsappMessage = "Hi, I want to join the Daily News Update WhatsApp group for agriculture and exam-related current affairs.";
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
@@ -115,12 +115,12 @@ export default function DailyNews() {
             buttonClassName="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-orange-500 hover:bg-orange-400 text-slate-950 font-semibold transition-colors"
             programTitle="Daily News Updates"
             programDescription="You'll receive daily curated news about agriculture, banking current affairs, government schemes, and exam notifications."
-            whatsappMessage={whatsappMessage}
+            telegramLink={TELEGRAM_LINK}
           />
           <p className="text-slate-400 text-sm mt-4">
-            <DirectWhatsAppLink 
-              buttonText="Skip sign up? Message us directly" 
-              whatsappMessage={whatsappMessage}
+            <DirectTelegramLink 
+              buttonText="Skip sign up? Join directly" 
+              telegramLink={TELEGRAM_LINK}
               program="daily-news"
             />
           </p>

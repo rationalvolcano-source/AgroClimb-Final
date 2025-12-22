@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
-import { Check, Calendar, Clock, Users, MessageCircle } from "lucide-react";
+import { Check, Calendar, Clock, Users, Send } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import { EnrollmentGate, DirectWhatsAppLink } from "@/components/EnrollmentGate";
+import { EnrollmentGate, DirectTelegramLink } from "@/components/EnrollmentGate";
 
 const curriculum = [
   {
@@ -44,8 +44,10 @@ const highlights = [
   { icon: Calendar, text: "Weekly live sessions on Zoom" },
   { icon: Clock, text: "1-2 hours per session" },
   { icon: Users, text: "Small batch for personal attention" },
-  { icon: MessageCircle, text: "WhatsApp group for doubt clearing" },
+  { icon: Send, text: "Telegram group for doubt clearing" },
 ];
+
+const TELEGRAM_LINK = "https://t.me/+kXJ-3Kmyd_JmMDU1";
 
 export default function DigitalSkills() {
   useSEO({
@@ -54,8 +56,6 @@ export default function DigitalSkills() {
     keywords: "Excel training agriculture students, PowerPoint course BSc Agriculture, digital skills agribusiness, data visualization agriculture, Excel for IBPS AFO, Excel course India",
     canonicalPath: "/digital-skills",
   });
-
-  const whatsappMessage = "Hi, I want to join the Digital Skills Zoom training group for Excel, Data Visualization & PowerPoint classes.";
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
@@ -136,12 +136,12 @@ export default function DigitalSkills() {
             buttonClassName="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold transition-colors"
             programTitle="Digital Skills Training"
             programDescription="You'll receive class schedules, Zoom links, and practice materials for Excel, Data Visualization & PowerPoint."
-            whatsappMessage={whatsappMessage}
+            telegramLink={TELEGRAM_LINK}
           />
           <p className="text-slate-400 text-sm mt-4">
-            <DirectWhatsAppLink 
-              buttonText="Skip sign up? Message us directly" 
-              whatsappMessage={whatsappMessage}
+            <DirectTelegramLink 
+              buttonText="Skip sign up? Join directly" 
+              telegramLink={TELEGRAM_LINK}
               program="digital-skills"
             />
           </p>

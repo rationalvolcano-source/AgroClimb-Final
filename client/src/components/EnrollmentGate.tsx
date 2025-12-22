@@ -8,8 +8,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
-import { SignInButton, useClerk } from "@clerk/clerk-react";
-import { CheckCircle, MessageCircle, Loader2 } from "lucide-react";
+import { SignInButton } from "@clerk/clerk-react";
+import { CheckCircle, Send, Loader2 } from "lucide-react";
 
 interface EnrollmentGateProps {
   program: "digital-skills" | "webinars" | "daily-news";
@@ -17,10 +17,14 @@ interface EnrollmentGateProps {
   buttonClassName?: string;
   programTitle: string;
   programDescription: string;
-  whatsappMessage: string;
+  telegramLink: string;
 }
 
-const WHATSAPP_NUMBER = "918250904021";
+const TELEGRAM_LINKS: Record<string, string> = {
+  "digital-skills": "https://t.me/+kXJ-3Kmyd_JmMDU1",
+  "webinars": "https://t.me/+n8xbzrqBXb1iOGI1",
+  "daily-news": "https://t.me/+0dQoa5KZak02MDk9",
+};
 
 export function EnrollmentGate({
   program,
@@ -28,7 +32,7 @@ export function EnrollmentGate({
   buttonClassName,
   programTitle,
   programDescription,
-  whatsappMessage,
+  telegramLink,
 }: EnrollmentGateProps) {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -51,7 +55,7 @@ export function EnrollmentGate({
     }
   };
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+  const telegramUrl = telegramLink || TELEGRAM_LINKS[program];
 
   if (isLoading) {
     return (
@@ -108,33 +112,19 @@ export function EnrollmentGate({
             <div className="bg-muted/50 rounded-lg p-4 border">
               <p className="text-sm font-medium mb-2">Next Step:</p>
               <p className="text-sm text-muted-foreground mb-3">
-                Message us on WhatsApp to confirm your spot and get updates.
+                Join our Telegram group to confirm your spot and get updates.
               </p>
               <a
-                href={whatsappUrl}
+                href={telegramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                data-testid={`link-whatsapp-${program}`}
+                data-testid={`link-telegram-${program}`}
               >
-                <Button className="w-full bg-green-600 hover:bg-green-700 gap-2">
-                  <MessageCircle className="w-4 h-4" />
-                  Message on WhatsApp
+                <Button className="w-full bg-blue-500 hover:bg-blue-600 gap-2">
+                  <Send className="w-4 h-4" />
+                  Join Telegram Group
                 </Button>
               </a>
-            </div>
-
-            <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>Or copy message:</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  navigator.clipboard.writeText(whatsappMessage);
-                }}
-                data-testid={`button-copy-message-${program}`}
-              >
-                Copy to clipboard
-              </Button>
             </div>
           </div>
         </DialogContent>
@@ -143,26 +133,24 @@ export function EnrollmentGate({
   );
 }
 
-export function DirectWhatsAppLink({
+export function DirectTelegramLink({
   buttonText,
   buttonClassName,
-  whatsappMessage,
+  telegramLink,
   program,
 }: {
   buttonText: string;
   buttonClassName?: string;
-  whatsappMessage: string;
+  telegramLink: string;
   program: string;
 }) {
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
-
   return (
     <a
-      href={whatsappUrl}
+      href={telegramLink}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-sm text-muted-foreground hover:text-foreground underline"
-      data-testid={`link-direct-whatsapp-${program}`}
+      className={buttonClassName || "text-sm text-muted-foreground hover:text-foreground underline"}
+      data-testid={`link-direct-telegram-${program}`}
     >
       {buttonText}
     </a>

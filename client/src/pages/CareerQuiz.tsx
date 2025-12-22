@@ -53,7 +53,7 @@ import {
   Rocket,
   ChevronRight,
   GripVertical,
-  MessageCircle,
+  Send,
 } from "lucide-react";
 
 const COURSES = [
@@ -1043,40 +1043,40 @@ export default function CareerQuiz() {
                 <Button 
                   asChild 
                   size="sm"
-                  className="bg-green-500 hover:bg-green-400"
-                  data-testid="button-counselling-whatsapp"
+                  className="bg-blue-500 hover:bg-blue-400"
+                  data-testid="button-counselling-telegram"
                 >
                   <a 
-                    href={`https://wa.me/918250904021?text=${encodeURIComponent(`Hi! I took the AgroClimb career quiz and received mixed signals in my responses. I would like personal counselling to understand my career pathway better.`)}`}
+                    href="https://t.me/+uQNpa83oEmIxOTA9"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Get Free Counselling on WhatsApp
+                    <Send className="h-4 w-4 mr-2" />
+                    Get Free Counselling on Telegram
                   </a>
                 </Button>
               </Card>
             )}
 
-            <Card className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-500/40 p-6 text-center">
-              <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-green-500/20 text-green-400 mb-4">
-                <MessageCircle className="h-7 w-7" />
+            <Card className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border-blue-500/40 p-6 text-center">
+              <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-blue-500/20 text-blue-400 mb-4">
+                <Send className="h-7 w-7" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Get Detailed Career Pathway</h3>
               <p className="text-slate-300 mb-4">Free counselling from successful alumni who've walked this path</p>
               <Button 
                 asChild 
                 size="lg"
-                className="bg-green-500 hover:bg-green-400 text-white shadow-lg shadow-green-500/25 hover:shadow-green-400/40 transition-shadow"
+                className="bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-400/40 transition-shadow"
                 data-testid="button-contact"
               >
                 <a 
-                  href={`https://wa.me/918250904021?text=${encodeURIComponent(`Hi! I took the AgroClimb career quiz and my recommended path is *${result.recommended_path.name}*.\n\nI would like a detailed career pathway and free counselling from successful alumni.`)}`}
+                  href="https://t.me/+uQNpa83oEmIxOTA9"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MessageCircle className="h-5 w-5 mr-2" />
-                  Chat on WhatsApp for Free Guidance
+                  <Send className="h-5 w-5 mr-2" />
+                  Join Telegram for Free Guidance
                 </a>
               </Button>
               <p className="text-xs text-slate-500 mt-3">Speak with alumni who succeeded in {result.recommended_path.name}</p>

@@ -1,15 +1,12 @@
 import Nav from "@/components/Nav";
-import { AlertTriangle, MessageCircle, RefreshCw } from "lucide-react";
+import { AlertTriangle, Send, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 
-const WHATSAPP_NUMBER = "918250904021";
+const TELEGRAM_LINK = "https://t.me/+0dQoa5KZak02MDk9";
 
 export default function AuthError() {
   const [, setLocation] = useLocation();
-  
-  const whatsappMessage = "Hi, I'm trying to sign up for AgroClimb programs but encountered a login issue. Please help me register.";
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
@@ -48,20 +45,20 @@ export default function AuthError() {
           </div>
 
           <a
-            href={whatsappUrl}
+            href={TELEGRAM_LINK}
             target="_blank"
             rel="noopener noreferrer"
             className="block"
-            data-testid="link-whatsapp-fallback"
+            data-testid="link-telegram-fallback"
           >
-            <Button className="w-full bg-green-600 hover:bg-green-700 gap-2">
-              <MessageCircle className="w-4 h-4" />
-              Register via WhatsApp Instead
+            <Button className="w-full bg-blue-500 hover:bg-blue-600 gap-2">
+              <Send className="w-4 h-4" />
+              Join Telegram Instead
             </Button>
           </a>
 
           <p className="text-sm text-slate-400 mt-4">
-            Can't wait? Message us directly on WhatsApp and we'll get you registered right away.
+            Can't wait? Join our Telegram group directly and we'll get you registered right away.
           </p>
 
           <Button

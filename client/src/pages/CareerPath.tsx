@@ -16,7 +16,7 @@ import {
   Clock,
   Target,
   TrendingUp,
-  MessageCircle,
+  Send,
   GraduationCap,
 } from "lucide-react";
 
@@ -346,10 +346,7 @@ export default function CareerPath() {
   };
   const colors = colorMap[pathData.color] || colorMap.emerald;
 
-  const whatsappMessage = encodeURIComponent(
-    `Hi! I'm interested in the ${pathData.name} path after BSc Agriculture. I would like detailed guidance and counselling from alumni who succeeded in this field.`
-  );
-  const whatsappLink = `https://wa.me/918250904021?text=${whatsappMessage}`;
+  const telegramLink = "https://t.me/+uQNpa83oEmIxOTA9";
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
@@ -474,21 +471,21 @@ export default function CareerPath() {
           </div>
         </Card>
 
-        <Card className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-500/40 p-6 text-center mb-6">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-green-500/20 text-green-400 mb-4">
-            <MessageCircle className="h-7 w-7" />
+        <Card className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border-blue-500/40 p-6 text-center mb-6">
+          <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-blue-500/20 text-blue-400 mb-4">
+            <Send className="h-7 w-7" />
           </div>
           <h3 className="text-xl font-bold text-white mb-2">Get Personalized Guidance</h3>
           <p className="text-slate-300 mb-4">Connect with alumni who succeeded in the {pathData.name} path</p>
           <Button 
             asChild 
             size="lg"
-            className="bg-green-500 hover:bg-green-400 text-white shadow-lg"
-            data-testid="button-whatsapp-cta"
+            className="bg-blue-500 hover:bg-blue-400 text-white shadow-lg"
+            data-testid="button-telegram-cta"
           >
-            <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="h-5 w-5 mr-2" />
-              Chat on WhatsApp for Free Counselling
+            <a href={telegramLink} target="_blank" rel="noopener noreferrer">
+              <Send className="h-5 w-5 mr-2" />
+              Join Telegram for Free Counselling
             </a>
           </Button>
         </Card>

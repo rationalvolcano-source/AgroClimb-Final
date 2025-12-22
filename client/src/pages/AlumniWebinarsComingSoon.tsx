@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
-import { Check, Calendar, Clock, Users, MessageCircle, Target } from "lucide-react";
+import { Check, Calendar, Clock, Users, Send, Target } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import { EnrollmentGate, DirectWhatsAppLink } from "@/components/EnrollmentGate";
+import { EnrollmentGate, DirectTelegramLink } from "@/components/EnrollmentGate";
 
 const webinarModules = [
   {
@@ -43,8 +43,10 @@ const highlights = [
   { icon: Calendar, text: "Weekly live sessions on Zoom" },
   { icon: Clock, text: "1-2 hours per session" },
   { icon: Users, text: "Learn from successful alumni" },
-  { icon: MessageCircle, text: "WhatsApp group for networking" },
+  { icon: Send, text: "Telegram group for networking" },
 ];
+
+const TELEGRAM_LINK = "https://t.me/+n8xbzrqBXb1iOGI1";
 
 export default function AlumniWebinarsComingSoon() {
   useSEO({
@@ -53,8 +55,6 @@ export default function AlumniWebinarsComingSoon() {
     keywords: "agriculture career mentorship, alumni webinars agriculture, career guidance BSc Agriculture, agriculture industry insights, resume building freshers agriculture, agriculture career counselling",
     canonicalPath: "/alumni-webinars",
   });
-
-  const whatsappMessage = "Hi, I want to join the Alumni Webinars group for career guidance and industry insights.";
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
@@ -133,12 +133,12 @@ export default function AlumniWebinarsComingSoon() {
             buttonClassName="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold transition-colors"
             programTitle="Alumni Webinars"
             programDescription="You'll receive session schedules, Zoom links, and access to career guidance sessions with successful alumni."
-            whatsappMessage={whatsappMessage}
+            telegramLink={TELEGRAM_LINK}
           />
           <p className="text-slate-400 text-sm mt-4">
-            <DirectWhatsAppLink 
-              buttonText="Skip sign up? Message us directly" 
-              whatsappMessage={whatsappMessage}
+            <DirectTelegramLink 
+              buttonText="Skip sign up? Join directly" 
+              telegramLink={TELEGRAM_LINK}
               program="webinars"
             />
           </p>
