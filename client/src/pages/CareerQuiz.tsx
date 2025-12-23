@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import { Link } from "wouter";
+import html2canvas from "html2canvas";
 import Nav from "@/components/Nav";
 import { useSEO } from "@/hooks/useSEO";
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,8 @@ import {
   ChevronRight,
   GripVertical,
   Send,
+  Download,
+  Camera,
 } from "lucide-react";
 
 const COURSES = [
@@ -214,6 +217,31 @@ export default function CareerQuiz() {
   });
   const [result, setResult] = useState<QuizResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const downloadResultsAsImage = async () => {
+    if (!resultsRef.current) return;
+    
+    setIsDownloading(true);
+    try {
+      const canvas = await html2canvas(resultsRef.current, {
+        backgroundColor: '#0f172a',
+        scale: 2,
+        logging: false,
+        useCORS: true,
+      });
+      
+      const link = document.createElement('a');
+      link.download = `AgroClimb-Career-Results-${new Date().toISOString().split('T')[0]}.jpg`;
+      link.href = canvas.toDataURL('image/jpeg', 0.9);
+      link.click();
+    } catch (error) {
+      console.error('Failed to download results:', error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const isResearchAcademicsLikely = useCallback(() => {
     if (answers.year_of_study === 1) return false;
@@ -924,6 +952,42 @@ export default function CareerQuiz() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
+            <Card className="bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 border-emerald-500/40 p-5">
+              <div className="flex flex-col md:flex-row items-center gap-4">
+                <div className="flex-shrink-0">
+                  <div className="h-14 w-14 rounded-full bg-emerald-500/30 flex items-center justify-center">
+                    <Camera className="h-7 w-7 text-emerald-400" />
+                  </div>
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <h3 className="text-lg font-bold text-white mb-1">Save Your Results!</h3>
+                  <p className="text-sm text-slate-300">
+                    Download this screen as an image. You'll need to share this with our Telegram bot for personalized career guidance.
+                  </p>
+                </div>
+                <Button
+                  onClick={downloadResultsAsImage}
+                  disabled={isDownloading}
+                  size="lg"
+                  className="bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/30 flex-shrink-0"
+                  data-testid="button-download-results"
+                >
+                  {isDownloading ? (
+                    <>
+                      <div className="h-5 w-5 mr-2 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="h-5 w-5 mr-2" />
+                      Save as Image
+                    </>
+                  )}
+                </Button>
+              </div>
+            </Card>
+
+            <div ref={resultsRef} className="space-y-6 bg-slate-950 p-4 rounded-2xl">
             <div className="text-center mb-8">
               <motion.div 
                 className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-emerald-500/20 text-emerald-400 mb-4"
@@ -1081,6 +1145,7 @@ export default function CareerQuiz() {
               </Button>
               <p className="text-xs text-slate-500 mt-3">Speak with alumni who succeeded in {result.recommended_path.name}</p>
             </Card>
+            </div>
 
             <div className="text-center pt-2">
               <button
