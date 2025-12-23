@@ -230,14 +230,23 @@ export default function CareerQuiz() {
         scale: 2,
         logging: false,
         useCORS: true,
+        allowTaint: true,
+        removeContainer: true,
+        windowWidth: resultsRef.current.scrollWidth,
+        windowHeight: resultsRef.current.scrollHeight,
       });
       
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
       const link = document.createElement('a');
       link.download = `AgroClimb-Career-Results-${new Date().toISOString().split('T')[0]}.jpg`;
-      link.href = canvas.toDataURL('image/jpeg', 0.9);
+      link.href = dataUrl;
+      link.style.display = 'none';
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
     } catch (error) {
       console.error('Failed to download results:', error);
+      alert('Failed to save image. Please try again or take a screenshot manually.');
     } finally {
       setIsDownloading(false);
     }
