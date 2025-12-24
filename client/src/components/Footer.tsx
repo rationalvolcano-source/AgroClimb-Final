@@ -1,5 +1,6 @@
 import logoPath from "@assets/image_1761115104637.webp";
 import { Link } from "wouter";
+import { SiInstagram, SiTelegram } from "react-icons/si";
 
 export default function Footer() {
   return (
@@ -20,6 +21,26 @@ export default function Footer() {
             <p className="text-sm text-slate-400" data-testid="footer-tagline">
               AI-guided career pathways for Agri students
             </p>
+            <div className="flex items-center gap-3 pt-2">
+              <a 
+                href="https://www.instagram.com/agroclimb?igsh=MXBycTVwZTM0N3N6bw==" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-pink-400 transition-colors"
+                data-testid="link-footer-instagram"
+              >
+                <SiInstagram className="h-5 w-5" />
+              </a>
+              <a 
+                href="https://t.me/+uQNpa83oEmIxOTA9" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-cyan-400 transition-colors"
+                data-testid="link-footer-telegram"
+              >
+                <SiTelegram className="h-5 w-5" />
+              </a>
+            </div>
           </div>
           
           <div>
