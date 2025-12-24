@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import html2canvas from "html2canvas";
 import Nav from "@/components/Nav";
 import { useSEO } from "@/hooks/useSEO";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -203,6 +204,8 @@ interface QuizResult {
 }
 
 export default function CareerQuiz() {
+  const { toast } = useToast();
+  
   useSEO({
     title: "Free Career Quiz for BSc Agriculture & Horticulture Students",
     description: "Take the free AI-powered career quiz to find your best-fit path after BSc Agriculture or Horticulture. Discover if Research, Academics, Agribusiness, or Banking is right for you. Get personalized recommendations in minutes.",
@@ -221,32 +224,92 @@ export default function CareerQuiz() {
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const downloadResultsAsImage = async () => {
-    if (!resultsRef.current) return;
+    if (!resultsRef.current) {
+      toast({
+        title: "Error",
+        description: "Unable to capture results. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setIsDownloading(true);
+    
     try {
-      const canvas = await html2canvas(resultsRef.current, {
+      // Small delay to ensure all content is rendered
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const element = resultsRef.current;
+      
+      const canvas = await html2canvas(element, {
         backgroundColor: '#0f172a',
         scale: 2,
         logging: false,
         useCORS: true,
         allowTaint: true,
-        removeContainer: true,
-        windowWidth: resultsRef.current.scrollWidth,
-        windowHeight: resultsRef.current.scrollHeight,
+        foreignObjectRendering: false,
+        x: 0,
+        y: 0,
+        width: element.scrollWidth,
+        height: element.scrollHeight,
+        onclone: (clonedDoc) => {
+          // Ensure cloned element is visible
+          const clonedElement = clonedDoc.querySelector('[data-results-capture]');
+          if (clonedElement) {
+            (clonedElement as HTMLElement).style.transform = 'none';
+            (clonedElement as HTMLElement).style.opacity = '1';
+          }
+        }
       });
       
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-      const link = document.createElement('a');
-      link.download = `AgroClimb-Career-Results-${new Date().toISOString().split('T')[0]}.jpg`;
-      link.href = dataUrl;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Convert to blob with timeout safeguard
+      const downloadPromise = new Promise<void>((resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+          reject(new Error('Image generation timed out'));
+        }, 5000);
+        
+        canvas.toBlob((blob) => {
+          clearTimeout(timeoutId);
+          try {
+            if (!blob) {
+              reject(new Error('Failed to generate blob'));
+              return;
+            }
+            
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `AgroClimb-Career-Results-${new Date().toISOString().split('T')[0]}.jpg`;
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Cleanup
+            URL.revokeObjectURL(url);
+            
+            toast({
+              title: "Success!",
+              description: "Your results have been saved. Share this image with our Telegram bot!",
+            });
+            
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        }, 'image/jpeg', 0.9);
+      });
+      
+      await downloadPromise;
+      
     } catch (error) {
       console.error('Failed to download results:', error);
-      alert('Failed to save image. Please try again or take a screenshot manually.');
+      toast({
+        title: "Download failed",
+        description: "Please take a screenshot manually (use your device's screenshot feature).",
+        variant: "destructive",
+      });
     } finally {
       setIsDownloading(false);
     }
@@ -996,7 +1059,7 @@ export default function CareerQuiz() {
               </div>
             </Card>
 
-            <div ref={resultsRef} className="space-y-6 bg-slate-950 p-4 rounded-2xl">
+            <div ref={resultsRef} data-results-capture className="space-y-6 bg-slate-950 p-4 rounded-2xl">
             <div className="text-center mb-8">
               <motion.div 
                 className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-emerald-500/20 text-emerald-400 mb-4"
