@@ -58,6 +58,7 @@ import {
   Send,
   Download,
   Camera,
+  Instagram,
 } from "lucide-react";
 
 const COURSES = [
@@ -1200,21 +1201,38 @@ export default function CareerQuiz() {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Get Detailed Career Pathway</h3>
               <p className="text-slate-300 mb-4">Free counselling from successful alumni who've walked this path</p>
-              <Button 
-                asChild 
-                size="lg"
-                className="bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-400/40 transition-shadow"
-                data-testid="button-contact"
-              >
-                <a 
-                  href="https://t.me/+uQNpa83oEmIxOTA9"
-                  target="_blank"
-                  rel="noopener noreferrer"
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button 
+                  asChild 
+                  size="lg"
+                  className="bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-400/40 transition-shadow"
+                  data-testid="button-contact"
                 >
-                  <Send className="h-5 w-5 mr-2" />
-                  Join Telegram for Free Guidance
-                </a>
-              </Button>
+                  <a 
+                    href="https://t.me/+uQNpa83oEmIxOTA9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Send className="h-5 w-5 mr-2" />
+                    Join Telegram
+                  </a>
+                </Button>
+                <Button 
+                  asChild 
+                  size="lg"
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 text-white shadow-lg shadow-pink-500/25 hover:shadow-pink-400/40 transition-shadow"
+                  data-testid="button-contact-instagram"
+                >
+                  <a 
+                    href="https://www.instagram.com/agroclimb?igsh=MXBycTVwZTM0N3N6bw=="
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Instagram className="h-5 w-5 mr-2" />
+                    Follow on Instagram
+                  </a>
+                </Button>
+              </div>
               <p className="text-xs text-slate-500 mt-3">Speak with alumni who succeeded in {result.recommended_path.name}</p>
             </Card>
             </div>
