@@ -129,3 +129,27 @@ export const analyticsEventBatchSchema = z.object({
 });
 
 export type AnalyticsEventInput = z.infer<typeof analyticsEventSchema>;
+
+// User Career Choices table - stores locked career pathway recommendations
+export const userCareerChoices = pgTable("user_career_choices", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clerkUserId: varchar("clerk_user_id").notNull().unique(),
+  email: varchar("email").notNull(),
+  recommendedPath: varchar("recommended_path").notNull(),
+  confidenceLevel: varchar("confidence_level").notNull(),
+  quizAnswers: jsonb("quiz_answers").notNull(),
+  isLocked: varchar("is_locked").notNull().default("true"),
+  lockedAt: timestamp("locked_at").defaultNow(),
+  unlockedAt: timestamp("unlocked_at"),
+});
+
+export const insertCareerChoiceSchema = createInsertSchema(userCareerChoices).pick({
+  clerkUserId: true,
+  email: true,
+  recommendedPath: true,
+  confidenceLevel: true,
+  quizAnswers: true,
+});
+
+export type InsertCareerChoice = z.infer<typeof insertCareerChoiceSchema>;
+export type CareerChoice = typeof userCareerChoices.$inferSelect;

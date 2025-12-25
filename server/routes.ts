@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import multer from "multer";
 import XLSX from "xlsx";
 import fs from "fs/promises";
-import { insertUserProfileSchema, analyticsEventBatchSchema } from "@shared/schema";
+import { insertUserProfileSchema, analyticsEventBatchSchema, insertCareerChoiceSchema } from "@shared/schema";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -131,6 +131,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error saving profile:", error);
       res.status(500).json({ message: "Failed to save profile" });
+    }
+  });
+
+  // Career Choice endpoints - for locking/unlocking career pathway recommendations
+  app.get('/api/career-choice', requireAuth(), async (req: Request, res: Response) => {
+    try {
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const choice = await storage.getCareerChoice(userId);
+      res.json(choice || null);
+    } catch (error) {
+      console.error("Error fetching career choice:", error);
+      res.status(500).json({ message: "Failed to fetch career choice" });
+    }
+  });
+
+  app.post('/api/career-choice', requireAuth(), async (req: Request, res: Response) => {
+    try {
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const parseResult = insertCareerChoiceSchema.safeParse({
+        clerkUserId: userId,
+        email: req.body.email,
+        recommendedPath: req.body.recommendedPath,
+        confidenceLevel: req.body.confidenceLevel,
+        quizAnswers: req.body.quizAnswers,
+      });
+      
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid data", 
+          errors: parseResult.error.flatten().fieldErrors 
+        });
+      }
+      
+      const choice = await storage.saveCareerChoice(parseResult.data);
+      res.json({ message: "Career choice locked successfully", choice });
+    } catch (error) {
+      console.error("Error saving career choice:", error);
+      res.status(500).json({ message: "Failed to save career choice" });
+    }
+  });
+
+  app.post('/api/career-choice/unlock', requireAuth(), async (req: Request, res: Response) => {
+    try {
+      const { userId } = getAuth(req);
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const choice = await storage.unlockCareerChoice(userId);
+      
+      if (!choice) {
+        return res.status(404).json({ message: "No career choice found to unlock" });
+      }
+      
+      res.json({ message: "Career choice unlocked. Talk to our team before retaking the quiz!", choice });
+    } catch (error) {
+      console.error("Error unlocking career choice:", error);
+      res.status(500).json({ message: "Failed to unlock career choice" });
     }
   });
 

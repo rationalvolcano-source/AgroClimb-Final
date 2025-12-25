@@ -5,6 +5,7 @@ import {
   userJourneyEvents,
   userWeeklyActivity,
   userDailyPageMetrics,
+  userCareerChoices,
   type User,
   type UpsertUser,
   type Enrollment,
@@ -12,6 +13,8 @@ import {
   type UserProfile,
   type InsertUserProfile,
   type AnalyticsEventInput,
+  type CareerChoice,
+  type InsertCareerChoice,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, sql, gte, lte } from "drizzle-orm";
@@ -29,6 +32,11 @@ export interface IStorage {
   // User Profile operations (for Gmail and WhatsApp)
   getUserProfile(clerkUserId: string): Promise<UserProfile | undefined>;
   upsertUserProfile(profile: InsertUserProfile): Promise<UserProfile>;
+  
+  // Career Choice operations
+  getCareerChoice(clerkUserId: string): Promise<CareerChoice | undefined>;
+  saveCareerChoice(choice: InsertCareerChoice): Promise<CareerChoice>;
+  unlockCareerChoice(clerkUserId: string): Promise<CareerChoice | undefined>;
   
   // Analytics operations
   recordAnalyticsEvents(clerkUserId: string, events: AnalyticsEventInput[]): Promise<void>;
@@ -261,6 +269,48 @@ export class DatabaseStorage implements IStorage {
       ))
       .orderBy(userDailyPageMetrics.date);
     return metrics;
+  }
+
+  // Career Choice operations
+  async getCareerChoice(clerkUserId: string): Promise<CareerChoice | undefined> {
+    const [choice] = await db.select().from(userCareerChoices).where(eq(userCareerChoices.clerkUserId, clerkUserId));
+    return choice;
+  }
+
+  async saveCareerChoice(choice: InsertCareerChoice): Promise<CareerChoice> {
+    const [result] = await db
+      .insert(userCareerChoices)
+      .values({
+        ...choice,
+        isLocked: "true",
+        lockedAt: new Date(),
+      })
+      .onConflictDoUpdate({
+        target: userCareerChoices.clerkUserId,
+        set: {
+          email: choice.email,
+          recommendedPath: choice.recommendedPath,
+          confidenceLevel: choice.confidenceLevel,
+          quizAnswers: choice.quizAnswers,
+          isLocked: "true",
+          lockedAt: new Date(),
+          unlockedAt: null,
+        },
+      })
+      .returning();
+    return result;
+  }
+
+  async unlockCareerChoice(clerkUserId: string): Promise<CareerChoice | undefined> {
+    const [result] = await db
+      .update(userCareerChoices)
+      .set({
+        isLocked: "false",
+        unlockedAt: new Date(),
+      })
+      .where(eq(userCareerChoices.clerkUserId, clerkUserId))
+      .returning();
+    return result;
   }
 }
 
