@@ -125,12 +125,12 @@ const PRIORITY_PROFILES: Record<string, Record<string, number>> = {
   "Research": {
     "Career Growth": 1, "Salary": 3, "Work Life Balance": 2, "Flexibility of location": 1,
     "Job Security": 3, "Innovative and Impactful work": 3, "Rural Development/Social Impact": 1,
-    "Prestige of Govt Job": 3, "Ease and pace of success": 1, "Foreign placement opportunities": 1
+    "Prestige of Govt Job": 3, "Ease and pace of success": 1, "Foreign placement opportunities": 2
   },
   "Academics": {
     "Career Growth": 1, "Salary": 3, "Work Life Balance": 3, "Flexibility of location": 1,
     "Job Security": 3, "Innovative and Impactful work": 2, "Rural Development/Social Impact": 1,
-    "Prestige of Govt Job": 3, "Ease and pace of success": 1, "Foreign placement opportunities": 1
+    "Prestige of Govt Job": 3, "Ease and pace of success": 1, "Foreign placement opportunities": 2
   },
   "Agribusiness Management": {
     "Career Growth": 3, "Salary": 3, "Work Life Balance": 1, "Flexibility of location": 3,
@@ -138,12 +138,12 @@ const PRIORITY_PROFILES: Record<string, Record<string, number>> = {
     "Prestige of Govt Job": 1, "Ease and pace of success": 3, "Foreign placement opportunities": 3
   },
   "Govt Banking and Finance": {
-    "Career Growth": 2, "Salary": 2, "Work Life Balance": 2, "Flexibility of location": 0,
+    "Career Growth": 2, "Salary": 2, "Work Life Balance": 2, "Flexibility of location": 1,
     "Job Security": 3, "Innovative and Impactful work": 1, "Rural Development/Social Impact": 3,
     "Prestige of Govt Job": 3, "Ease and pace of success": 2, "Foreign placement opportunities": 1
   },
   "Other Govt Jobs": {
-    "Career Growth": 2, "Salary": 3, "Work Life Balance": 2, "Flexibility of location": 1,
+    "Career Growth": 2, "Salary": 2, "Work Life Balance": 2, "Flexibility of location": 1,
     "Job Security": 3, "Innovative and Impactful work": 2, "Rural Development/Social Impact": 3,
     "Prestige of Govt Job": 3, "Ease and pace of success": 2, "Foreign placement opportunities": 1
   }
@@ -399,9 +399,25 @@ export default function CareerQuiz() {
       }
 
       // Question 5 (subject liking) - HIGH WEIGHT for Research/Academics
+      // Enhanced to detect standout subjects (one rated much higher than others)
       if (fullAnswers.subject_liking && fullAnswers.year_of_study !== 1) {
         const technicalSubjects = ["crop_production", "crop_protection", "horticulture", "agri_engineering", 
           "genetics_breeding", "biochem_biotech", "economics_extension", "statistics", "forestry"];
+        
+        const subjectScores = technicalSubjects.map(s => ({
+          id: s,
+          score: fullAnswers.subject_liking[s] || 0
+        })).sort((a, b) => b.score - a.score);
+        
+        const topSubject = subjectScores[0];
+        const secondSubject = subjectScores[1];
+        const avgOtherScores = subjectScores.slice(1).reduce((sum, s) => sum + s.score, 0) / (subjectScores.length - 1);
+        
+        // Detect standout: top subject is 3+ points above second OR 4+ above average
+        const hasStandoutSubject = topSubject && (
+          (secondSubject && topSubject.score - secondSubject.score >= 3) ||
+          (topSubject.score - avgOtherScores >= 4)
+        );
         
         const highScoreSubjects = technicalSubjects.filter(s => (fullAnswers.subject_liking[s] || 0) >= 8);
         const moderateScoreSubjects = technicalSubjects.filter(s => {
@@ -414,6 +430,12 @@ export default function CareerQuiz() {
         scores["Academics"] += highScoreSubjects.length * 8;
         scores["Research"] += moderateScoreSubjects.length * 3;
         scores["Academics"] += moderateScoreSubjects.length * 3;
+        
+        // Bonus for having a clear standout passion subject
+        if (hasStandoutSubject && topSubject.score >= 8) {
+          scores["Research"] += 15;
+          scores["Academics"] += 15;
+        }
       }
 
       // NOTE: Question 3 (preferred_work_type) does NOT add to scores - only affects confidence
@@ -473,6 +495,7 @@ export default function CareerQuiz() {
       }
 
       let subjectClusters: string[] = [];
+      let favoriteSubject: string | null = null;
       if ((bestPath === "Research" || bestPath === "Academics") && fullAnswers.subject_liking && fullAnswers.year_of_study !== 1) {
         const clusterMap: Record<string, string> = {
           "crop_production": "Crop Production (Soil Science-Agronomy)",
@@ -488,11 +511,28 @@ export default function CareerQuiz() {
         
         const sortedSubjects = Object.entries(fullAnswers.subject_liking)
           .filter(([key]) => key !== "others")
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 3)
-          .filter(([, score]) => score >= 7);
+          .sort((a, b) => b[1] - a[1]);
         
-        subjectClusters = sortedSubjects.map(([key]) => clusterMap[key]).filter(Boolean);
+        const topSubjectEntry = sortedSubjects[0];
+        const secondSubjectEntry = sortedSubjects[1];
+        const avgOtherScores = sortedSubjects.slice(1).reduce((sum, [, score]) => sum + score, 0) / (sortedSubjects.length - 1);
+        
+        // Detect standout subject for personalized recommendation
+        if (topSubjectEntry && topSubjectEntry[1] >= 7) {
+          const isStandout = (secondSubjectEntry && topSubjectEntry[1] - secondSubjectEntry[1] >= 3) ||
+            (topSubjectEntry[1] - avgOtherScores >= 4);
+          
+          if (isStandout || sortedSubjects.filter(([, score]) => score >= 7).length === 1) {
+            favoriteSubject = clusterMap[topSubjectEntry[0]] || null;
+          }
+        }
+        
+        // Get top subjects with score >= 7
+        subjectClusters = sortedSubjects
+          .slice(0, 3)
+          .filter(([, score]) => score >= 7)
+          .map(([key]) => clusterMap[key])
+          .filter(Boolean);
       }
 
       const yearTone = {
@@ -561,6 +601,11 @@ export default function CareerQuiz() {
       
       if (fullAnswers.priorities_ranked[0]) {
         whyThisPath += `Your top priority "${fullAnswers.priorities_ranked[0]}" is ${PRIORITY_PROFILES[bestPath][fullAnswers.priorities_ranked[0]] >= 2 ? "strongly" : "moderately"} supported in this path. `;
+      }
+      
+      // Highlight favorite subject for Research/Academics
+      if (favoriteSubject && (bestPath === "Research" || bestPath === "Academics")) {
+        whyThisPath += `Your clear passion for ${favoriteSubject} makes it a strong specialization choice. `;
       }
       
       if (fullAnswers.reason_for_course === "A") {
@@ -810,7 +855,11 @@ export default function CareerQuiz() {
                 <Target className="h-8 w-8" />
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">Rank your career priorities</h2>
-              <p className="text-slate-400">Drag to reorder - most important at top</p>
+              <p className="text-slate-400 mb-2">Hold and drag each item up or down to reorder</p>
+              <p className="text-xs text-slate-500 bg-slate-800/50 rounded-lg px-3 py-2 inline-block">
+                <GripVertical className="h-3 w-3 inline mr-1" />
+                Touch/click the item and physically move it - don't just tap!
+              </p>
             </div>
             
             <Reorder.Group 
