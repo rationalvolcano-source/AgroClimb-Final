@@ -438,8 +438,22 @@ export default function CareerQuiz() {
         }
       }
 
-      // NOTE: Question 3 (preferred_work_type) does NOT add to scores - only affects confidence
-      // This ensures Questions 4, 5, 6 determine the pathway
+      // Question 3: Reason for choosing Agri - MODERATE WEIGHT (15 points)
+      // A = Biology lover → Research/Academics
+      // B = Chemistry lover → Research (biochem focus)
+      // C = Fast employment → Agribusiness/Banking/Govt Jobs
+      // D = Plan B → Quicker paths (Agribusiness/Banking/Govt)
+      const reasonBonus: Record<string, string[]> = {
+        "A": ["Research", "Academics"],
+        "B": ["Research", "Academics"],
+        "C": ["Agribusiness Management", "Govt Banking and Finance", "Other Govt Jobs"],
+        "D": ["Agribusiness Management", "Govt Banking and Finance", "Other Govt Jobs"],
+      };
+      
+      const reasonPaths = reasonBonus[fullAnswers.reason_for_course] || [];
+      reasonPaths.forEach((path, i) => {
+        scores[path] += (15 - i * 5); // First path gets 15, second gets 10, third gets 5
+      });
 
       let bestPath = Object.entries(scores).reduce((a, b) => a[1] > b[1] ? a : b)[0];
       const maxScore = scores[bestPath];
