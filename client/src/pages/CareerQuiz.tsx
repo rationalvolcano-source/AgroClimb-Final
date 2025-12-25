@@ -316,7 +316,9 @@ export default function CareerQuiz() {
     }
   };
 
-  const isResearchAcademicsLikely = useCallback(() => {
+  // Calculate if Research/Academics is likely based on current answers
+  // This determines whether to show the subject rating question
+  const needsSubjectQuiz = (() => {
     if (answers.year_of_study === 1) return false;
     if (!answers.priorities_ranked || !answers.preferred_work_type) return false;
     
@@ -345,13 +347,23 @@ export default function CareerQuiz() {
       scores[path] += (30 - i * 10);
     });
 
+    // Also consider reason for course
+    const reasonBonus: Record<string, string[]> = {
+      "A": ["Research", "Academics"],
+      "B": ["Research", "Academics"],
+      "C": ["Agribusiness Management", "Govt Banking and Finance", "Other Govt Jobs"],
+      "D": ["Agribusiness Management", "Govt Banking and Finance", "Other Govt Jobs"],
+    };
+    const reasonPaths = reasonBonus[answers.reason_for_course || ""] || [];
+    reasonPaths.forEach((path, i) => {
+      scores[path] += (15 - i * 5);
+    });
+
     const sortedPaths = Object.entries(scores).sort((a, b) => b[1] - a[1]);
     const topTwo = sortedPaths.slice(0, 2).map(([path]) => path);
     
     return topTwo.includes("Research") || topTwo.includes("Academics");
-  }, [answers.priorities_ranked, answers.preferred_work_type, answers.year_of_study]);
-
-  const needsSubjectQuiz = isResearchAcademicsLikely();
+  })();
   const totalSteps = needsSubjectQuiz ? 7 : 6;
   const progress = ((step + 1) / totalSteps) * 100;
 
