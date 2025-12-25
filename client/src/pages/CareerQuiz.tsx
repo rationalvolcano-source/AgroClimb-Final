@@ -1,7 +1,10 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import html2canvas from "html2canvas";
+import { useUser, SignInButton } from "@clerk/clerk-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import Nav from "@/components/Nav";
 import { useSEO } from "@/hooks/useSEO";
 import { useToast } from "@/hooks/use-toast";
@@ -59,7 +62,24 @@ import {
   Download,
   Camera,
   Instagram,
+  Lock,
+  Unlock,
+  LogIn,
+  ExternalLink,
 } from "lucide-react";
+
+// Type for career choice from API
+interface CareerChoiceData {
+  id: string;
+  clerkUserId: string;
+  email: string;
+  recommendedPath: string;
+  confidenceLevel: string;
+  quizAnswers: any;
+  isLocked: string;
+  lockedAt: string | null;
+  unlockedAt: string | null;
+}
 
 const COURSES = [
   { value: "B.Sc(Agri)", label: "B.Sc (Agriculture)", icon: Wheat },
@@ -206,6 +226,8 @@ interface QuizResult {
 
 export default function CareerQuiz() {
   const { toast } = useToast();
+  const { user, isSignedIn, isLoaded } = useUser();
+  const [, setLocation] = useLocation();
   
   useSEO({
     title: "Free Career Quiz for BSc Agriculture & Horticulture Students",
@@ -222,7 +244,80 @@ export default function CareerQuiz() {
   const [result, setResult] = useState<QuizResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isLocking, setIsLocking] = useState(false);
+  const [showUnlockConfirm, setShowUnlockConfirm] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Fetch existing career choice for logged-in users
+  const { data: existingChoice, isLoading: isLoadingChoice } = useQuery<CareerChoiceData | null>({
+    queryKey: ['/api/career-choice'],
+    enabled: isSignedIn,
+  });
+
+  // Lock career choice mutation
+  const lockCareerMutation = useMutation({
+    mutationFn: async (data: { email: string; recommendedPath: string; confidenceLevel: string; quizAnswers: any }) => {
+      const response = await apiRequest('POST', '/api/career-choice', data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/career-choice'] });
+      toast({
+        title: "Career Path Locked!",
+        description: "Your career recommendation has been saved. Stay focused on this path!",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to lock",
+        description: "Please try again or contact support.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Unlock career choice mutation
+  const unlockCareerMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', '/api/career-choice/unlock', {});
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/career-choice'] });
+      setShowUnlockConfirm(false);
+      toast({
+        title: "Career Path Unlocked",
+        description: "Please talk to our team before retaking the quiz!",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to unlock",
+        description: "Please try again or contact support.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleLockCareer = async () => {
+    if (!result || !user?.primaryEmailAddress?.emailAddress) return;
+    
+    setIsLocking(true);
+    try {
+      await lockCareerMutation.mutateAsync({
+        email: user.primaryEmailAddress.emailAddress,
+        recommendedPath: result.recommended_path.name,
+        confidenceLevel: result.recommended_path.confidence_level,
+        quizAnswers: answers,
+      });
+    } finally {
+      setIsLocking(false);
+    }
+  };
+
+  const handleUnlockCareer = async () => {
+    await unlockCareerMutation.mutateAsync();
+  };
 
   const downloadResultsAsImage = async () => {
     if (!resultsRef.current) {
@@ -1050,6 +1145,167 @@ export default function CareerQuiz() {
     }
   };
 
+  // Show locked career choice state - user has already locked in their recommendation
+  if (isSignedIn && existingChoice && existingChoice.isLocked === "true" && !result) {
+    const pathInfo = PATH_INFO[existingChoice.recommendedPath];
+    const PathIcon = pathInfo?.icon || Target;
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50">
+        <Nav />
+        <main className="max-w-2xl mx-auto px-4 py-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <Card className="bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 border-emerald-500/40 p-6 text-center">
+              <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-emerald-500/20 text-emerald-400 mb-4">
+                <Lock className="h-10 w-10" />
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Your Career Path is Locked</h1>
+              <p className="text-slate-300 mb-4">
+                You've committed to your recommended career pathway. Stay focused on your goal!
+              </p>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700 p-6 text-center">
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-emerald-500/20 text-emerald-400 mb-4">
+                <PathIcon className="h-8 w-8" />
+              </div>
+              <h2 className="text-xl font-bold text-white mb-2" data-testid="text-locked-path">
+                {existingChoice.recommendedPath}
+              </h2>
+              <p className="text-slate-400 text-sm">{pathInfo?.description}</p>
+              <div className={`inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full text-sm font-medium ${
+                existingChoice.confidenceLevel === "high" 
+                  ? "bg-green-500/20 text-green-400 border border-green-500/30" 
+                  : existingChoice.confidenceLevel === "medium"
+                  ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                  : "bg-red-500/20 text-red-400 border border-red-500/30"
+              }`}>
+                {existingChoice.confidenceLevel === "high" 
+                  ? "High Confidence Match" 
+                  : existingChoice.confidenceLevel === "medium"
+                  ? "Moderate Confidence Match"
+                  : "Low Confidence Match"}
+              </div>
+            </Card>
+
+            {!showUnlockConfirm ? (
+              <Card className="bg-slate-800/50 border-slate-700 p-6">
+                <h3 className="text-lg font-semibold text-white mb-3">Want to Retake the Quiz?</h3>
+                <p className="text-slate-400 text-sm mb-4">
+                  If you've had a change of heart, we encourage you to speak with our career guidance team first before retaking the quiz.
+                </p>
+                <Button
+                  onClick={() => setShowUnlockConfirm(true)}
+                  variant="outline"
+                  className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+                  data-testid="button-want-unlock"
+                >
+                  <Unlock className="h-4 w-4 mr-2" />
+                  I Want to Unlock & Retake
+                </Button>
+              </Card>
+            ) : (
+              <Card className="bg-amber-500/10 border-amber-500/30 p-6">
+                <h3 className="text-lg font-semibold text-amber-400 mb-3 flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5" />
+                  Before You Unlock
+                </h3>
+                <p className="text-amber-200/80 text-sm mb-4">
+                  Please talk to a real person from our team before changing your career path. Career decisions are important and we want to make sure you're making the right choice!
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    asChild
+                    className="bg-blue-500 hover:bg-blue-400 text-white"
+                    data-testid="button-talk-telegram"
+                  >
+                    <a 
+                      href="https://t.me/+uQNpa83oEmIxOTA9"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Talk to Us on Telegram
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                  </Button>
+                  <Button
+                    onClick={handleUnlockCareer}
+                    disabled={unlockCareerMutation.isPending}
+                    variant="outline"
+                    className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                    data-testid="button-confirm-unlock"
+                  >
+                    {unlockCareerMutation.isPending ? (
+                      <>
+                        <div className="h-4 w-4 mr-2 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" />
+                        Unlocking...
+                      </>
+                    ) : (
+                      <>
+                        <Unlock className="h-4 w-4 mr-2" />
+                        I've Talked, Unlock Now
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <button
+                  onClick={() => setShowUnlockConfirm(false)}
+                  className="text-sm text-slate-500 hover:text-slate-300 mt-4"
+                  data-testid="button-cancel-unlock"
+                >
+                  Cancel
+                </button>
+              </Card>
+            )}
+
+            <Card className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border-blue-500/40 p-6 text-center">
+              <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-blue-500/20 text-blue-400 mb-4">
+                <Send className="h-7 w-7" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Need Guidance?</h3>
+              <p className="text-slate-300 mb-4">Connect with our community for mentorship and career support</p>
+              <Button 
+                asChild 
+                size="lg"
+                className="bg-blue-500 hover:bg-blue-400 text-white"
+                data-testid="button-join-telegram-locked"
+              >
+                <a 
+                  href="https://t.me/+uQNpa83oEmIxOTA9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Send className="h-5 w-5 mr-2" />
+                  Join Telegram Community
+                </a>
+              </Button>
+            </Card>
+          </motion.div>
+        </main>
+      </div>
+    );
+  }
+
+  // Loading state while checking for existing choice
+  if (isSignedIn && isLoadingChoice) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50">
+        <Nav />
+        <main className="max-w-2xl mx-auto px-4 py-20">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto rounded-full border-4 border-emerald-500/30 border-t-emerald-500 animate-spin mb-4" />
+            <p className="text-slate-400">Loading your career profile...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   if (isCalculating) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50">
@@ -1311,6 +1567,71 @@ export default function CareerQuiz() {
               <p className="text-xs text-slate-500 mt-3">Speak with alumni who succeeded in {result.recommended_path.name}</p>
             </Card>
             </div>
+
+            {/* Lock In Career Path Section */}
+            {isSignedIn ? (
+              existingChoice?.isLocked === "true" ? (
+                <Card className="bg-emerald-500/10 border-emerald-500/30 p-6 text-center">
+                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/20 text-emerald-400 mb-3">
+                    <Lock className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-lg font-bold text-emerald-400 mb-2">Career Path Locked!</h3>
+                  <p className="text-slate-300 text-sm">Your recommendation has been saved to your profile.</p>
+                </Card>
+              ) : (
+                <Card className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-amber-500/40 p-6 text-center">
+                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-amber-500/20 text-amber-400 mb-3">
+                    <Lock className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">Lock In Your Career Path</h3>
+                  <p className="text-slate-300 text-sm mb-4">
+                    Commit to this career path! Locking in helps you stay focused and prevents indecision.
+                  </p>
+                  <Button
+                    onClick={handleLockCareer}
+                    disabled={isLocking || lockCareerMutation.isPending}
+                    size="lg"
+                    className="bg-amber-500 hover:bg-amber-400 text-white shadow-lg shadow-amber-500/30"
+                    data-testid="button-lock-career"
+                  >
+                    {isLocking || lockCareerMutation.isPending ? (
+                      <>
+                        <div className="h-5 w-5 mr-2 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Locking...
+                      </>
+                    ) : (
+                      <>
+                        <Lock className="h-5 w-5 mr-2" />
+                        Lock In This Path
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-xs text-slate-500 mt-3">
+                    Logged in as {user?.primaryEmailAddress?.emailAddress}
+                  </p>
+                </Card>
+              )
+            ) : (
+              <Card className="bg-slate-800/50 border-slate-700 p-6 text-center">
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-slate-700 text-slate-400 mb-3">
+                  <LogIn className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Save Your Career Choice</h3>
+                <p className="text-slate-400 text-sm mb-4">
+                  Sign in with Google to lock in your career path and access it anytime.
+                </p>
+                <SignInButton mode="modal">
+                  <Button
+                    size="lg"
+                    className="bg-white hover:bg-slate-100 text-slate-900"
+                    data-testid="button-signin-lock"
+                  >
+                    <LogIn className="h-5 w-5 mr-2" />
+                    Sign In to Lock Career
+                  </Button>
+                </SignInButton>
+              </Card>
+            )}
 
             <div className="text-center pt-2">
               <button
